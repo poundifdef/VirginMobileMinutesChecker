@@ -1,0 +1,7 @@
+[setup]
+clean
+compile
+debug
+install
+release
+uninstall
