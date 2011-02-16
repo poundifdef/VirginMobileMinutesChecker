@@ -1,0 +1,216 @@
+package com.jaygoel.virginminuteschecker;
+
+import java.util.Map;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.TableRow.LayoutParams;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
+public class ViewMinutes extends Activity implements Runnable {
+
+	String PREFS_NAME = "loginInfo"; 
+	ProgressDialog pd;
+	Map<String, String> rc = null;
+	//private TextView tv;
+	Activity me = this;
+
+	String username, password;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.view_minutes);
+		setTitle(getString(R.string.viewTitle));
+
+		//tv = (TextView) this.findViewById(R.id.minutes);
+
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		username = settings.getString("username", "u");
+		password = settings.getString("password", "p");
+
+		if (username.equals("u") || password.equals("p")) {
+			Intent i = new Intent(this, MinutesChecker.class);
+			startActivity(i);
+		} else {
+			pd = new ProgressDialog(ViewMinutes.this);
+			pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			pd.setMessage(getString(R.string.loadingMessage));
+			pd.setIndeterminate(true);
+			pd.setCancelable(false);
+	
+			doInfo();
+		}
+
+	}
+
+	private void doInfo() {
+		pd.show();
+
+		Thread t = new Thread(this);
+		t.start();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.logout:
+			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+			SharedPreferences.Editor editor = settings.edit();
+
+			editor.putString("username", "u");
+			editor.putString("password", "p");
+
+			// Commit the edits!
+			editor.commit();
+			Intent i = new Intent(this, MinutesChecker.class);
+			startActivity(i);
+			return true;
+		case R.id.refresh:
+			doInfo();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void run() {
+		rc = WebsiteScraper.getInfo(username, password);
+		handler.sendEmptyMessage(0);
+	}
+
+	private Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			pd.dismiss();
+			if (rc.get("isValid").equals("TRUE")) {
+				
+				//System.err.println(rc.size());
+				
+		        TableLayout tl = (TableLayout) findViewById(R.id.minutes);
+		        
+		        int rowCount = tl.getChildCount();
+		        
+		        for (int i = 0; i < rowCount; i++) {
+		        	//View v = tl.getChildAt(i);
+		        	tl.removeViewAt(0);
+		        	
+		        }
+		        
+		        int current = 0;
+			    //Iterator<Entry<String, String>> it = rc.entrySet().iterator();
+			    for (Map.Entry<String, String> entry : rc.entrySet()) {
+			        //Map.Entry<String, String> pairs = it.next();
+			        //tv.setText(entry.getKey() + " = " + entry.getValue());
+			    	
+			    	if (entry.getKey().equals("isValid"))
+			    		continue;
+			    	
+			        current++;
+			    	
+			           TableRow tr = new TableRow(me);
+			            tr.setId(100+current);
+			            tr.setLayoutParams(new LayoutParams(
+			                    LayoutParams.FILL_PARENT,
+			                    LayoutParams.WRAP_CONTENT));   
+
+			            // Create a TextView to house the name of the province
+			            TextView labelTV = new TextView(me);
+			            labelTV.setId(200+current);
+//			            labelTV.setText(provinces[current]);
+			            labelTV.setText(entry.getKey());
+			            labelTV.setTextColor(Color.LTGRAY);
+			            labelTV.setTextSize(TypedValue.COMPLEX_UNIT_PT ,7);	
+			            labelTV.setLayoutParams(new LayoutParams(
+			                    LayoutParams.FILL_PARENT,
+			                    LayoutParams.WRAP_CONTENT));
+			            tr.addView(labelTV);
+
+/*		            
+			            tl.addView(tr, new TableLayout.LayoutParams(
+			                    LayoutParams.FILL_PARENT,
+			                    LayoutParams.WRAP_CONTENT));
+
+			            current++;
+			            
+			            //TableRow
+			            tr = new TableRow(me);
+				            tr.setId(100+current);
+				            tr.setLayoutParams(new LayoutParams(
+				                    LayoutParams.FILL_PARENT,
+				                    LayoutParams.WRAP_CONTENT));   
+
+	*/		            
+			            
+			            // Create a TextView to house the value of the after-tax income
+			            TextView valueTV = new TextView(me);
+			            valueTV.setId(current);
+			            valueTV.setText(entry.getValue());
+//			            valueTV.setText("$0");
+			            valueTV.setTextColor(Color.WHITE);
+			            valueTV.setTextSize(TypedValue.COMPLEX_UNIT_PT ,9);
+			            //valueTV.setGravity(0x05);
+			            valueTV.setLayoutParams(new LayoutParams(
+			                    LayoutParams.FILL_PARENT,
+			                    LayoutParams.WRAP_CONTENT));
+			            tr.addView(valueTV);
+
+			            // Add the TableRow to the TableLayout
+			            tl.addView(tr, new TableLayout.LayoutParams(
+			                    LayoutParams.FILL_PARENT,
+			                    LayoutParams.WRAP_CONTENT));
+			        
+			        
+			        
+			        
+			    }
+			    
+				//tv.setText(rc.get("info"));
+			} else {
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				builder.setMessage(getString(R.string.loginFail))
+						.setCancelable(false)
+						.setNeutralButton("Ok.",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										Intent i = new Intent(me,
+												MinutesChecker.class);
+										startActivity(i);
+
+									}
+								});
+
+				AlertDialog alert = builder.create();
+
+				alert.show();
+
+			}
+		}
+	};
+}

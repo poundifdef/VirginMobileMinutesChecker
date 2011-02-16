@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Minutes Checker for Virgin Mobile</string>
+    <string name="login">Sign In</string>
+    <string name="logout">Sign Out</string>
+    <string name="refresh">Refresh</string>
+    <string name="loadingMessage">Loading Usage Information...</string>
+    <string name="loginFail">Could not retrieve your usage information. Make sure you have a connection and  
+    						that your username and password are correct!</string>
+    <string name="signinTitle">Minutes Checker: Sign In</string>
+	<string name="viewTitle">Minutes Checker: Usage Information</string>
+    </resources>
