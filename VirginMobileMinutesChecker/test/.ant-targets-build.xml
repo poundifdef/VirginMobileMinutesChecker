@@ -1,0 +1,9 @@
+[setup]
+clean
+compile
+coverage
+debug
+install
+release
+run-tests
+uninstall
