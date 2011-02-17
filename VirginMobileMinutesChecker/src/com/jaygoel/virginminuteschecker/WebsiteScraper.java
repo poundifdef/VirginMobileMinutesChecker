@@ -92,7 +92,7 @@ public class WebsiteScraper {
 		   if (line == null) {
 			   line = "";
 		   }
-		   System.err.println(line);
+		   //System.err.println(line);
 	    	    return line;
 	}
 	    
