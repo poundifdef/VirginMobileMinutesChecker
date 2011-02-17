@@ -15,6 +15,8 @@ import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 
+import android.util.Log;
+
 public class WebsiteScraper {
 	
 	public static String fetchScreen(String username, String password) {
@@ -202,6 +204,7 @@ public class WebsiteScraper {
    public static Map<String, String> getInfo(String username, String password) {
 
 	   String line = fetchScreen(username, password);
+	   Log.d("DEBUG", "Line: "+line);
 	   
 
   	    return parseInfo(line);

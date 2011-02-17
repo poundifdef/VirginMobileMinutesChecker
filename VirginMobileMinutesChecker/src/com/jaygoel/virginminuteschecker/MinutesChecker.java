@@ -53,8 +53,9 @@ public class MinutesChecker extends Activity {
 		// Commit the edits!
 		editor.commit();
 
-		Intent i = new Intent(this, ViewMinutes.class);
-		startActivity(i);
-
+		// Intent i = new Intent(this, ViewMinutes.class);
+		// startActivity(i);
+		setResult(1);
+		finish();
 	}
 }

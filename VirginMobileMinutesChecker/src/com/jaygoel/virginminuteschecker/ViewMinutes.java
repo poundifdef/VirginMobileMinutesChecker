@@ -20,6 +20,8 @@ import android.widget.TableRow.LayoutParams;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.util.Log;
+
 
 public class ViewMinutes extends Activity implements Runnable {
 
@@ -40,25 +42,52 @@ public class ViewMinutes extends Activity implements Runnable {
 		setTitle(getString(R.string.viewTitle));
 
 		//tv = (TextView) this.findViewById(R.id.minutes);
-
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		username = settings.getString("username", "u");
-		password = settings.getString("password", "p");
-
+		setLoginInfo();
+		
 		if (username.equals("u") || password.equals("p")) {
 			Intent i = new Intent(this, MinutesChecker.class);
-			startActivity(i);
+			startActivityForResult(i, 1);
+			// startActivity(i);
 		} else {
-			pd = new ProgressDialog(ViewMinutes.this);
-			pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			pd.setMessage(getString(R.string.loadingMessage));
-			pd.setIndeterminate(true);
-			pd.setCancelable(false);
-	
-			doInfo();
+		    gatherAndDisplay();
 		}
 
 	}
+
+    private void setLoginInfo() {
+	SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+	username = settings.getString("username", "u");
+	password = settings.getString("password", "p");
+    }
+
+
+    @Override
+    protected void onActivityResult(int reqCode, int resultCode, Intent intent) {
+	Log.d("DEBUG", "in onActivityResult");
+	if (reqCode == 1 && resultCode != RESULT_CANCELED) {
+	    Log.d("DEBUG", "login activity succeeded, continuing");
+
+	    setLoginInfo();
+	    gatherAndDisplay();
+	} else {
+	    Log.d("DEBUG", "login activity failed, repeating");
+	    Log.d("DEBUG", Integer.toString(reqCode));
+	    Log.d("DEBUG", Integer.toString(resultCode));
+
+	    showErrorMessageAndRequery();
+	}
+    }
+
+
+    private void gatherAndDisplay() {
+	pd = new ProgressDialog(ViewMinutes.this);
+	pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+	pd.setMessage(getString(R.string.loadingMessage));
+	pd.setIndeterminate(true);
+	pd.setCancelable(false);
+	
+	doInfo();
+    }
 
 	private void doInfo() {
 		pd.show();
@@ -79,6 +108,9 @@ public class ViewMinutes extends Activity implements Runnable {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.logout:
+		    TableLayout tl = (TableLayout) findViewById(R.id.minutes);
+		    tl.removeAllViews();
+
 			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 			SharedPreferences.Editor editor = settings.edit();
 
@@ -88,7 +120,8 @@ public class ViewMinutes extends Activity implements Runnable {
 			// Commit the edits!
 			editor.commit();
 			Intent i = new Intent(this, MinutesChecker.class);
-			startActivity(i);
+			startActivityForResult(i, 1);
+			// startActivity(i);
 			return true;
 		case R.id.refresh:
 			doInfo();
@@ -112,14 +145,15 @@ public class ViewMinutes extends Activity implements Runnable {
 				//System.err.println(rc.size());
 				
 		        TableLayout tl = (TableLayout) findViewById(R.id.minutes);
+			tl.removeAllViews();
 		        
-		        int rowCount = tl.getChildCount();
+		        // int rowCount = tl.getChildCount();
 		        
-		        for (int i = 0; i < rowCount; i++) {
-		        	//View v = tl.getChildAt(i);
-		        	tl.removeViewAt(0);
+		        // for (int i = 0; i < rowCount; i++) {
+		        // 	//View v = tl.getChildAt(i);
+		        // 	tl.removeViewAt(0);
 		        	
-		        }
+		        // }
 		        
 		        int current = 0;
 			    //Iterator<Entry<String, String>> it = rc.entrySet().iterator();
@@ -191,26 +225,30 @@ public class ViewMinutes extends Activity implements Runnable {
 			    
 				//tv.setText(rc.get("info"));
 			} else {
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(me);
-				builder.setMessage(getString(R.string.loginFail))
-						.setCancelable(false)
-						.setNeutralButton("Ok.",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int id) {
-										Intent i = new Intent(me,
-												MinutesChecker.class);
-										startActivity(i);
-
-									}
-								});
-
-				AlertDialog alert = builder.create();
-
-				alert.show();
-
+			    showErrorMessageAndRequery();
 			}
 		}
 	};
+
+    private void showErrorMessageAndRequery() {
+	AlertDialog.Builder builder = new AlertDialog.Builder(me);
+	builder.setMessage(getString(R.string.loginFail))
+	    .setCancelable(false)
+	    .setNeutralButton("Ok.",
+			      new DialogInterface.OnClickListener() {
+				  public void onClick(DialogInterface dialog,
+						      int id) {
+				      Intent i = new Intent(me,
+							    MinutesChecker.class);
+				      startActivityForResult(i, 1);
+				      //startActivity(i);
+
+				  }
+			      });
+
+	AlertDialog alert = builder.create();
+
+	alert.show();
+
+    }
 }
