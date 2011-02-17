@@ -114,11 +114,19 @@ public class ViewMinutes extends Activity implements Runnable {
 			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 			SharedPreferences.Editor editor = settings.edit();
 
-			editor.putString("username", "u");
-			editor.putString("password", "p");
+			// editor.putString("username", "u");
+			// editor.putString("password", "p");
+			editor.clear();
 
 			// Commit the edits!
 			editor.commit();
+
+			SharedPreferences cache = getSharedPreferences("cache", 0);
+			SharedPreferences.Editor ceditor = cache.edit();
+			ceditor.clear();
+			ceditor.commit();
+			
+			
 			Intent i = new Intent(this, MinutesChecker.class);
 			startActivityForResult(i, 1);
 			// startActivity(i);
@@ -141,25 +149,21 @@ public class ViewMinutes extends Activity implements Runnable {
 		public void handleMessage(Message msg) {
 			pd.dismiss();
 			if (rc.get("isValid").equals("TRUE")) {
-				
-				//System.err.println(rc.size());
+
+
+			    // cache minutes used
+			    SharedPreferences cache = getSharedPreferences("cache", 0);
+			    SharedPreferences.Editor ceditor = cache.edit();
+			    ceditor.putString("minutes", rc.get("Minutes Used"));
+			    ceditor.commit();
+			    
+			    
 				
 		        TableLayout tl = (TableLayout) findViewById(R.id.minutes);
 			tl.removeAllViews();
 		        
-		        // int rowCount = tl.getChildCount();
-		        
-		        // for (int i = 0; i < rowCount; i++) {
-		        // 	//View v = tl.getChildAt(i);
-		        // 	tl.removeViewAt(0);
-		        	
-		        // }
-		        
 		        int current = 0;
-			    //Iterator<Entry<String, String>> it = rc.entrySet().iterator();
 			    for (Map.Entry<String, String> entry : rc.entrySet()) {
-			        //Map.Entry<String, String> pairs = it.next();
-			        //tv.setText(entry.getKey() + " = " + entry.getValue());
 			    	
 			    	if (entry.getKey().equals("isValid"))
 			    		continue;
@@ -175,7 +179,6 @@ public class ViewMinutes extends Activity implements Runnable {
 			            // Create a TextView to house the name of the province
 			            TextView labelTV = new TextView(me);
 			            labelTV.setId(200+current);
-//			            labelTV.setText(provinces[current]);
 			            labelTV.setText(entry.getKey());
 			            labelTV.setTextColor(Color.LTGRAY);
 			            labelTV.setTextSize(TypedValue.COMPLEX_UNIT_PT ,7);	
@@ -184,30 +187,12 @@ public class ViewMinutes extends Activity implements Runnable {
 			                    LayoutParams.WRAP_CONTENT));
 			            tr.addView(labelTV);
 
-/*		            
-			            tl.addView(tr, new TableLayout.LayoutParams(
-			                    LayoutParams.FILL_PARENT,
-			                    LayoutParams.WRAP_CONTENT));
-
-			            current++;
-			            
-			            //TableRow
-			            tr = new TableRow(me);
-				            tr.setId(100+current);
-				            tr.setLayoutParams(new LayoutParams(
-				                    LayoutParams.FILL_PARENT,
-				                    LayoutParams.WRAP_CONTENT));   
-
-	*/		            
-			            
 			            // Create a TextView to house the value of the after-tax income
 			            TextView valueTV = new TextView(me);
 			            valueTV.setId(current);
 			            valueTV.setText(entry.getValue());
-//			            valueTV.setText("$0");
 			            valueTV.setTextColor(Color.WHITE);
 			            valueTV.setTextSize(TypedValue.COMPLEX_UNIT_PT ,9);
-			            //valueTV.setGravity(0x05);
 			            valueTV.setLayoutParams(new LayoutParams(
 			                    LayoutParams.FILL_PARENT,
 			                    LayoutParams.WRAP_CONTENT));

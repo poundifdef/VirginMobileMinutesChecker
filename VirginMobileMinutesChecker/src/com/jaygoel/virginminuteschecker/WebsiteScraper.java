@@ -204,7 +204,7 @@ public class WebsiteScraper {
    public static Map<String, String> getInfo(String username, String password) {
 
 	   String line = fetchScreen(username, password);
-	   Log.d("DEBUG", "Line: "+line);
+	   // Log.d("DEBUG", "Line: "+line);
 	   
 
   	    return parseInfo(line);

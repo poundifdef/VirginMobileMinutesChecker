@@ -8,9 +8,13 @@ import android.widget.Toast;
 import android.util.Log;
 import android.content.SharedPreferences;
 
+import com.jaygoel.virginminuteschecker.ViewMinutes;
 import com.jaygoel.virginminuteschecker.WebsiteScraper;
 import com.jaygoel.virginminuteschecker.IVMCScraper;
 import com.jaygoel.virginminuteschecker.ReferenceScraper;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MinutesService extends Service {
 
@@ -18,18 +22,17 @@ public class MinutesService extends Service {
     public static final String ACTION_PARSE_TOAST= "parse_toast";
     public static final String ACTION_TOAST_LAST= "toast_last";
     public static final String ACTION_UPDATE= "update";
+    public static final String ACTION_KILL_TOAST= "kill_toast";
 
     private static final String TAG= "DEBUG";
-    private final IBinder binder= new MinutesBinder();
 
-    public class MinutesBinder extends Binder {
-	MinutesService getService() {
-	    return MinutesService.this;
-	}
-    }
+    private final Timer timer= new Timer("MinutesService");
+    private ToastTask toastTask;
+    private Toast theToast;
 
+    @Override
     public IBinder onBind(Intent intent) {
-	return binder;
+	return null;
     }
 
     @Override
@@ -42,7 +45,10 @@ public class MinutesService extends Service {
 	} else if (action.equals(ACTION_TOAST_LAST)) {
 	    toastLast();
 	} else if (action.equals(ACTION_UPDATE)) {
+	    killTimers();
 	    update();
+	} else if (action.equals(ACTION_KILL_TOAST)) {
+	    killTimers();
 	} else {
 	    Log.e(TAG, "Unknown action: "+action);
 	}
@@ -101,11 +107,16 @@ public class MinutesService extends Service {
 
 	String minutes;
 	if (username.equals("u") || password.equals("p")) {
-	    minutes= "Not Logged In";
-	    Log.d(TAG, "Not Logged In");
+	    Log.d(TAG, "Not Logged In ... asking for login credentials");
+
+	    toast("Please login to update your remaining minutes");
+
+	    Intent i = new Intent(this, ViewMinutes.class);
+	    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	    startActivity(i);
 	} else {
 	    String html= WebsiteScraper.fetchScreen(username, password);
-	    Log.d(TAG, html);
+	    // Log.d(TAG, html);
 	    IVMCScraper scraper= new ReferenceScraper();
 	    
 	    if (scraper.isValid(html)) {
@@ -117,21 +128,58 @@ public class MinutesService extends Service {
 		cedit.putString("minutes", minutes);
 		cedit.commit();
 	    } else {
-		minutes= "Problem Loading Page";
+		toast("There was a problem loading your Virgin Mobile page. Please login again.");
+		Intent i = new Intent(this, ViewMinutes.class);
+		startActivity(i);
 	    }
 	}
-
-	toast("Minutes Used: " + minutes);
     }
 
 
 
     private void toast(String msg) {
-	toast(msg, Toast.LENGTH_LONG);
+	toast(msg, 10);
     }
 
-    private void toast(String msg, int length) {
-	Toast.makeText(getApplicationContext(), msg, length).show();
+    private void toast(String msg, int seconds) {
+	theToast= Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+	toastTask= new ToastTask(theToast, seconds);
+	timer.scheduleAtFixedRate(toastTask, 0, 1000);
+    }
+
+    private void killTimers() {
+	Log.d("DEBUG", "killing timers");
+	theToast.cancel();
+ 	toastTask.cancel();
+	Log.d("DEBUG", "killing timers ... DONE");
+   }
+
+    private class ToastTask extends TimerTask {
+	private Toast t;
+	private int count;
+
+	private int i= 0;
+
+	ToastTask(Toast t, int count) {
+	    this.t = t;
+	    this.count = count;
+	}
+
+	@Override
+	public void run() {
+	    if (i > count) {
+		cancel();
+	    } else {
+		++i;
+		t.show();
+	    }
+	}
+
+	@Override
+	public boolean cancel() {
+	    t.cancel();
+	    return super.cancel();
+	}
     }
 
 

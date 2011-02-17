@@ -22,7 +22,16 @@ public class CallEventReceiver extends BroadcastReceiver {
 
 	if (state.equals("RINGING")) {
 	    Intent i= new Intent(context, MinutesService.class);
-	    i.putExtra(MinutesService.ACTION, MinutesService.ACTION_PARSE_TOAST);
+	    //i.putExtra(MinutesService.ACTION, MinutesService.ACTION_PARSE_TOAST);
+	    i.putExtra(MinutesService.ACTION, MinutesService.ACTION_TOAST_LAST);
+	    context.startService(i);
+	} else if (state.equals("IDLE")) {
+	    Intent i= new Intent(context, MinutesService.class);
+	    i.putExtra(MinutesService.ACTION, MinutesService.ACTION_UPDATE);
+	    context.startService(i);
+	} else if (state.equals("OFFHOOK")) {
+	    Intent i= new Intent(context, MinutesService.class);
+	    i.putExtra(MinutesService.ACTION, MinutesService.ACTION_KILL_TOAST);
 	    context.startService(i);
 	}
 
