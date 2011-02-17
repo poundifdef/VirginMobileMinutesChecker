@@ -149,8 +149,10 @@ public class MinutesService extends Service {
 
     private void killTimers() {
 	Log.d("DEBUG", "killing timers");
-	theToast.cancel();
- 	toastTask.cancel();
+	if (theToast != null)
+	    theToast.cancel();
+	if (toastTask != null)
+	    toastTask.cancel();
 	Log.d("DEBUG", "killing timers ... DONE");
    }
 
