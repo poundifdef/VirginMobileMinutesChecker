@@ -4,5 +4,6 @@
           android:title="@string/logout" />
     <item android:id="@+id/refresh"
           android:title="@string/refresh" />
-          <!--           android:icon="@drawable/ic_new_game" -->
+    <item android:id="@+id/settings"
+          android:title="@string/settings" />
 </menu>

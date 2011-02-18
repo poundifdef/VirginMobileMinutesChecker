@@ -9,6 +9,8 @@
               android:label="@string/signinTitle">
     </activity>
 
+    <activity android:name=".VMSettings">
+    </activity>
 
     <activity android:name=".ViewMinutes" android:configChanges="orientation|keyboardHidden">
       <intent-filter>

@@ -12,6 +12,7 @@ import com.jaygoel.virginminuteschecker.ViewMinutes;
 import com.jaygoel.virginminuteschecker.WebsiteScraper;
 import com.jaygoel.virginminuteschecker.IVMCScraper;
 import com.jaygoel.virginminuteschecker.ReferenceScraper;
+import com.jaygoel.virginminuteschecker.VMSettings;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,6 +38,12 @@ public class MinutesService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+	SharedPreferences settings = getSharedPreferences("settings", 0);
+	if(!settings.getBoolean(VMSettings.OPTION_RUNSERVICE, true)) {
+	    Log.d("DEBUG", "Settings said not to run");
+	    return Service.START_NOT_STICKY;
+	}
+
 	Log.d(TAG, "in onStartCommand");
 	String action= intent.getStringExtra(ACTION);
 

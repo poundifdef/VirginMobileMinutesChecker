@@ -105,38 +105,42 @@ public class ViewMinutes extends Activity implements Runnable {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.logout:
-		    TableLayout tl = (TableLayout) findViewById(R.id.minutes);
-		    tl.removeAllViews();
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.logout:
+		TableLayout tl = (TableLayout) findViewById(R.id.minutes);
+		tl.removeAllViews();
 
-			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-			SharedPreferences.Editor editor = settings.edit();
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
 
-			// editor.putString("username", "u");
-			// editor.putString("password", "p");
-			editor.clear();
+		// editor.putString("username", "u");
+		// editor.putString("password", "p");
+		editor.clear();
 
-			// Commit the edits!
-			editor.commit();
+		// Commit the edits!
+		editor.commit();
 
-			SharedPreferences cache = getSharedPreferences("cache", 0);
-			SharedPreferences.Editor ceditor = cache.edit();
-			ceditor.clear();
-			ceditor.commit();
+		SharedPreferences cache = getSharedPreferences("cache", 0);
+		SharedPreferences.Editor ceditor = cache.edit();
+		ceditor.clear();
+		ceditor.commit();
 			
 			
-			Intent i = new Intent(this, MinutesChecker.class);
-			startActivityForResult(i, 1);
-			// startActivity(i);
-			return true;
-		case R.id.refresh:
-			doInfo();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		Intent i = new Intent(this, MinutesChecker.class);
+		startActivityForResult(i, 1);
+		// startActivity(i);
+		return true;
+	    case R.id.refresh:
+		doInfo();
+		return true;
+	    case R.id.settings:
+		Intent i2 = new Intent(this, VMSettings.class);
+		startActivity(i2);
+		return true;
+	    default:
+		return super.onOptionsItemSelected(item);
+	    }
 	}
 
 	@Override

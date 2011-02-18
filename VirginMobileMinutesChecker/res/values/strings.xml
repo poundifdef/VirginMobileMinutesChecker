@@ -4,9 +4,11 @@
     <string name="login">Sign In</string>
     <string name="logout">Sign Out</string>
     <string name="refresh">Refresh</string>
+    <string name="settings">Settings</string>
+    <string name="incoming_notification_option">Display Minutes on Incoming Phone Call</string>
     <string name="loadingMessage">Loading Usage Information...</string>
     <string name="loginFail">Could not retrieve your usage information. Make sure you have a connection and  
     						that your username and password are correct!</string>
     <string name="signinTitle">Minutes Checker: Sign In</string>
-	<string name="viewTitle">Minutes Checker: Usage Information</string>
-    </resources>
+    <string name="viewTitle">Minutes Checker: Usage Information</string>
+</resources>
