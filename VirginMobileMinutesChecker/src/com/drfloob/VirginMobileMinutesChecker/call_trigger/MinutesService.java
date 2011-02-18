@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.widget.Toast;
 import android.util.Log;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.jaygoel.virginminuteschecker.ViewMinutes;
 import com.jaygoel.virginminuteschecker.WebsiteScraper;
@@ -19,11 +20,7 @@ import java.util.TimerTask;
 
 public class MinutesService extends Service {
 
-    public static final String ACTION= "com.drfloob.VirginMobileMinutesChecker.call_trigger.MinutesService.Action";
-    public static final String ACTION_PARSE_TOAST= "parse_toast";
-    public static final String ACTION_TOAST_LAST= "toast_last";
-    public static final String ACTION_UPDATE= "update";
-    public static final String ACTION_KILL_TOAST= "kill_toast";
+    public static final String EVENT= "com.drfloob.VirginMobileMinutesChecker.call_trigger.MinutesService.Action";
 
     private static final String TAG= "DEBUG";
 
@@ -38,27 +35,26 @@ public class MinutesService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-	SharedPreferences settings = getSharedPreferences("settings", 0);
-	if(!settings.getBoolean(VMSettings.OPTION_RUNSERVICE, true)) {
+	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	if(!settings.getBoolean("incomingCallPref", true)) {
 	    Log.d("DEBUG", "Settings said not to run");
 	    return Service.START_NOT_STICKY;
 	}
 
 	Log.d(TAG, "in onStartCommand");
-	String action= intent.getStringExtra(ACTION);
+	String event= intent.getStringExtra(EVENT);
 
-	if (action.equals(ACTION_PARSE_TOAST)) {
-	    parseAndToast();
-	} else if (action.equals(ACTION_TOAST_LAST)) {
+	if (event.equals("RINGING")) {
 	    toastLast();
-	} else if (action.equals(ACTION_UPDATE)) {
+	} else if (event.equals("IDLE")) {
 	    killTimers();
 	    update();
-	} else if (action.equals(ACTION_KILL_TOAST)) {
+	} else if (event.equals("OFFHOOK")) {
 	    killTimers();
 	} else {
-	    Log.e(TAG, "Unknown action: "+action);
+	    Log.e(TAG, "Unknown event: "+event);
 	}
+	// parseAndToast();
 
 	return Service.START_STICKY;
     }

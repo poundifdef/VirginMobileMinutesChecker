@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+  <PreferenceCategory
+     android:title="@+string/servicePrefTitle">
+    <CheckBoxPreference
+       android:title="@+string/incomingCallPrefTitle"
+       android:summary="@+string/incomingCallPrefSummary"
+       android:defaultValue="true"
+       android:key="incomingCallPref" />
+    <CheckBoxPreference
+       android:title="@+string/outgoingCallPrefTitle"
+       android:summary="@+string/outgoingCallPrefSummary"
+       android:defaultValue="false"
+       android:key="outgoingCallPref" />
+  </PreferenceCategory>
+</PreferenceScreen>

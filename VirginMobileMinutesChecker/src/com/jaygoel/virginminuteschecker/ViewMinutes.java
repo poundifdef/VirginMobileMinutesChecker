@@ -135,7 +135,7 @@ public class ViewMinutes extends Activity implements Runnable {
 		doInfo();
 		return true;
 	    case R.id.settings:
-		Intent i2 = new Intent(this, VMSettings.class);
+		Intent i2 = new Intent(this, Preferences.class);
 		startActivity(i2);
 		return true;
 	    default:
