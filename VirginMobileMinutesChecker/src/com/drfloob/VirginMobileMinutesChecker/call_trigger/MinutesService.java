@@ -14,7 +14,6 @@ import com.jaygoel.virginminuteschecker.ViewMinutes;
 import com.jaygoel.virginminuteschecker.WebsiteScraper;
 import com.jaygoel.virginminuteschecker.IVMCScraper;
 import com.jaygoel.virginminuteschecker.ReferenceScraper;
-import com.jaygoel.virginminuteschecker.VMSettings;
 
 import java.util.Timer;
 import java.util.TimerTask;
