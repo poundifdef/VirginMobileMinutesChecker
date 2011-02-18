@@ -8,8 +8,6 @@ import android.widget.Toast;
 import android.app.Service;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
-import com.jaygoel.virginminuteschecker.VMSettings;
-import android.content.SharedPreferences;
 
 public class CallEventReceiver extends BroadcastReceiver {
 
