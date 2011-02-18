@@ -8,6 +8,7 @@ import android.widget.Toast;
 import android.util.Log;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 
 import com.jaygoel.virginminuteschecker.ViewMinutes;
 import com.jaygoel.virginminuteschecker.WebsiteScraper;
@@ -44,13 +45,16 @@ public class MinutesService extends Service {
 	Log.d(TAG, "in onStartCommand");
 	String event= intent.getStringExtra(EVENT);
 
-	if (event.equals("RINGING")) {
+	if (event.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
 	    toastLast();
-	} else if (event.equals("IDLE")) {
+	} else if (event.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
 	    killTimers();
 	    update();
-	} else if (event.equals("OFFHOOK")) {
-	    killTimers();
+	} else if (event.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+	    if (settings.getBoolean("outgoingCallPref", false)) 
+		toastLast();
+	    else
+		killTimers();
 	} else {
 	    Log.e(TAG, "Unknown event: "+event);
 	}
