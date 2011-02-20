@@ -116,10 +116,7 @@ public class MinutesService extends Service {
 	    Log.d(TAG, "Not Logged In ... asking for login credentials");
 
 	    toast("Please login to update your remaining minutes");
-
-	    Intent i = new Intent(this, ViewMinutes.class);
-	    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	    startActivity(i);
+	    startViewMinutesActivity();
 	} else {
 	    String html= WebsiteScraper.fetchScreen(username, password);
 	    // Log.d(TAG, html);
@@ -135,12 +132,17 @@ public class MinutesService extends Service {
 		cedit.commit();
 	    } else {
 		toast("There was a problem loading your Virgin Mobile page. Please login again.");
-		Intent i = new Intent(this, ViewMinutes.class);
-		startActivity(i);
+		startViewMinutesActivity();
 	    }
 	}
     }
 
+    
+    private void startViewMinutesActivity() {
+	Intent i = new Intent(this, ViewMinutes.class);
+	i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	startActivity(i);
+    }
 
 
     private void toast(String msg) {
