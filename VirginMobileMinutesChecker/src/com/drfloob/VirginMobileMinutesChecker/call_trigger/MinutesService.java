@@ -33,16 +33,20 @@ public class MinutesService extends Service {
 	return null;
     }
 
+    /** Since we're always returning Service.START_NOT_STICKY, intent is guaranteed to not be null */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
 	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	if(!settings.getBoolean("incomingCallPref", true)) {
 	    Log.d("DEBUG", "Settings said not to run");
 	    return Service.START_NOT_STICKY;
 	}
 
+
 	Log.d(TAG, "in onStartCommand");
 	String event= intent.getStringExtra(EVENT);
+
 
 	if (event.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
 	    toastLast();
@@ -59,7 +63,7 @@ public class MinutesService extends Service {
 	}
 	// parseAndToast();
 
-	return Service.START_STICKY;
+	return Service.START_NOT_STICKY;
     }
 
 

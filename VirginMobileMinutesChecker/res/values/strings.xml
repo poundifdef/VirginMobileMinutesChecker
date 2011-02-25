@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Minutes Checker for Virgin Mobile</string>
+    <string name="service_name">Minutes Checker Service</string>
     <string name="login">Sign In</string>
     <string name="logout">Sign Out</string>
     <string name="refresh">Refresh</string>

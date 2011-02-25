@@ -21,7 +21,8 @@
       </intent-filter>
     </receiver>
 
-    <service android:name="com.drfloob.VirginMobileMinutesChecker.call_trigger.MinutesService" />
+    <service android:name="com.drfloob.VirginMobileMinutesChecker.call_trigger.MinutesService" 
+	     android:label="@string/service_name" />
     
     <activity android:name=".Preferences" />
 
