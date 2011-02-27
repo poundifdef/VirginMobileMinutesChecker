@@ -23,6 +23,6 @@
     <string name="incomingCallPrefSummary">Show minutes used when a call is received</string>
 
     <string name="outgoingCallPrefTitle">Outgoing Call</string>
-    <string name="outgoingCallPrefSummary">Show minuted used when making a call</string>
+    <string name="outgoingCallPrefSummary">Show minutes used when making a call</string>
 
 </resources>

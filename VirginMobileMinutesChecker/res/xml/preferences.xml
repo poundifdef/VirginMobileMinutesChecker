@@ -10,7 +10,7 @@
     <CheckBoxPreference
        android:title="@+string/outgoingCallPrefTitle"
        android:summary="@+string/outgoingCallPrefSummary"
-       android:defaultValue="false"
+       android:defaultValue="true"
        android:key="outgoingCallPref" />
   </PreferenceCategory>
 </PreferenceScreen>

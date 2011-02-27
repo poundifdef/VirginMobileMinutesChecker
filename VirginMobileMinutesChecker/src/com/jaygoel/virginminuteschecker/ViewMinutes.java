@@ -143,7 +143,6 @@ public class ViewMinutes extends Activity implements Runnable {
 	    }
 	}
 
-	@Override
 	public void run() {
 		rc = WebsiteScraper.getInfo(username, password);
 		handler.sendEmptyMessage(0);
@@ -180,7 +179,7 @@ public class ViewMinutes extends Activity implements Runnable {
 			                    LayoutParams.FILL_PARENT,
 			                    LayoutParams.WRAP_CONTENT));   
 
-			            // Create a TextView to house the name of the province
+			            // Create a TextView to show the name of the property
 			            TextView labelTV = new TextView(me);
 			            labelTV.setId(200+current);
 			            labelTV.setText(entry.getKey());
@@ -191,7 +190,7 @@ public class ViewMinutes extends Activity implements Runnable {
 			                    LayoutParams.WRAP_CONTENT));
 			            tr.addView(labelTV);
 
-			            // Create a TextView to house the value of the after-tax income
+			            // Create a TextView to show that property's value
 			            TextView valueTV = new TextView(me);
 			            valueTV.setId(current);
 			            valueTV.setText(entry.getValue());
@@ -206,9 +205,6 @@ public class ViewMinutes extends Activity implements Runnable {
 			            tl.addView(tr, new TableLayout.LayoutParams(
 			                    LayoutParams.FILL_PARENT,
 			                    LayoutParams.WRAP_CONTENT));
-			        
-			        
-			        
 			        
 			    }
 			    
