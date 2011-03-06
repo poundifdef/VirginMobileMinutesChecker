@@ -118,13 +118,8 @@ public class MinutesService extends Service {
 	String minutes;
 	if (username.equals("u") || password.equals("p")) {
 	    Log.d(TAG, "Not Logged In ... asking for login credentials");
-
 	    toast("Please login to update your remaining minutes");
-
-       // We have the option of bringing the user to the logon screen
-       // if we are unable to retrieve their minutes. But I don't want
-       // to interrupt the user's flow with a new dialog.
-	    // startViewMinutesActivity();
+	    startViewMinutesActivity();
 	} else {
 	    String html= WebsiteScraper.fetchScreen(username, password);
 	    // Log.d(TAG, html);
@@ -140,9 +135,7 @@ public class MinutesService extends Service {
 		cedit.commit();
 	    } else {
 		toast("There was a problem loading your Virgin Mobile page. Please login again.");
-
-      // See above with respect to bringing the user to the logon screen
-		// startViewMinutesActivity();
+		startViewMinutesActivity();
 	    }
 	}
     }
@@ -201,7 +194,5 @@ public class MinutesService extends Service {
 	    return super.cancel();
 	}
     }
-
-
-    
+   
 }
