@@ -135,6 +135,13 @@ public class MinutesService extends Service {
 		cedit.commit();
 	    } else {
 		toast("There was a problem loading your Virgin Mobile page. Please login again.");
+
+		// If the scraper brings back an invalid page, it's prudent to invalidate the cache.
+		// there's no sense in relying on the reported minutes if we can't scrape anymore.
+		SharedPreferences.Editor cedit= cache.edit();
+		cedit.putString("minutes", "Unknown");
+		cedit.commit();
+
 		startViewMinutesActivity();
 	    }
 	}

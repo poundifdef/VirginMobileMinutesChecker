@@ -114,8 +114,6 @@ public class ViewMinutes extends Activity implements Runnable {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 
-		// editor.putString("username", "u");
-		// editor.putString("password", "p");
 		editor.clear();
 
 		// Commit the edits!
@@ -129,7 +127,6 @@ public class ViewMinutes extends Activity implements Runnable {
 			
 		Intent i = new Intent(this, MinutesChecker.class);
 		startActivityForResult(i, 1);
-		// startActivity(i);
 		return true;
 	    case R.id.refresh:
 		doInfo();
