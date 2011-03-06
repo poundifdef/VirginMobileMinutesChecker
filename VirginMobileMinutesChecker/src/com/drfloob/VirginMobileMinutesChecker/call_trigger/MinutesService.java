@@ -54,7 +54,7 @@ public class MinutesService extends Service {
 	    killTimers();
 	    update();
 	} else if (event.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
-	    if (settings.getBoolean("outgoingCallPref", false)) 
+	    if (settings.getBoolean("outgoingCallPref", true))
 		toastLast();
 	    else
 		killTimers();
