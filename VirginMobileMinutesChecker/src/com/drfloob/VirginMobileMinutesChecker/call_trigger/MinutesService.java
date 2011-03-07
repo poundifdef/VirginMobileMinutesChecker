@@ -124,8 +124,13 @@ public class MinutesService extends Service {
        // We have the option of bringing the user to the logon screen
        // if we are unable to retrieve their minutes. But I don't want
        // to interrupt the user's flow with a new dialog.
-	    // startViewMinutesActivity();
+	     startViewMinutesActivity();
 	} else {
+      try {
+      Thread.sleep(2000);
+      } catch (Exception e) {
+      e.printStackTrace();
+      }
 	    String html= WebsiteScraper.fetchScreen(username, password);
 	    // Log.d(TAG, html);
 	    IVMCScraper scraper= new ReferenceScraper();
@@ -142,7 +147,7 @@ public class MinutesService extends Service {
 		toast("There was a problem loading your Virgin Mobile page. Please login again.");
 
       // See above with respect to bringing the user to the logon screen
-		// startViewMinutesActivity();
+		 startViewMinutesActivity();
 	    }
 	}
     }
@@ -156,7 +161,7 @@ public class MinutesService extends Service {
 
 
     private void toast(String msg) {
-	toast(msg, 10);
+	toast(msg, 1);
     }
 
     private void toast(String msg, int seconds) {

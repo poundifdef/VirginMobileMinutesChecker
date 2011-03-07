@@ -15,8 +15,6 @@ import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 
-import android.util.Log;
-
 public class WebsiteScraper {
 	
 	public static String fetchScreen(String username, String password) {
@@ -86,7 +84,7 @@ public class WebsiteScraper {
 			   e.printStackTrace();
 			   System.err.println("exception 83");
 			   System.err.println(e.getMessage());
-			   System.err.println(line);
+			   //System.err.println(line);
 			   return line;
 			   //rc.put("isValid", "FALSE");
 		   }
