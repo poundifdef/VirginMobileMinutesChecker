@@ -1,0 +1,278 @@
+diff -r -u -N VirginMobileMinutesChecker/AndroidManifest.xml VirginMobileMinutesChecker_/AndroidManifest.xml
+--- VirginMobileMinutesChecker/AndroidManifest.xml	2011-02-27 18:46:50.000000000 -0500
++++ VirginMobileMinutesChecker_/AndroidManifest.xml	2011-03-04 13:30:58.000000000 -0500
+@@ -20,6 +20,19 @@
+ 	<action android:name="android.intent.action.PHONE_STATE" />
+       </intent-filter>
+     </receiver>
++    
++    <service android:name=".UpdateService" />
++    
++
++    
++            <receiver android:name="Widget" android:label="@string/app_name">
++            <intent-filter>
++                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
++            </intent-filter>
++            <meta-data
++                android:name="android.appwidget.provider"
++                android:resource="@xml/widget_provider" />
++        </receiver>
+ 
+     <service android:name="com.drfloob.VirginMobileMinutesChecker.call_trigger.MinutesService" 
+ 	     android:label="@string/service_name" />
+diff -r -u -N VirginMobileMinutesChecker/gen/com/jaygoel/virginminuteschecker/R.java VirginMobileMinutesChecker_/gen/com/jaygoel/virginminuteschecker/R.java
+--- VirginMobileMinutesChecker/gen/com/jaygoel/virginminuteschecker/R.java	2011-02-27 18:46:50.000000000 -0500
++++ VirginMobileMinutesChecker_/gen/com/jaygoel/virginminuteschecker/R.java	2011-03-04 13:30:59.000000000 -0500
+@@ -12,18 +12,22 @@
+     }
+     public static final class drawable {
+         public static final int icon=0x7f020000;
++        public static final int widget_background=0x7f020001;
+     }
+     public static final class id {
+-        public static final int logout=0x7f070003;
++        public static final int LinearLayout01=0x7f070003;
++        public static final int logout=0x7f070005;
+         public static final int minutes=0x7f070002;
+         public static final int password=0x7f070001;
+-        public static final int refresh=0x7f070004;
+-        public static final int settings=0x7f070005;
++        public static final int refresh=0x7f070006;
++        public static final int settings=0x7f070007;
+         public static final int username=0x7f070000;
++        public static final int widget_textview=0x7f070004;
+     }
+     public static final class layout {
+         public static final int main=0x7f030000;
+         public static final int view_minutes=0x7f030001;
++        public static final int widget=0x7f030002;
+     }
+     public static final class menu {
+         public static final int menu=0x7f060000;
+@@ -50,5 +54,6 @@
+     }
+     public static final class xml {
+         public static final int preferences=0x7f040000;
++        public static final int widget_provider=0x7f040001;
+     }
+ }
+Binary files VirginMobileMinutesChecker/res/drawable/widget_background.png and VirginMobileMinutesChecker_/res/drawable/widget_background.png differ
+diff -r -u -N VirginMobileMinutesChecker/res/layout/widget.xml VirginMobileMinutesChecker_/res/layout/widget.xml
+--- VirginMobileMinutesChecker/res/layout/widget.xml	1969-12-31 19:00:00.000000000 -0500
++++ VirginMobileMinutesChecker_/res/layout/widget.xml	2011-03-04 13:22:38.000000000 -0500
+@@ -0,0 +1,17 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    android:id="@+id/LinearLayout01"
++    android:layout_height="72dp"
++    android:background="@drawable/widget_background"
++    android:layout_width="294dp"
++    android:orientation="horizontal">
++
++    <TextView android:id="@+id/widget_textview"
++        android:layout_width="fill_parent"
++        android:layout_height="fill_parent"
++        android:gravity="center_vertical|center_horizontal"
++        android:textColor="@android:color/white"
++        android:text="TEXT"
++        android:textSize="8pt"/>
++</LinearLayout>
+\ No newline at end of file
+diff -r -u -N VirginMobileMinutesChecker/res/xml/widget_provider.xml VirginMobileMinutesChecker_/res/xml/widget_provider.xml
+--- VirginMobileMinutesChecker/res/xml/widget_provider.xml	1969-12-31 19:00:00.000000000 -0500
++++ VirginMobileMinutesChecker_/res/xml/widget_provider.xml	2011-03-04 08:55:19.000000000 -0500
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8" ?>
++<appwidget-provider
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    android:minWidth="294dp"
++    android:initialLayout="@layout/main"
++    android:updatePeriodMillis="3600000"
++    android:minHeight="72dp"/>
+\ No newline at end of file
+diff -r -u -N VirginMobileMinutesChecker/src/com/drfloob/VirginMobileMinutesChecker/call_trigger/CallEventReceiver.java VirginMobileMinutesChecker_/src/com/drfloob/VirginMobileMinutesChecker/call_trigger/CallEventReceiver.java
+--- VirginMobileMinutesChecker/src/com/drfloob/VirginMobileMinutesChecker/call_trigger/CallEventReceiver.java	2011-02-27 18:46:50.000000000 -0500
++++ VirginMobileMinutesChecker_/src/com/drfloob/VirginMobileMinutesChecker/call_trigger/CallEventReceiver.java	2011-03-04 11:09:08.000000000 -0500
+@@ -4,9 +4,6 @@
+ import android.content.Context;
+ import android.content.Intent;
+ import android.util.Log;
+-import android.widget.Toast;
+-import android.app.Service;
+-import android.os.IBinder;
+ import android.telephony.TelephonyManager;
+ 
+ public class CallEventReceiver extends BroadcastReceiver {
+diff -r -u -N VirginMobileMinutesChecker/src/com/jaygoel/virginminuteschecker/MinutesChecker.java VirginMobileMinutesChecker_/src/com/jaygoel/virginminuteschecker/MinutesChecker.java
+--- VirginMobileMinutesChecker/src/com/jaygoel/virginminuteschecker/MinutesChecker.java	2011-02-27 18:46:50.000000000 -0500
++++ VirginMobileMinutesChecker_/src/com/jaygoel/virginminuteschecker/MinutesChecker.java	2011-03-04 11:09:08.000000000 -0500
+@@ -2,7 +2,6 @@
+ 
+ import android.app.Activity;
+ import android.content.Context;
+-import android.content.Intent;
+ import android.content.SharedPreferences;
+ import android.os.Bundle;
+ import android.telephony.TelephonyManager;
+diff -r -u -N VirginMobileMinutesChecker/src/com/jaygoel/virginminuteschecker/Preferences.java VirginMobileMinutesChecker_/src/com/jaygoel/virginminuteschecker/Preferences.java
+--- VirginMobileMinutesChecker/src/com/jaygoel/virginminuteschecker/Preferences.java	2011-02-27 18:46:50.000000000 -0500
++++ VirginMobileMinutesChecker_/src/com/jaygoel/virginminuteschecker/Preferences.java	2011-03-04 11:09:08.000000000 -0500
+@@ -1,12 +1,7 @@
+ package com.jaygoel.virginminuteschecker;
+ 
+-import android.util.Log;
+-import android.content.Intent;
+-import com.drfloob.VirginMobileMinutesChecker.call_trigger.MinutesService;
+ import android.os.Bundle;
+-import android.preference.Preference;
+ import android.preference.PreferenceActivity;
+-import android.preference.PreferenceScreen;
+ 
+ public class Preferences extends PreferenceActivity {
+     @Override
+diff -r -u -N VirginMobileMinutesChecker/src/com/jaygoel/virginminuteschecker/UpdateService.java VirginMobileMinutesChecker_/src/com/jaygoel/virginminuteschecker/UpdateService.java
+--- VirginMobileMinutesChecker/src/com/jaygoel/virginminuteschecker/UpdateService.java	1969-12-31 19:00:00.000000000 -0500
++++ VirginMobileMinutesChecker_/src/com/jaygoel/virginminuteschecker/UpdateService.java	2011-03-04 13:31:22.000000000 -0500
+@@ -0,0 +1,101 @@
++package com.jaygoel.virginminuteschecker;
++
++import android.app.Service;
++import android.appwidget.AppWidgetManager;
++import android.content.ComponentName;
++import android.content.Context;
++import android.content.Intent;
++import android.content.SharedPreferences;
++import android.os.IBinder;
++import android.telephony.PhoneStateListener;
++import android.telephony.TelephonyManager;
++import android.util.Log;
++import android.widget.RemoteViews;
++
++public class UpdateService extends Service {
++	
++	private static final String TAG= "DEBUG";
++	public static final String EVENT= "com.jaygoel.virginminuteschecker.call_trigger.UpdateService.Action";
++	private Context saved_context;
++    
++    private final PhoneStateListener phoneStateListener = new PhoneStateListener(){
++        @Override
++        public void onCallStateChanged(int state, String incomingNumber)
++        {
++        		Log.d(TAG, "in oncallstatechanged");
++                String callState = "UNKNOWN";
++                
++                switch(state)
++                {
++                        case TelephonyManager.CALL_STATE_IDLE:          callState = "IDLE"; break;
++                        case TelephonyManager.CALL_STATE_RINGING:       callState = "Ringing (" + incomingNumber + ")"; break;
++                        case TelephonyManager.CALL_STATE_OFFHOOK:       callState = "Offhook"; break;
++                }
++                
++                if (callState=="IDLE")
++                {
++                	Log.d(TAG, "does this shit work?");
++                	UpdateService.update(saved_context);
++                }
++
++                super.onCallStateChanged(state, incomingNumber);
++        }
++    };
++	
++	@Override
++    public void onCreate() {
++    	Log.d(TAG, "in create");
++		saved_context = this;
++        update(saved_context);
++        TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
++        tm.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
++    }
++
++    public static void update(Context context) {
++    	Log.d(TAG, "in update");
++    	AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
++    	
++        RemoteViews remoteViews;
++        ComponentName widget;
++
++        remoteViews = new RemoteViews( context.getPackageName(), R.layout.widget );
++        widget = new ComponentName( context, Widget.class );
++        
++    	SharedPreferences settings = context.getSharedPreferences("loginInfo", 0);
++    	String username = settings.getString("username", "u");
++    	String password = settings.getString("password", "p");
++
++    	SharedPreferences cache = context.getSharedPreferences("cache", 0);
++
++    	String minutes;
++    	if (username.equals("u") || password.equals("p")) {
++    	    minutes= "Not Logged In";
++    	    Log.d(TAG, "Not Logged In");
++    	} else {
++    	    String html= WebsiteScraper.fetchScreen(username, password);
++    	    Log.d(TAG, html);
++    	    IVMCScraper scraper= new ReferenceScraper();
++    	    
++    	    if (scraper.isValid(html)) {
++    		Log.d(TAG, "valid");
++    		minutes= scraper.getMinutesUsed(html);
++    		Log.d(TAG, minutes);
++
++    		SharedPreferences.Editor cedit= cache.edit();
++    		cedit.putString("minutes", minutes);
++    		cedit.commit();
++    	    } else {
++    		minutes= "Problem Loading Page";
++    	    }
++    	}
++        
++        remoteViews.setTextViewText( R.id.widget_textview, "Minutes Used: " + minutes);
++        appWidgetManager.updateAppWidget( widget, remoteViews );
++    }
++	@Override
++	public IBinder onBind(Intent arg0) {
++    	Log.d(TAG, "in onbind (shouldn't happen)");
++		// TODO Auto-generated method stub
++		return null;
++	}
++}
+\ No newline at end of file
+diff -r -u -N VirginMobileMinutesChecker/src/com/jaygoel/virginminuteschecker/WebsiteScraper.java VirginMobileMinutesChecker_/src/com/jaygoel/virginminuteschecker/WebsiteScraper.java
+--- VirginMobileMinutesChecker/src/com/jaygoel/virginminuteschecker/WebsiteScraper.java	2011-02-27 18:46:50.000000000 -0500
++++ VirginMobileMinutesChecker_/src/com/jaygoel/virginminuteschecker/WebsiteScraper.java	2011-03-04 11:09:08.000000000 -0500
+@@ -15,8 +15,6 @@
+ 
+ import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+ 
+-import android.util.Log;
+-
+ public class WebsiteScraper {
+ 	
+ 	public static String fetchScreen(String username, String password) {
+diff -r -u -N VirginMobileMinutesChecker/src/com/jaygoel/virginminuteschecker/Widget.java VirginMobileMinutesChecker_/src/com/jaygoel/virginminuteschecker/Widget.java
+--- VirginMobileMinutesChecker/src/com/jaygoel/virginminuteschecker/Widget.java	1969-12-31 19:00:00.000000000 -0500
++++ VirginMobileMinutesChecker_/src/com/jaygoel/virginminuteschecker/Widget.java	2011-03-04 13:31:40.000000000 -0500
+@@ -0,0 +1,21 @@
++package com.jaygoel.virginminuteschecker;
++
++import android.appwidget.AppWidgetManager;
++import android.appwidget.AppWidgetProvider;
++import android.content.Context;
++import android.content.Intent;
++
++import com.jaygoel.virginminuteschecker.UpdateService;
++
++public class Widget extends AppWidgetProvider
++{
++	
++	Context saved_context;
++	AppWidgetManager saved_appWidgetManager;
++	
++    @Override
++    public void onUpdate( Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds )
++    {
++    	context.startService(new Intent(context, UpdateService.class));
++    }
++}
+\ No newline at end of file
