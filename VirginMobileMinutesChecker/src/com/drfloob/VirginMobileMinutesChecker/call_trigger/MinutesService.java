@@ -119,21 +119,8 @@ public class MinutesService extends Service {
 	if (username.equals("u") || password.equals("p")) {
 	    Log.d(TAG, "Not Logged In ... asking for login credentials");
 	    toast("Please login to update your remaining minutes");
-<<<<<<< HEAD
-
-       // We have the option of bringing the user to the logon screen
-       // if we are unable to retrieve their minutes. But I don't want
-       // to interrupt the user's flow with a new dialog.
-	     startViewMinutesActivity();
-=======
 	    startViewMinutesActivity();
->>>>>>> 5532216c901abac5138000dab70062bf4ed9e699
 	} else {
-      try {
-      Thread.sleep(2000);
-      } catch (Exception e) {
-      e.printStackTrace();
-      }
 	    String html= WebsiteScraper.fetchScreen(username, password);
 	    // Log.d(TAG, html);
 	    IVMCScraper scraper= new ReferenceScraper();
@@ -149,10 +136,6 @@ public class MinutesService extends Service {
 	    } else {
 		toast("There was a problem loading your Virgin Mobile page. Please login again.");
 
-<<<<<<< HEAD
-      // See above with respect to bringing the user to the logon screen
-		 startViewMinutesActivity();
-=======
 		// If the scraper brings back an invalid page, it's prudent to invalidate the cache.
 		// there's no sense in relying on the reported minutes if we can't scrape anymore.
 		SharedPreferences.Editor cedit= cache.edit();
@@ -160,7 +143,6 @@ public class MinutesService extends Service {
 		cedit.commit();
 
 		startViewMinutesActivity();
->>>>>>> 5532216c901abac5138000dab70062bf4ed9e699
 	    }
 	}
     }
