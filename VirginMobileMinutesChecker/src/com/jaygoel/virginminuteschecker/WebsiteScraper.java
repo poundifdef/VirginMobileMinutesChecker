@@ -82,8 +82,8 @@ public class WebsiteScraper {
 	    	    connection.disconnect();
 		   } catch (Exception e) {
 			   e.printStackTrace();
-			   System.err.println("exception 83");
-			   System.err.println(e.getMessage());
+			   //System.err.println("exception 83");
+			   //System.err.println(e.getMessage());
 			   //System.err.println(line);
 			   return line;
 			   //rc.put("isValid", "FALSE");
