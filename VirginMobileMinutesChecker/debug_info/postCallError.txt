@@ -1,0 +1,68 @@
+D/PhoneUtils( 1957): playCallEndTone : excuted
+D/NotificationMgr( 1957): cancelCallInProgressNotification()...
+D/NotificationMgr( 1957): cancelCallInProgressNotification: 17301636
+D/NotificationMgr( 1957): cancelInCall()...
+D/CallNotifier( 1957): - callLogType: 2, UserData: 
+D/CallNotifier( 1957): name: null
+D/CallNotifier( 1957): phoneNumber: 888-322-1122
+D/CallNotifier( 1957): cnapName: null
+D/CallNotifier( 1957): numberPresentation: 1
+D/CallNotifier( 1957): namePresentation: 1
+D/CallNotifier( 1957): contactExits: false
+D/CallNotifier( 1957): phoneLabel: null
+D/CallNotifier( 1957): numberType: 0
+D/CallNotifier( 1957): numberLabel: null
+D/CallNotifier( 1957): photoResource: 0
+D/CallNotifier( 1957): person_id: 0
+D/CallNotifier( 1957): needUpdate: false
+D/CallNotifier( 1957): contactRefUri: null
+D/CallNotifier( 1957): contactRingtoneUri: null
+D/CallNotifier( 1957): shouldSendToVoicemail: false
+D/CallNotifier( 1957): cachedPhoto: null
+D/CallNotifier( 1957): isCachedPhotoCurrent: true
+D/CallNotifier( 1957): emergency: false
+D/CallNotifier( 1957): voicemail false
+D/CallNotifier( 1957): SnsStatus null
+D/CallNotifier( 1957): SnsAccount -1
+D/PhoneUtils( 1957): modifyForSpecialCnapCases: initially, number=888-322-1122, presentation=1
+D/PhoneUtils( 1957): checkCnapSpecialCases, normal str. number: 888-322-1122
+D/PhoneUtils( 1957): modifyForSpecialCnapCases: returning number string=888-322-1122
+D/CallNotifier( 1957): getLogNumber: 888-322-1122
+D/CallNotifier( 1957): - Updating call log : Voice call
+D/AudioHardwareALSA( 1890): [*] onRawReqComplete(): datalen(-1)
+I/AudioPolicyManager( 1890): setOutputDevice() output 1 device 1 delayMs 372
+I/AudioPolicyManager( 1890): setOutputDevice() setting same device 1 for output 1
+W/ActivityManager( 1916): Activity pause timeout for HistoryRecord{45b72768 com.android.phone/.InCallScreen}
+I/LogsProvider( 2043): insert data - logtype : 100 number : 888-322-1122 contactid : 0 name : null messageid : null
+I/NotificationService( 1916): enqueueToast pkg=com.jaygoel.virginminuteschecker callback=android.app.ITransientNotification$Stub$Proxy@45bfd368 duration=0
+I/LogsProvider( 2043): delete : _id in (select _id from logs where logtype=100 OR logtype=500 ORDER BY date DESC limit -1 offset 500)
+W/System.err( 3440): java.net.SocketException: Network unreachable
+W/System.err( 3440): 	at org.apache.harmony.luni.platform.OSNetworkSystem.connectSocketImpl(Native Method)
+W/System.err( 3440): 	at org.apache.harmony.luni.platform.OSNetworkSystem.connect(OSNetworkSystem.java:114)
+W/System.err( 3440): 	at org.apache.harmony.luni.net.PlainSocketImpl.connect(PlainSocketImpl.java:245)
+W/System.err( 3440): 	at org.apache.harmony.luni.net.PlainSocketImpl.connect(PlainSocketImpl.java:535)
+W/System.err( 3440): 	at java.net.Socket.connect(Socket.java:1071)
+W/System.err( 3440): 	at org.apache.harmony.luni.internal.net.www.protocol.http.HttpConnection.<init>(HttpConnection.java:62)
+W/System.err( 3440): 	at org.apache.harmony.luni.internal.net.www.protocol.http.HttpConnectionManager$ConnectionPool.getHttpConnection(HttpConnectionManager.java:145)
+W/System.err( 3440): 	at org.apache.harmony.luni.internal.net.www.protocol.http.HttpConnectionManager.getConnection(HttpConnectionManager.java:67)
+W/System.err( 3440): 	at org.apache.harmony.luni.internal.net.www.protocol.http.HttpURLConnection.getHTTPConnection(HttpURLConnection.java:821)
+W/System.err( 3440): 	at org.apache.harmony.luni.internal.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:807)
+W/System.err( 3440): 	at org.apache.harmony.luni.internal.net.www.protocol.https.HttpsURLConnection$HttpsEngine.connect(HttpsURLConnection.java:395)
+W/System.err( 3440): 	at org.apache.harmony.luni.internal.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1150)
+W/System.err( 3440): 	at org.apache.harmony.luni.internal.net.www.protocol.https.HttpsURLConnection.getOutputStream(HttpsURLConnection.java:262)
+W/System.err( 3440): 	at com.jaygoel.virginminuteschecker.WebsiteScraper.fetchScreen(WebsiteScraper.java:62)
+W/System.err( 3440): 	at com.jaygoel.virginminuteschecker.WebsiteScraper.getInfo(WebsiteScraper.java:204)
+W/System.err( 3440): 	at com.jaygoel.virginminuteschecker.ViewMinutes.run(ViewMinutes.java:144)
+W/System.err( 3440): 	at java.lang.Thread.run(Thread.java:1096)
+I/ActivityManager( 1916): Displayed activity com.jaygoel.virginminuteschecker/.ViewMinutes: 412 ms (total 18298 ms)
+I/LogsProvider( 2043): delete time : 470
+D/CallNotifier( 1957): - still showing in-call screen; not releasing wake locks.
+D/PhoneApp( 1957): updateProximitySensorMode: state = IDLE
+D/PowerManagerService( 1916): disableProximityLockLocked
+E/SensorManager( 1916): unregisterListener: com.android.server.PowerManagerService$8@457a77d0
+D/Sensors ( 1916): sensors_control_activate open_akm fd = 114
+D/Sensors ( 1916): close proximity sensor
+D/Sensors ( 1916): sensors=00000002, real=00000002
+D/DTMFTwelveKeyDialer( 1957): clearDigits()...
+D/InCallScreen( 1957): - onDisconnect: delayed bailout...
+
