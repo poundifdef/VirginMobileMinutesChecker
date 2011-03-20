@@ -20,7 +20,6 @@ public final class R {
         public static final int minutes=0x7f070002;
         public static final int password=0x7f070001;
         public static final int refresh=0x7f070006;
-        public static final int settings=0x7f070007;
         public static final int username=0x7f070000;
         public static final int widget_textview=0x7f070004;
     }

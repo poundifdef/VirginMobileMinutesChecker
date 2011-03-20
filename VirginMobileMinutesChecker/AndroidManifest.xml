@@ -14,6 +14,7 @@
       </intent-filter>
     </activity>
 
+<!--
 
     <receiver android:name="com.drfloob.VirginMobileMinutesChecker.call_trigger.CallEventReceiver">
       <intent-filter>
@@ -38,7 +39,7 @@
 	     android:label="@string/service_name" />
     
     <activity android:name=".Preferences" />
-
+-->
   </application>
   <uses-sdk android:minSdkVersion="7" />
 
