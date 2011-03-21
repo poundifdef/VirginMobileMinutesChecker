@@ -131,10 +131,10 @@ public class ViewMinutes extends Activity implements Runnable {
 	    case R.id.refresh:
 		doInfo();
 		return true;
-	    case R.id.settings:
-		Intent i2 = new Intent(this, Preferences.class);
-		startActivity(i2);
-		return true;
+	    //case R.id.settings:
+		//Intent i2 = new Intent(this, Preferences.class);
+		//startActivity(i2);
+		//return true;
 	    default:
 		return super.onOptionsItemSelected(item);
 	    }
