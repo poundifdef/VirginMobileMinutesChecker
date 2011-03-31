@@ -153,17 +153,17 @@ public class WebsiteScraper {
 
    	    rc.put("Current Balance", line.substring(start + srch.length(), end));
    	    
-   	    //srch = "<h3>Min. Amount Due</h3><p>";
-   	    //start = line.indexOf(srch);
-   	    //end = line.indexOf("</p>", start);
+   	    srch = "<h3>Min. Amount Due</h3><p>";
+   	    start = line.indexOf(srch);
+   	    end = line.indexOf("</p>", start);
    	    
-//   	    virginInfo.append("Amount Due: ");
-//   	    virginInfo.append(line.substring(start + srch.length(), end));
-//   	    virginInfo.append("\n");
+   	    //virginInfo.append("Amount Due: ");
+   	    //virginInfo.append(line.substring(start + srch.length(), end));
+   	    //virginInfo.append("\n");
 
-   	    //if ((start > 0) && (end > 0)) {
-   	   // 	rc.put("Amount Due", line.substring(start + srch.length(), end));
-   	   // }
+   	    if ((start > 0) && (end > 0)) {
+   	    	rc.put("Amount Due", line.substring(start + srch.length(), end));
+   	    }
    	   // srch = "<h3>Date Due</h3><p>";
    	   // start = line.indexOf(srch);
    	   // end = line.indexOf("</p>", start);
@@ -186,6 +186,14 @@ public class WebsiteScraper {
   	    
    	    if ((start > 0) && (end > 0)) {
    	   	    rc.put("Charge Deducted", line.substring(start + srch.length(), end));
+   	    }
+
+   	    srch = "<h3>You will be charged on</h3><p>";
+   	    start = line.indexOf(srch);
+   	    end = line.indexOf("</p>", start);
+   	    
+   	    if ((start > 0) && (end > 0)) {
+   	   	    rc.put("Charged on", line.substring(start + srch.length(), end));
    	    }
    	
 	   //	   rc.put("Charged on", "02/05/11");
