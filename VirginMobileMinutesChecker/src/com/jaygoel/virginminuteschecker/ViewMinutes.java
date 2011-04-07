@@ -12,225 +12,240 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TableRow.LayoutParams;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
-import android.util.Log;
 
+public class ViewMinutes extends Activity implements Runnable
+{
 
-public class ViewMinutes extends Activity implements Runnable {
+    String PREFS_NAME = "loginInfo";
+    ProgressDialog pd;
+    Map<String, String> rc = null;
+    // private TextView tv;
+    Activity me = this;
 
-	String PREFS_NAME = "loginInfo"; 
-	ProgressDialog pd;
-	Map<String, String> rc = null;
-	//private TextView tv;
-	Activity me = this;
-
-	String username, password;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-
-		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.view_minutes);
-		setTitle(getString(R.string.viewTitle));
-
-		//tv = (TextView) this.findViewById(R.id.minutes);
-		setLoginInfo();
-		
-		if (username.equals("u") || password.equals("p")) {
-			Intent i = new Intent(this, MinutesChecker.class);
-			startActivityForResult(i, 1);
-			// startActivity(i);
-		} else {
-		    gatherAndDisplay();
-		}
-
-	}
-
-    private void setLoginInfo() {
-	SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-	username = settings.getString("username", "u");
-	password = settings.getString("password", "p");
-    }
-
+    String username, password;
 
     @Override
-    protected void onActivityResult(int reqCode, int resultCode, Intent intent) {
-	Log.d("DEBUG", "in onActivityResult");
-	if (reqCode == 1 && resultCode != RESULT_CANCELED) {
-	    Log.d("DEBUG", "login activity succeeded, continuing");
+    protected void onCreate(final Bundle savedInstanceState)
+    {
 
-	    setLoginInfo();
-	    gatherAndDisplay();
-	} else {
-	    Log.d("DEBUG", "login activity failed, repeating");
-	    Log.d("DEBUG", Integer.toString(reqCode));
-	    Log.d("DEBUG", Integer.toString(resultCode));
+        super.onCreate(savedInstanceState);
 
-	    showErrorMessageAndRequery();
-	}
+        setContentView(R.layout.view_minutes);
+        setTitle(getString(R.string.viewTitle));
+
+        // tv = (TextView) this.findViewById(R.id.minutes);
+        setLoginInfo();
+
+        if (username.equals("u") || password.equals("p"))
+        {
+            Intent i = new Intent(this, MinutesChecker.class);
+            startActivityForResult(i, 1);
+            // startActivity(i);
+        }
+        else
+        {
+            gatherAndDisplay();
+        }
+
     }
 
-
-    private void gatherAndDisplay() {
-	pd = new ProgressDialog(ViewMinutes.this);
-	pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-	pd.setMessage(getString(R.string.loadingMessage));
-	pd.setIndeterminate(true);
-	pd.setCancelable(false);
-	
-	doInfo();
+    private void setLoginInfo()
+    {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        username = settings.getString("username", "u");
+        password = settings.getString("password", "p");
     }
 
-	private void doInfo() {
-		pd.show();
+    @Override
+    protected void onActivityResult(final int reqCode, final int resultCode, final Intent intent)
+    {
+        Log.d("DEBUG", "in onActivityResult");
+        if (reqCode == 1 && resultCode != RESULT_CANCELED)
+        {
+            Log.d("DEBUG", "login activity succeeded, continuing");
 
-		Thread t = new Thread(this);
-		t.start();
-	}
+            setLoginInfo();
+            gatherAndDisplay();
+        }
+        else
+        {
+            Log.d("DEBUG", "login activity failed, repeating");
+            Log.d("DEBUG", Integer.toString(reqCode));
+            Log.d("DEBUG", Integer.toString(resultCode));
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
-		return true;
-	}
+            showErrorMessageAndRequery();
+        }
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle item selection
-	    switch (item.getItemId()) {
-	    case R.id.logout:
-		TableLayout tl = (TableLayout) findViewById(R.id.minutes);
-		tl.removeAllViews();
+    private void gatherAndDisplay()
+    {
+        pd = new ProgressDialog(ViewMinutes.this);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setMessage(getString(R.string.loadingMessage));
+        pd.setIndeterminate(true);
+        pd.setCancelable(false);
 
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
+        doInfo();
+    }
 
-		editor.clear();
+    private void doInfo()
+    {
+        pd.show();
 
-		// Commit the edits!
-		editor.commit();
+        Thread t = new Thread(this);
+        t.start();
+    }
 
-		SharedPreferences cache = getSharedPreferences("cache", 0);
-		SharedPreferences.Editor ceditor = cache.edit();
-		ceditor.clear();
-		ceditor.commit();
-			
-			
-		Intent i = new Intent(this, MinutesChecker.class);
-		startActivityForResult(i, 1);
-		return true;
-	    case R.id.refresh:
-		doInfo();
-		return true;
-	    //case R.id.settings:
-		//Intent i2 = new Intent(this, Preferences.class);
-		//startActivity(i2);
-		//return true;
-	    default:
-		return super.onOptionsItemSelected(item);
-	    }
-	}
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
 
-	public void run() {
-		rc = WebsiteScraper.getInfo(username, password);
-		handler.sendEmptyMessage(0);
-	}
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item)
+    {
+        // Handle item selection
+        switch (item.getItemId())
+        {
+            case R.id.logout:
+                TableLayout tl = (TableLayout) findViewById(R.id.minutes);
+                tl.removeAllViews();
 
-	private Handler handler = new Handler() {
-		public void handleMessage(Message msg) {
-			pd.dismiss();
-			if (rc.get("isValid").equals("TRUE")) {
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
 
+                editor.clear();
 
-			    // cache minutes used
-			    SharedPreferences cache = getSharedPreferences("cache", 0);
-			    SharedPreferences.Editor ceditor = cache.edit();
-			    ceditor.putString("minutes", rc.get("Minutes Used"));
-			    ceditor.commit();
-			    
-			    
-				
-		        TableLayout tl = (TableLayout) findViewById(R.id.minutes);
-			tl.removeAllViews();
-		        
-		        int current = 0;
-			    for (Map.Entry<String, String> entry : rc.entrySet()) {
-			    	
-			    	if (entry.getKey().equals("isValid"))
-			    		continue;
-			    	
-			        current++;
-			    	
-			           TableRow tr = new TableRow(me);
-			            tr.setId(100+current);
-			            tr.setLayoutParams(new LayoutParams(
-			                    LayoutParams.FILL_PARENT,
-			                    LayoutParams.WRAP_CONTENT));   
+                // Commit the edits!
+                editor.commit();
 
-			            // Create a TextView to show the name of the property
-			            TextView labelTV = new TextView(me);
-			            labelTV.setId(200+current);
-			            labelTV.setText(entry.getKey());
-			            labelTV.setTextColor(Color.LTGRAY);
-			            labelTV.setTextSize(TypedValue.COMPLEX_UNIT_PT ,7);	
-			            labelTV.setLayoutParams(new LayoutParams(
-			                    LayoutParams.FILL_PARENT,
-			                    LayoutParams.WRAP_CONTENT));
-			            tr.addView(labelTV);
+                SharedPreferences cache = getSharedPreferences("cache", 0);
+                SharedPreferences.Editor ceditor = cache.edit();
+                ceditor.clear();
+                ceditor.commit();
 
-			            // Create a TextView to show that property's value
-			            TextView valueTV = new TextView(me);
-			            valueTV.setId(current);
-			            valueTV.setText(entry.getValue());
-			            valueTV.setTextColor(Color.WHITE);
-			            valueTV.setTextSize(TypedValue.COMPLEX_UNIT_PT ,9);
-			            valueTV.setLayoutParams(new LayoutParams(
-			                    LayoutParams.FILL_PARENT,
-			                    LayoutParams.WRAP_CONTENT));
-			            tr.addView(valueTV);
+                Intent i = new Intent(this, MinutesChecker.class);
+                startActivityForResult(i, 1);
+                return true;
+            case R.id.refresh:
+                doInfo();
+                return true;
+                // case R.id.settings:
+                // Intent i2 = new Intent(this, Preferences.class);
+                // startActivity(i2);
+                // return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-			            // Add the TableRow to the TableLayout
-			            tl.addView(tr, new TableLayout.LayoutParams(
-			                    LayoutParams.FILL_PARENT,
-			                    LayoutParams.WRAP_CONTENT));
-			        
-			    }
-			    
-				//tv.setText(rc.get("info"));
-			} else {
-			    showErrorMessageAndRequery();
-			}
-		}
-	};
+    @Override
+    public void run()
+    {
+        rc = WebsiteScraper.getInfo(username, password);
+        handler.sendEmptyMessage(0);
+    }
 
-    private void showErrorMessageAndRequery() {
-	AlertDialog.Builder builder = new AlertDialog.Builder(me);
-	builder.setMessage(getString(R.string.loginFail))
-	    .setCancelable(false)
-	    .setNeutralButton("Ok.",
-			      new DialogInterface.OnClickListener() {
-				  public void onClick(DialogInterface dialog,
-						      int id) {
-				      Intent i = new Intent(me,
-							    MinutesChecker.class);
-				      startActivityForResult(i, 1);
-				      //startActivity(i);
+    private final Handler handler = new Handler()
+    {
+        @Override
+        public void handleMessage(final Message msg)
+        {
+            pd.dismiss();
+            if (rc.get("isValid").equals("TRUE"))
+            {
 
-				  }
-			      });
+                // cache minutes used
+                SharedPreferences cache = getSharedPreferences("cache", 0);
+                SharedPreferences.Editor ceditor = cache.edit();
+                ceditor.putString("minutes", rc.get("Minutes Used"));
+                ceditor.commit();
 
-	AlertDialog alert = builder.create();
+                TableLayout tl = (TableLayout) findViewById(R.id.minutes);
+                tl.removeAllViews();
 
-	alert.show();
+                int current = 0;
+                for (Map.Entry<String, String> entry : rc.entrySet())
+                {
+
+                    if (entry.getKey().equals("isValid"))
+                    {
+                        continue;
+                    }
+
+                    current++;
+
+                    TableRow tr = new TableRow(me);
+                    tr.setId(100 + current);
+                    tr.setLayoutParams(new LayoutParams(
+                        LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+
+                    // Create a TextView to show the name of the property
+                    TextView labelTV = new TextView(me);
+                    labelTV.setId(200 + current);
+                    labelTV.setText(entry.getKey());
+                    labelTV.setTextColor(Color.LTGRAY);
+                    labelTV.setTextSize(TypedValue.COMPLEX_UNIT_PT, 7);
+                    labelTV.setLayoutParams(new LayoutParams(
+                        LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                    tr.addView(labelTV);
+
+                    // Create a TextView to show that property's value
+                    TextView valueTV = new TextView(me);
+                    valueTV.setId(current);
+                    valueTV.setText(entry.getValue());
+                    valueTV.setTextColor(Color.WHITE);
+                    valueTV.setTextSize(TypedValue.COMPLEX_UNIT_PT, 9);
+                    valueTV.setLayoutParams(new LayoutParams(
+                        LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                    tr.addView(valueTV);
+
+                    // Add the TableRow to the TableLayout
+                    tl.addView(tr, new TableLayout.LayoutParams(
+                        LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+
+                }
+
+                // tv.setText(rc.get("info"));
+            }
+            else
+            {
+                showErrorMessageAndRequery();
+            }
+        }
+    };
+
+    private void showErrorMessageAndRequery()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(me);
+        builder.setMessage(getString(R.string.loginFail)).setCancelable(false)
+            .setNeutralButton("Ok.", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(final DialogInterface dialog, final int id)
+                {
+                    Intent i = new Intent(me, MinutesChecker.class);
+                    startActivityForResult(i, 1);
+                    // startActivity(i);
+
+                }
+            });
+
+        AlertDialog alert = builder.create();
+
+        alert.show();
 
     }
 }

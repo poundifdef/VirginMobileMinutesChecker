@@ -8,10 +8,6 @@
     <activity android:name=".MinutesChecker" android:label="@string/signinTitle" />
 
     <activity android:name=".ViewMinutes" android:configChanges="orientation|keyboardHidden">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
     </activity>
 
 <!--
@@ -40,6 +36,14 @@
     
     <activity android:name=".Preferences" />
 -->
+    <activity android:name="com.baker.vm.MultipleAccountsActivity" android:label="@string/app_name">
+    
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      
+      </activity>
   </application>
   <uses-sdk android:minSdkVersion="7" />
 

@@ -24,5 +24,13 @@
 
     <string name="outgoingCallPrefTitle">Outgoing Call</string>
     <string name="outgoingCallPrefSummary">Show minutes used when making a call</string>
+    <string name="phoneNumberLabel">Phone Number:</string>
+    <string name="passwordLabel">Password (vKey or PIN):</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="currentBalance">Current Balance:</string>
+    <string name="minutesUsed">Minutes Used:</string>
+    <string name="chargedOn">Charged On:</string>
+    <string name="monthlyCharge">Monthly Charge:</string>
 
 </resources>
