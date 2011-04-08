@@ -12,6 +12,7 @@ public final class R {
     }
     public static final class color {
         public static final int gray=0x7f050001;
+        public static final int red=0x7f050002;
         public static final int white=0x7f050000;
     }
     public static final class drawable {
@@ -48,6 +49,7 @@ public final class R {
         public static final int menu=0x7f070000;
     }
     public static final class string {
+        public static final int addAccountDialogTitle=0x7f060017;
         public static final int app_name=0x7f060000;
         public static final int cancel=0x7f060012;
         public static final int chargedOn=0x7f060015;

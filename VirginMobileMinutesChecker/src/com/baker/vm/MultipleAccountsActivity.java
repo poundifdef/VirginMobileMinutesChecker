@@ -6,27 +6,25 @@ package com.baker.vm;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RadioGroup.LayoutParams;
 import android.widget.TextView;
 
-import com.jaygoel.virginminuteschecker.IVMCScraper;
 import com.jaygoel.virginminuteschecker.R;
-import com.jaygoel.virginminuteschecker.ReferenceScraper;
-import com.jaygoel.virginminuteschecker.WebsiteScraper;
 
 /**
  * @author baker
@@ -38,18 +36,7 @@ public final class MultipleAccountsActivity extends Activity
     private static final String TEXTVIEW = "textview";
     private static final String TABLE = "table";
 
-    private static final int DEFAULT_ACCOUNT_ID = 0;
-    private static final String TAG = "MultipleAccounts";
-
-    private static String getUserKey(final int accountNumber)
-    {
-        return "Acct" + accountNumber + "PhoneNumber";
-    }
-    private static String getPasswordKey(final int accountNumber)
-    {
-        return "Acct" + accountNumber + "Password";
-    }
-
+    private final List<UsernamePassword> model = new ArrayList<UsernamePassword>();
     private final Hashtable<String, View> hash = new Hashtable<String, View>();
 
     @Override
@@ -57,47 +44,75 @@ public final class MultipleAccountsActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multipleaccounts);
+    }
 
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
 
-        UsernamePassword acct = new UsernamePassword(
-            prefs.getString(getUserKey(DEFAULT_ACCOUNT_ID), null),
-            prefs.getString(getPasswordKey(DEFAULT_ACCOUNT_ID), null));
+        // get all stored phone numbers / passwords
+		// (and layout views)
+        updateModelFromPreferences();
 
-        if (acct.user == null || acct.user.length() == 0)
+        // if they have no phone numbers then pop up a new account dialog
+        if (model.size() == 0)
         {
             // prompt for initial phone number / password
-            acct = promptForAuthentication(DEFAULT_ACCOUNT_ID);
-        }
-        else if (acct.pass == null || acct.pass.length() == 0)
-        {
-            // prompt for initial password (fill in phone number?)
-            acct = promptForAuthentication(acct.user, DEFAULT_ACCOUNT_ID);
+            showAddAccountDialog(getUsersTelephoneNumber());
         }
         else
         {
-            initializeAppFromPreferences();
+            new FetchAccountTask(this).execute(model.toArray(new UsernamePassword[0]));
         }
 
-    }
+	}
 
-    @Override
+	@Override
     public boolean onCreateOptionsMenu(final Menu menu)
     {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private UsernamePassword promptForAuthentication(final int accountIdNumber)
-    {
-        return promptForAuthentication(null, accountIdNumber);
-    }
+    private String getUsersTelephoneNumber()
+	{
+    	final TelephonyManager tMgr =
+    		(TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
 
-    private UsernamePassword promptForAuthentication(final String user,
-        final int accountIdNumber)
+    	final String number = tMgr.getLine1Number();
+		return number == null ? "" : number;
+	}
+
+	private void updateModelFromPreferences()
+	{
+        model.clear();
+        final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+
+        final List<String> phoneNumbers = new ArrayList<String>();
+        final Map<String, ?> map = prefs.getAll();
+
+        for (final String key : map.keySet())
+        {
+        	if (isUserPref(key))
+        	{
+        		phoneNumbers.add(map.get(key).toString());
+        	}
+        }
+
+        for (final String phoneNumber : phoneNumbers)
+        {
+        	model.add(new UsernamePassword(phoneNumber,
+        			prefs.getString(getPrefPassKey(phoneNumber), null)));
+        }
+
+        doInitialLayout();
+	}
+
+    private void showAddAccountDialog(final String user)
     {
         final Dialog dialog = new Dialog(this);
 
-        dialog.setTitle("Account information");
+        dialog.setTitle(R.string.addAccountDialogTitle);
         dialog.setContentView(R.layout.account_dialog);
 
         if (user != null)
@@ -105,22 +120,20 @@ public final class MultipleAccountsActivity extends Activity
             ((EditText) dialog.findViewById(R.id.phoneNumberInputView)).setText(user);
         }
 
-        final UsernamePassword auth = new UsernamePassword(null, null);
-
         dialog.findViewById(R.id.signInButton).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(final View v)
             {
-                String phoneNumber = ((EditText) dialog.findViewById(R.id.phoneNumberInputView)).getText().toString();
-                String pass = ((EditText) dialog.findViewById(R.id.passwordInputView)).getText().toString();
+                final String phoneNumber = ((EditText) dialog.findViewById(R.id.phoneNumberInputView)).getText().toString();
+                final String pass = ((EditText) dialog.findViewById(R.id.passwordInputView)).getText().toString();
 
-                updatePreferences(getPreferences(MODE_PRIVATE),
-                    getUserKey(accountIdNumber),
-                    getPasswordKey(accountIdNumber),
-                    new UsernamePassword(phoneNumber, pass));
+                final UsernamePassword auth = new UsernamePassword(phoneNumber, pass);
+                updatePreferences(auth);
 
-                initializeAppFromPreferences();
+                updateLayout(auth);
+
+                new FetchAccountTask(MultipleAccountsActivity.this).execute(auth);
 
                 dialog.dismiss();
             }
@@ -136,177 +149,102 @@ public final class MultipleAccountsActivity extends Activity
         });
 
         dialog.show();
-
-        return auth;
     }
 
-    private void initializeAppFromPreferences()
+    private void doInitialLayout()
     {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        final LinearLayout v = (LinearLayout) findViewById(R.id.accountView);
 
-        UsernamePassword acct = new UsernamePassword(
-            prefs.getString(getUserKey(DEFAULT_ACCOUNT_ID), null),
-            prefs.getString(getPasswordKey(DEFAULT_ACCOUNT_ID), null));
-
-        List<UsernamePassword> auth = new ArrayList<UsernamePassword>();
-        auth.add(acct);
-
-        String user = null;
-        int i = 1;
-        do
+        for (final UsernamePassword auth : model)
         {
-            user = prefs.getString(getUserKey(i), null);
+        	if (!hash.containsKey(getHashKey(auth.user, TEXTVIEW)))
+        	{
+                final LinearLayout vert = new LinearLayout(getApplicationContext());
+                vert.setOrientation(LinearLayout.VERTICAL);
+                vert.setPadding(0, 10, 0, 0);
 
-            if (user != null)
-            {
-                String pass = prefs.getString(getPasswordKey(i), null);
-                auth.add(new UsernamePassword(user, pass));
-            }
+                vert.addView(createTextView(auth.user));
 
-            ++i;
+                final LinearLayout table = new LinearLayout(getApplicationContext());
+                table.setOrientation(LinearLayout.VERTICAL);
+                hash.put(getHashKey(auth.user, TABLE), table);
 
-        } while (user != null);
+                updateLayout(auth);
 
-        initLayout(auth);
+                vert.addView(table);
 
-        new AsyncTask<UsernamePassword, Integer, List<VMAccount>>()
-        {
-            @Override
-            protected void onCancelled()
-            {
-                super.onCancelled();
+                v.addView(vert);
+        	}
+        }
 
-                findViewById(R.id.progress).setVisibility(View.GONE);
-            }
-
-            @Override
-            protected void onPreExecute()
-            {
-                super.onPreExecute();
-
-                findViewById(R.id.progress).setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected void onPostExecute(final List<VMAccount> result)
-            {
-                super.onPostExecute(result);
-
-                MultipleAccountsActivity.this.setLayout(result);
-                findViewById(R.id.progress).setVisibility(View.GONE);
-            }
-
-            @Override
-            protected void onProgressUpdate(final Integer... values)
-            {
-                super.onProgressUpdate(values);
-
-                if (values != null && values.length > 0)
-                {
-                    ProgressBar bar = (ProgressBar) findViewById(R.id.progress);
-                    bar.setProgress(values[0]);
-                }
-            }
-
-            @Override
-            protected List<VMAccount> doInBackground(final UsernamePassword... params)
-            {
-                ((ProgressBar) findViewById(R.id.progress)).setMax(100);
-
-                IVMCScraper scraper= new ReferenceScraper();
-
-                List<VMAccount> accts = new ArrayList<VMAccount>();
-                int index = 0;
-                for (UsernamePassword a : params)
-                {
-                    String html= WebsiteScraper.fetchScreen(a.user, a.pass);
-                    Log.d(TAG, html);
-
-                    if (scraper.isValid(html))
-                    {
-                        Log.d(TAG, "valid");
-                        accts.add(new VMAccount(html, scraper));
-                    }
-                    else
-                    {
-                        Log.d(TAG, "invalid: " + a.toString());
-                        accts.add(VMAccount.createInvalid(a.user));
-                    }
-
-                    publishProgress((int) ((index++ / (float) params.length) * 100));
-                }
-                return accts;
-            }
-        }.execute(auth.toArray(new UsernamePassword[0]));
     }
 
-    private void initLayout(final List<UsernamePassword> auths)
+    public void updateLayout(final UsernamePassword auth)
     {
-        hash.clear();
-        LinearLayout v = (LinearLayout) findViewById(R.id.accountView);
+        final TextView phoneNumber =
+            (TextView) hash.get(getHashKey(auth.user, TEXTVIEW));
+        phoneNumber.setText(auth.user);
+        phoneNumber.setTextColor(getResources().getColor(R.color.gray));
 
-        for (UsernamePassword auth : auths)
+        final LinearLayout table =
+            (LinearLayout) hash.get(getHashKey(auth.user, TABLE));
+        table.removeAllViews();
+
+        if (auth.pass == null || auth.pass.length() == 0)
         {
-            LinearLayout vert = new LinearLayout(getApplicationContext());
-            vert.setOrientation(LinearLayout.VERTICAL);
-
-            vert.addView(createTextView(auth.user));
-
-            LinearLayout table = new LinearLayout(getApplicationContext());
-            table.setOrientation(LinearLayout.VERTICAL);
+        	addRow(table, createSignInButton(auth.user));
+        }
+        else
+        {
             table.setPadding(20, 0, 0, 0);
-            hash.put(createKey(auth.user, TABLE), table);
 
             addRow(table, R.string.currentBalance, "");
             addRow(table, R.string.minutesUsed, "");
             addRow(table, R.string.chargedOn, "");
             addRow(table, R.string.monthlyCharge, "");
-
-            vert.addView(table);
-
-            v.addView(vert);
         }
-
     }
 
-    private void setLayout(final List<VMAccount> accounts)
+    public void updateLayout(final List<VMAccount> accounts)
     {
-        int i = 0;
-        for (VMAccount acct : accounts)
+        for (final VMAccount acct : accounts)
         {
-            TextView phoneNumber =
-                (TextView) hash.get(createKey(acct.getNumber(), TEXTVIEW));
-            phoneNumber.setText(acct.getNumber());
-            phoneNumber.setTextColor(getResources().getColor(R.color.white));
+        	updateLayout(acct);
+        }
+    }
 
-            LinearLayout table =
-                (LinearLayout) hash.get(createKey(acct.getNumber(), TABLE));
-            table.removeAllViews();
+    public void updateLayout(final VMAccount acct)
+    {
+        final TextView phoneNumber =
+        	(TextView) hash.get(getHashKey(acct.getNumber(), TEXTVIEW));
+        phoneNumber.setText(acct.getNumber());
+        phoneNumber.setTextColor(getResources().getColor(R.color.white));
 
-            if (acct.isValid())
-            {
-                addRow(table, R.string.currentBalance, acct.getBalance());
-                addRow(table, R.string.minutesUsed, acct.getMinutesUsed());
-                addRow(table, R.string.chargedOn, acct.getChargedOn());
-                addRow(table, R.string.monthlyCharge, acct.getMonthlyCharge());
-            }
-            else
-            {
-                addRow(table, -1, getString(R.string.loginFail));
-                Editor editor = getPreferences(MODE_PRIVATE).edit();
-                editor.remove(getPasswordKey(i));
-                editor.commit();
-            }
+        final LinearLayout table =
+        	(LinearLayout) hash.get(getHashKey(acct.getNumber(), TABLE));
+        table.removeAllViews();
 
-            ++i;
+        if (acct.isValid())
+        {
+        	addRow(table, R.string.currentBalance, acct.getBalance());
+        	addRow(table, R.string.minutesUsed, acct.getMinutesUsed());
+        	addRow(table, R.string.chargedOn, acct.getChargedOn());
+        	addRow(table, R.string.monthlyCharge, acct.getMonthlyCharge());
+        }
+        else
+        {
+        	addRow(table, createSignInButton(acct.getNumber()), getString(R.string.loginFail));
+        	final Editor editor = getPreferences(MODE_PRIVATE).edit();
+        	editor.remove(getPrefPassKey(acct.getNumber()));
+        	editor.commit();
         }
     }
 
     private void addRow(final LinearLayout table,
-        final int labelResId,
-        final String value)
+    					final int labelResId,
+    					final String value)
     {
-        TextView lbl = new TextView(this);
+        final TextView lbl = new TextView(this);
         if (labelResId != -1)
         {
             lbl.setText(labelResId);
@@ -319,28 +257,67 @@ public final class MultipleAccountsActivity extends Activity
         lbl.setTextSize(12F);
         lbl.setMinimumWidth(175);
 
-        TextView val = new TextView(this);
+        final TextView val = new TextView(this);
         val.setText(value);
         val.setTextColor(getResources().getColor(R.color.white));
 
-        LinearLayout row = new LinearLayout(this);
+        final LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.addView(lbl, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         row.addView(val, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1F));
 
         table.addView(row, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
     }
+
+    private void addRow(final LinearLayout table,
+    					final Button button)
+    {
+    	button.setPadding(20, 5, 20, 5);
+        table.addView(button, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+    }
+
+    private void addRow(final LinearLayout table,
+    					final Button button,
+    					final String message)
+    {
+        final TextView lbl = new TextView(getApplicationContext());
+        lbl.setText(message);
+        lbl.setTextColor(getResources().getColor(R.color.red));
+        lbl.setTextSize(12F);
+        lbl.setPadding(20, 5, 20, 5);
+
+        button.setPadding(20, 5, 20, 5);
+
+        table.addView(lbl, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        table.addView(button, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+    }
+
     private View createTextView(final String user)
     {
-        TextView text = new TextView(this);
+        final TextView text = new TextView(this);
         text.setText(user);
-        hash.put(createKey(user, TEXTVIEW), text);
+        hash.put(getHashKey(user, TEXTVIEW), text);
         text.setTextColor(getResources().getColor(R.color.gray));
 
         return text;
     }
 
-    private String createKey(final String user, final String type)
+    private Button createSignInButton(final String phoneNumber)
+    {
+    	final Button signIn = new Button(getApplicationContext());
+    	signIn.setText(R.string.login);
+    	signIn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(final View v)
+			{
+				showAddAccountDialog(phoneNumber);
+			}
+		});
+
+    	return signIn;
+    }
+
+    private String getHashKey(final String user, final String type)
     {
         return digits(user) + "|" + type;
     }
@@ -350,32 +327,49 @@ public final class MultipleAccountsActivity extends Activity
         return user.replaceAll("\\D", "");
     }
 
-    private void updatePreferences(final SharedPreferences prefs,
-                                   final String iDefaultUserKey,
-                                   final String iDefaultPasswordKey,
-                                   final UsernamePassword acct)
+    private void updatePreferences(final UsernamePassword acct)
     {
-        Editor editor = prefs.edit();
-        editor.putString(iDefaultUserKey, acct.user);
-        editor.putString(iDefaultPasswordKey, acct.pass);
+		final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		final Editor editor = prefs.edit();
+        editor.putString(getPrefUserKey(acct), acct.user);
+        editor.putString(getPrefPassKey(acct), acct.pass);
         editor.commit();
+
+    	updateModelFromPreferences();
     }
 
-    private static class UsernamePassword
+    private static final String USER_PREFIX = "USER";
+    private static final String PASS_PREFIX = "PASS";
+
+    private boolean isUserPref(final String key)
     {
-        private UsernamePassword(final String iUser, final String iPass)
-        {
-            user = iUser;
-            pass = iPass;
-        }
-
-        private final String user;
-        private final String pass;
-
-        @Override
-        public String toString()
-        {
-            return user + " (" + pass + ")";
-        }
+    	if (key.startsWith(USER_PREFIX))
+    	{
+    		return true;
+    	}
+    	else
+    	{
+    		return false;
+    	}
     }
+
+	private String getPrefUserKey(final UsernamePassword acct)
+	{
+		return getPrefKey(USER_PREFIX, acct.user);
+	}
+
+	private String getPrefPassKey(final UsernamePassword acct)
+	{
+		return getPrefPassKey(acct.user);
+	}
+
+	private String getPrefPassKey(final String phoneNumber)
+	{
+		return getPrefKey(PASS_PREFIX, phoneNumber);
+	}
+
+	private String getPrefKey(final String prefix, final String phoneNumber)
+	{
+		return prefix + digits(phoneNumber);
+	}
 }

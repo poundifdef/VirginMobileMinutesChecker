@@ -32,5 +32,6 @@
     <string name="minutesUsed">Minutes Used:</string>
     <string name="chargedOn">Charged On:</string>
     <string name="monthlyCharge">Monthly Charge:</string>
+    <string name="addAccountDialogTitle">Account information</string>
 
 </resources>
