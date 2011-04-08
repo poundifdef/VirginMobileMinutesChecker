@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +18,8 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,6 +38,7 @@ public final class MultipleAccountsActivity extends Activity
 
     private static final String TEXTVIEW = "textview";
     private static final String TABLE = "table";
+    private static final String LAYOUT = "linearlayout";
 
     private final List<UsernamePassword> model = new ArrayList<UsernamePassword>();
     private final Hashtable<String, View> hash = new Hashtable<String, View>();
@@ -56,10 +60,10 @@ public final class MultipleAccountsActivity extends Activity
         updateModelFromPreferences();
 
         // if they have no phone numbers then pop up a new account dialog
-        if (model.size() == 0)
+        if (model.isEmpty())
         {
             // prompt for initial phone number / password
-            showAddAccountDialog(getUsersTelephoneNumber());
+            showAddAccountDialog(getUsersTelephoneNumber(), null);
         }
         else
         {
@@ -71,10 +75,79 @@ public final class MultipleAccountsActivity extends Activity
 	@Override
     public boolean onCreateOptionsMenu(final Menu menu)
     {
-        return super.onCreateOptionsMenu(menu);
+        final MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.multipleaccounts_menu, menu);
+        return true;
+
     }
 
-    private String getUsersTelephoneNumber()
+    @Override
+	public boolean onOptionsItemSelected(final MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.menu_refreshall:
+				// update model to match preferences
+				updateModelFromPreferences();
+
+				// fetch data
+	            new FetchAccountTask(this).execute(model.toArray(new UsernamePassword[0]));
+				return true;
+
+			case R.id.menu_accountsignout:
+
+				removeAllPasswordsFromPreferences();
+				updateModelFromPreferences();
+
+				for (final UsernamePassword auth : model)
+				{
+					updateLayout(auth);
+				}
+
+				return true;
+
+			case R.id.menu_addaccount:
+
+				final SharedPreferences pref = getPreferences(MODE_PRIVATE);
+
+				String startingNumber = null;
+				if (!pref.contains(getPrefUserKey(getUsersTelephoneNumber())))
+				{
+					startingNumber = getUsersTelephoneNumber();
+				}
+				showAddAccountDialog(startingNumber, null);
+
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+
+	}
+
+	private void removeAllPasswordsFromPreferences()
+	{
+        final List<String> keys = new ArrayList<String>();
+        final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        final Map<String, ?> map = prefs.getAll();
+
+        for (final String key : map.keySet())
+        {
+        	if (isPasswordPref(key))
+        	{
+        		keys.add(key);
+        	}
+        }
+
+        final Editor editor = prefs.edit();
+        for (final String key : keys)
+        {
+        	editor.remove(key);
+        }
+        editor.commit();
+	}
+
+	private String getUsersTelephoneNumber()
 	{
     	final TelephonyManager tMgr =
     		(TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -108,16 +181,24 @@ public final class MultipleAccountsActivity extends Activity
         doInitialLayout();
 	}
 
-    private void showAddAccountDialog(final String user)
+    private void showAddAccountDialog(final String user, final String password)
     {
         final Dialog dialog = new Dialog(this);
 
         dialog.setTitle(R.string.addAccountDialogTitle);
         dialog.setContentView(R.layout.account_dialog);
 
-        if (user != null)
+        if (user != null && user.length() != 0)
         {
             ((EditText) dialog.findViewById(R.id.phoneNumberInputView)).setText(user);
+            dialog.findViewById(R.id.passwordInputView).requestFocus();
+        }
+
+        if (password != null && password.length() != 0)
+        {
+        	final EditText passwordView = (EditText) dialog.findViewById(R.id.passwordInputView);
+            passwordView.setText(password);
+            passwordView.selectAll();
         }
 
         dialog.findViewById(R.id.signInButton).setOnClickListener(new View.OnClickListener()
@@ -144,7 +225,11 @@ public final class MultipleAccountsActivity extends Activity
             @Override
             public void onCancel(final DialogInterface dlg)
             {
-                MultipleAccountsActivity.this.finish();
+            	updateModelFromPreferences();
+            	if (model.isEmpty())
+            	{
+            		MultipleAccountsActivity.this.finish();
+            	}
             }
         });
 
@@ -155,13 +240,40 @@ public final class MultipleAccountsActivity extends Activity
     {
         final LinearLayout v = (LinearLayout) findViewById(R.id.accountView);
 
+        // Remove views that are no longer in our model
+        final List<String> deadNumbers = new ArrayList<String>();
+        for (final String key : hash.keySet())
+        {
+        	final String number = getNumberFromHashKey(key);
+        	if (!doesModelContainPhoneNumber(number))
+        	{
+        		final View removeMe = hash.get(getHashKey(number, LAYOUT));
+        		if (removeMe != null)
+        		{
+        			v.removeView(removeMe);
+        			deadNumbers.add(number);
+        		}
+        	}
+        }
+
+        // Remove keys from hash (after iterating to avoid ConcurrentMod Exception)
+        for (final String number : deadNumbers)
+        {
+        	hash.remove(getHashKey(number, TABLE));
+        	hash.remove(getHashKey(number, TEXTVIEW));
+        	hash.remove(getHashKey(number, LAYOUT));
+        }
+
+        // Add new views that were not in the model when we laid things out last
         for (final UsernamePassword auth : model)
         {
+        	// only add initial layout pieces when it's not already there
         	if (!hash.containsKey(getHashKey(auth.user, TEXTVIEW)))
         	{
                 final LinearLayout vert = new LinearLayout(getApplicationContext());
                 vert.setOrientation(LinearLayout.VERTICAL);
                 vert.setPadding(0, 10, 0, 0);
+                hash.put(getHashKey(auth.user, LAYOUT), vert);
 
                 vert.addView(createTextView(auth.user));
 
@@ -179,7 +291,7 @@ public final class MultipleAccountsActivity extends Activity
 
     }
 
-    public void updateLayout(final UsernamePassword auth)
+	public void updateLayout(final UsernamePassword auth)
     {
         final TextView phoneNumber =
             (TextView) hash.get(getHashKey(auth.user, TEXTVIEW));
@@ -192,7 +304,7 @@ public final class MultipleAccountsActivity extends Activity
 
         if (auth.pass == null || auth.pass.length() == 0)
         {
-        	addRow(table, createSignInButton(auth.user));
+        	addRow(table, createSignInButton(auth));
         }
         else
         {
@@ -233,10 +345,7 @@ public final class MultipleAccountsActivity extends Activity
         }
         else
         {
-        	addRow(table, createSignInButton(acct.getNumber()), getString(R.string.loginFail));
-        	final Editor editor = getPreferences(MODE_PRIVATE).edit();
-        	editor.remove(getPrefPassKey(acct.getNumber()));
-        	editor.commit();
+        	addRow(table, createSignInButton(acct.getAuth()), getString(R.string.loginFail));
         }
     }
 
@@ -298,11 +407,40 @@ public final class MultipleAccountsActivity extends Activity
         text.setText(user);
         hash.put(getHashKey(user, TEXTVIEW), text);
         text.setTextColor(getResources().getColor(R.color.gray));
+        text.setOnLongClickListener(new View.OnLongClickListener() {
+
+			@Override
+			public boolean onLongClick(final View v)
+			{
+				final AlertDialog.Builder builder = new AlertDialog.Builder(MultipleAccountsActivity.this);
+				builder.setMessage(getString(R.string.areyousure_removenumber, user))
+				.setCancelable(false)
+				.setPositiveButton(R.string.removeit, new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int id) {
+						removePhoneNumber(user);
+
+						if (model.isEmpty())
+						{
+							showAddAccountDialog(getUsersTelephoneNumber(), null);
+						}
+					}
+				})
+				.setNegativeButton(R.string.keepit, new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int id) {
+						dialog.cancel();
+					}
+				});
+				final AlertDialog alert = builder.create();
+
+				alert.show();
+				return true;
+			}
+		});
 
         return text;
     }
 
-    private Button createSignInButton(final String phoneNumber)
+	private Button createSignInButton(final UsernamePassword auth)
     {
     	final Button signIn = new Button(getApplicationContext());
     	signIn.setText(R.string.login);
@@ -310,21 +448,61 @@ public final class MultipleAccountsActivity extends Activity
 			@Override
 			public void onClick(final View v)
 			{
-				showAddAccountDialog(phoneNumber);
+				showAddAccountDialog(auth.user, auth.pass);
 			}
 		});
 
     	return signIn;
     }
 
+	private void removePhoneNumber(final String user)
+	{
+		final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		final Editor editor = prefs.edit();
+		editor.remove(getPrefUserKey(user));
+		editor.remove(getPrefPassKey(user));
+		editor.commit();
+
+		updateModelFromPreferences();
+	}
+
+    private boolean doesModelContainPhoneNumber(final String number)
+	{
+    	for (final UsernamePassword auth : model)
+    	{
+    		if (digits(auth.user).equals(number))
+    		{
+    			return true;
+    		}
+    	}
+		return false;
+	}
+
     private String getHashKey(final String user, final String type)
     {
         return digits(user) + "|" + type;
     }
 
+    private String getNumberFromHashKey(final String hashKey)
+    {
+    	// This is kind of a hack implementation, but so long as the "type" doesn't contain
+    	// numbers, this will return the 9 digit phone number
+    	return digits(hashKey);
+    }
+
     private String digits(final String user)
     {
-        return user.replaceAll("\\D", "");
+    	final String ret = user.replaceAll("\\D", "");
+    	if (ret.length() == 10)
+    	{
+    		return ret;
+    	}
+    	if (ret.length() > 10)
+    	{
+    		return ret.substring(ret.length() - 10, ret.length() - 1);
+    	}
+    	// how did they get a shorter than 10 digit phone number?
+        return ret;
     }
 
     private void updatePreferences(final UsernamePassword acct)
@@ -353,9 +531,26 @@ public final class MultipleAccountsActivity extends Activity
     	}
     }
 
+    private boolean isPasswordPref(final String key)
+    {
+    	if (key.startsWith(PASS_PREFIX))
+    	{
+    		return true;
+    	}
+    	else
+    	{
+    		return false;
+    	}
+    }
+
 	private String getPrefUserKey(final UsernamePassword acct)
 	{
-		return getPrefKey(USER_PREFIX, acct.user);
+		return getPrefUserKey(acct.user);
+	}
+
+    protected String getPrefUserKey(final String phoneNumber)
+	{
+		return getPrefKey(USER_PREFIX, phoneNumber);
 	}
 
 	private String getPrefPassKey(final UsernamePassword acct)

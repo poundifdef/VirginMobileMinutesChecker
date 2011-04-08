@@ -32,6 +32,9 @@
     <string name="minutesUsed">Minutes Used:</string>
     <string name="chargedOn">Charged On:</string>
     <string name="monthlyCharge">Monthly Charge:</string>
-    <string name="addAccountDialogTitle">Account information</string>
+    <string name="addAccountDialogTitle">Add Account</string>
+    <string name="areyousure_removenumber">Are you sure you want to remove %1$s?</string>
+    <string name="keepit">Keep It</string>
+    <string name="removeit">Remove It</string>
 
 </resources>

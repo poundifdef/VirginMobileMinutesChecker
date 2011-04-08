@@ -96,13 +96,13 @@ public class FetchAccountTask
                 if (scraper.isValid(html))
                 {
                     Log.d(TAG, "valid");
-                    acct = new VMAccount(html, scraper);
+                    acct = new VMAccount(a, html, scraper);
                     accts.add(acct);
                 }
                 else
                 {
                     Log.d(TAG, "invalid: " + a.toString());
-                    acct = VMAccount.createInvalid(a.user);
+                    acct = VMAccount.createInvalid(a);
                     accts.add(acct);
                 }
         	}

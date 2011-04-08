@@ -9,13 +9,14 @@ import com.jaygoel.virginminuteschecker.IVMCScraper;
 public final class VMAccount
 {
 
-    public static VMAccount createInvalid(final String iPhoneNumber)
+    public static VMAccount createInvalid(final UsernamePassword iAuth)
     {
-        return new VMAccount(iPhoneNumber);
+        return new VMAccount(iAuth);
     }
 
-    public VMAccount(final String html, final IVMCScraper scraper)
+    public VMAccount(final UsernamePassword iAuth, final String html, final IVMCScraper scraper)
     {
+    	auth = iAuth;
         isValid = scraper.isValid(html);
         if (isValid)
         {
@@ -39,10 +40,11 @@ public final class VMAccount
         }
     }
 
-    private VMAccount(final String iPhoneNumber)
+    private VMAccount(final UsernamePassword iAuth)
     {
+    	auth = iAuth;
         isValid = false;
-        number = iPhoneNumber;
+        number = auth.user;
         monthlyCharge = null;
         balance = null;
         minAmountDue = null;
@@ -51,6 +53,7 @@ public final class VMAccount
         minutesUsed = null;
     }
 
+    private final UsernamePassword auth;
     private final boolean isValid;
     private final String number;
     private final String monthlyCharge;
@@ -93,5 +96,10 @@ public final class VMAccount
     {
         return minutesUsed;
     }
+
+	public UsernamePassword getAuth()
+	{
+		return auth;
+	}
 
 }
