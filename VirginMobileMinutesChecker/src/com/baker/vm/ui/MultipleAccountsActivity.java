@@ -1,22 +1,23 @@
 /**
  *
  */
-package com.baker.vm;
+package com.baker.vm.ui;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Paint;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,6 +28,9 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup.LayoutParams;
 import android.widget.TextView;
 
+import com.baker.vm.PreferencesUtil;
+import com.baker.vm.UsernamePassword;
+import com.baker.vm.VMAccount;
 import com.jaygoel.virginminuteschecker.R;
 
 /**
@@ -36,18 +40,52 @@ import com.jaygoel.virginminuteschecker.R;
 public final class MultipleAccountsActivity extends Activity
 {
 
+    private static final Pattern PHONE_NUMBER_PAT =
+        Pattern.compile("(\\d{3})?(\\d{3})(\\d{4})");
+
     private static final String TEXTVIEW = "textview";
     private static final String TABLE = "table";
     private static final String LAYOUT = "linearlayout";
 
+    public static String digits(final String user)
+    {
+        final String ret = user.replaceAll("\\D", "");
+        if (ret.length() == 10)
+        {
+            return ret;
+        }
+        if (ret.length() > 10)
+        {
+            return ret.substring(ret.length() - 10, ret.length());
+        }
+        // how did they get a shorter than 10 digit phone number?
+        return ret;
+    }
+
     private final List<UsernamePassword> model = new ArrayList<UsernamePassword>();
     private final Hashtable<String, View> hash = new Hashtable<String, View>();
+
+    public MultipleAccountsActivity()
+    {
+
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multipleaccounts);
+
+        // get all stored phone numbers / passwords
+        // (don't do the layout, that'll happen on resume)
+        updateModelFromPreferences(false);
+
+        if (!model.isEmpty())
+        {
+            // fetch data on create, instead of onResume where every time you
+            // enter the app it goes off again.
+            new FetchAccountTask(this).execute(model.toArray(new UsernamePassword[0]));
+        }
     }
 
 	@Override
@@ -64,10 +102,6 @@ public final class MultipleAccountsActivity extends Activity
         {
             // prompt for initial phone number / password
             showAddAccountDialog(getUsersTelephoneNumber(), null);
-        }
-        else
-        {
-            new FetchAccountTask(this).execute(model.toArray(new UsernamePassword[0]));
         }
 
 	}
@@ -108,12 +142,11 @@ public final class MultipleAccountsActivity extends Activity
 
 			case R.id.menu_addaccount:
 
-				final SharedPreferences pref = getPreferences(MODE_PRIVATE);
-
 				String startingNumber = null;
-				if (!pref.contains(getPrefUserKey(getUsersTelephoneNumber())))
+				if (!PreferencesUtil.
+				        containsNumber(this, getUsersTelephoneNumber()))
 				{
-					startingNumber = getUsersTelephoneNumber();
+                    startingNumber = getUsersTelephoneNumber();
 				}
 				showAddAccountDialog(startingNumber, null);
 
@@ -128,12 +161,12 @@ public final class MultipleAccountsActivity extends Activity
 	private void removeAllPasswordsFromPreferences()
 	{
         final List<String> keys = new ArrayList<String>();
-        final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        final SharedPreferences prefs = PreferencesUtil.get(this);
         final Map<String, ?> map = prefs.getAll();
 
         for (final String key : map.keySet())
         {
-        	if (isPasswordPref(key))
+        	if (PreferencesUtil.isPasswordPref(key))
         	{
         		keys.add(key);
         	}
@@ -149,24 +182,25 @@ public final class MultipleAccountsActivity extends Activity
 
 	private String getUsersTelephoneNumber()
 	{
-    	final TelephonyManager tMgr =
-    		(TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-
-    	final String number = tMgr.getLine1Number();
-		return number == null ? "" : number;
+		return PreferencesUtil.getDefaultTelephoneNumber(getApplicationContext());
 	}
 
 	private void updateModelFromPreferences()
 	{
+	    updateModelFromPreferences(true);
+	}
+
+	private void updateModelFromPreferences(final boolean doLayout)
+	{
         model.clear();
-        final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        final SharedPreferences prefs = PreferencesUtil.get(this);
 
         final List<String> phoneNumbers = new ArrayList<String>();
         final Map<String, ?> map = prefs.getAll();
 
         for (final String key : map.keySet())
         {
-        	if (isUserPref(key))
+        	if (PreferencesUtil.isUserPref(key))
         	{
         		phoneNumbers.add(map.get(key).toString());
         	}
@@ -175,10 +209,13 @@ public final class MultipleAccountsActivity extends Activity
         for (final String phoneNumber : phoneNumbers)
         {
         	model.add(new UsernamePassword(phoneNumber,
-        			prefs.getString(getPrefPassKey(phoneNumber), null)));
+        	    PreferencesUtil.getPassword(this, phoneNumber)));
         }
 
-        doInitialLayout();
+        if (doLayout)
+        {
+            doInitialLayout();
+        }
 	}
 
     private void showAddAccountDialog(final String user, final String password)
@@ -206,7 +243,7 @@ public final class MultipleAccountsActivity extends Activity
             @Override
             public void onClick(final View v)
             {
-                final String phoneNumber = ((EditText) dialog.findViewById(R.id.phoneNumberInputView)).getText().toString();
+                final String phoneNumber = digits(((EditText) dialog.findViewById(R.id.phoneNumberInputView)).getText().toString());
                 final String pass = ((EditText) dialog.findViewById(R.id.passwordInputView)).getText().toString();
 
                 final UsernamePassword auth = new UsernamePassword(phoneNumber, pass);
@@ -295,7 +332,7 @@ public final class MultipleAccountsActivity extends Activity
     {
         final TextView phoneNumber =
             (TextView) hash.get(getHashKey(auth.user, TEXTVIEW));
-        phoneNumber.setText(auth.user);
+        phoneNumber.setText(formatPhoneNumber(auth.user));
         phoneNumber.setTextColor(getResources().getColor(R.color.gray));
 
         final LinearLayout table =
@@ -310,10 +347,14 @@ public final class MultipleAccountsActivity extends Activity
         {
             table.setPadding(20, 0, 0, 0);
 
-            addRow(table, R.string.currentBalance, "");
-            addRow(table, R.string.minutesUsed, "");
-            addRow(table, R.string.chargedOn, "");
-            addRow(table, R.string.monthlyCharge, "");
+            int widest = getMaxWidth(R.string.currentBalance,
+                                     R.string.minutesUsed,
+                                     R.string.chargedOn,
+                                     R.string.monthlyCharge);
+            addRow(table, R.string.currentBalance, "", widest);
+            addRow(table, R.string.minutesUsed, "", widest);
+            addRow(table, R.string.chargedOn, "", widest);
+            addRow(table, R.string.monthlyCharge, "", widest);
         }
     }
 
@@ -338,10 +379,16 @@ public final class MultipleAccountsActivity extends Activity
 
         if (acct.isValid())
         {
-        	addRow(table, R.string.currentBalance, acct.getBalance());
-        	addRow(table, R.string.minutesUsed, acct.getMinutesUsed());
-        	addRow(table, R.string.chargedOn, acct.getChargedOn());
-        	addRow(table, R.string.monthlyCharge, acct.getMonthlyCharge());
+            int widest = getMaxWidth(R.string.currentBalance,
+                                     R.string.minutesUsed,
+                                     R.string.chargedOn,
+                                     R.string.monthlyCharge);
+        	addRow(table, R.string.currentBalance, acct.getBalance(), widest);
+        	addRow(table, R.string.minutesUsed, acct.getMinutesUsed(), widest);
+        	addRow(table, R.string.chargedOn, acct.getChargedOn(), widest);
+        	addRow(table, R.string.monthlyCharge, acct.getMonthlyCharge(), widest);
+
+        	PreferencesUtil.setCache(this, acct.getMinutesUsed());
         }
         else
         {
@@ -351,7 +398,8 @@ public final class MultipleAccountsActivity extends Activity
 
     private void addRow(final LinearLayout table,
     					final int labelResId,
-    					final String value)
+    					final String value,
+    					final int width)
     {
         final TextView lbl = new TextView(this);
         if (labelResId != -1)
@@ -364,7 +412,7 @@ public final class MultipleAccountsActivity extends Activity
         }
         lbl.setTextColor(getResources().getColor(R.color.gray));
         lbl.setTextSize(12F);
-        lbl.setMinimumWidth(175);
+        lbl.setMinimumWidth(width + 5);
 
         final TextView val = new TextView(this);
         val.setText(value);
@@ -404,7 +452,7 @@ public final class MultipleAccountsActivity extends Activity
     private View createTextView(final String user)
     {
         final TextView text = new TextView(this);
-        text.setText(user);
+        text.setText(formatPhoneNumber(user));
         hash.put(getHashKey(user, TEXTVIEW), text);
         text.setTextColor(getResources().getColor(R.color.gray));
         text.setOnLongClickListener(new View.OnLongClickListener() {
@@ -416,7 +464,8 @@ public final class MultipleAccountsActivity extends Activity
 				builder.setMessage(getString(R.string.areyousure_removenumber, user))
 				.setCancelable(false)
 				.setPositiveButton(R.string.removeit, new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int id) {
+					@Override
+                    public void onClick(final DialogInterface dialog, final int id) {
 						removePhoneNumber(user);
 
 						if (model.isEmpty())
@@ -426,7 +475,8 @@ public final class MultipleAccountsActivity extends Activity
 					}
 				})
 				.setNegativeButton(R.string.keepit, new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int id) {
+					@Override
+                    public void onClick(final DialogInterface dialog, final int id) {
 						dialog.cancel();
 					}
 				});
@@ -440,7 +490,7 @@ public final class MultipleAccountsActivity extends Activity
         return text;
     }
 
-	private Button createSignInButton(final UsernamePassword auth)
+    private Button createSignInButton(final UsernamePassword auth)
     {
     	final Button signIn = new Button(getApplicationContext());
     	signIn.setText(R.string.login);
@@ -457,11 +507,7 @@ public final class MultipleAccountsActivity extends Activity
 
 	private void removePhoneNumber(final String user)
 	{
-		final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-		final Editor editor = prefs.edit();
-		editor.remove(getPrefUserKey(user));
-		editor.remove(getPrefPassKey(user));
-		editor.commit();
+	    PreferencesUtil.removeNumber(this, user);
 
 		updateModelFromPreferences();
 	}
@@ -478,6 +524,17 @@ public final class MultipleAccountsActivity extends Activity
 		return false;
 	}
 
+    private int getMaxWidth(final int... stringResIds)
+    {
+        int max = 0;
+        Paint p = new Paint();
+        for (int stringResId : stringResIds)
+        {
+            max = Math.max(max, (int) p.measureText(getString(stringResId)));
+        }
+        return max;
+    }
+
     private String getHashKey(final String user, final String type)
     {
         return digits(user) + "|" + type;
@@ -490,81 +547,21 @@ public final class MultipleAccountsActivity extends Activity
     	return digits(hashKey);
     }
 
-    private String digits(final String user)
+    private String formatPhoneNumber(final String number)
     {
-    	final String ret = user.replaceAll("\\D", "");
-    	if (ret.length() == 10)
-    	{
-    		return ret;
-    	}
-    	if (ret.length() > 10)
-    	{
-    		return ret.substring(ret.length() - 10, ret.length() - 1);
-    	}
-    	// how did they get a shorter than 10 digit phone number?
+        String ret = number;
+        Matcher m = PHONE_NUMBER_PAT.matcher(number);
+        if (m.matches())
+        {
+            ret = "(" + m.group(1) + ") " + m.group(2) + "-" + m.group(3);
+        }
         return ret;
     }
 
     private void updatePreferences(final UsernamePassword acct)
     {
-		final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-		final Editor editor = prefs.edit();
-        editor.putString(getPrefUserKey(acct), acct.user);
-        editor.putString(getPrefPassKey(acct), acct.pass);
-        editor.commit();
+        PreferencesUtil.setAuth(this, acct);
 
     	updateModelFromPreferences();
     }
-
-    private static final String USER_PREFIX = "USER";
-    private static final String PASS_PREFIX = "PASS";
-
-    private boolean isUserPref(final String key)
-    {
-    	if (key.startsWith(USER_PREFIX))
-    	{
-    		return true;
-    	}
-    	else
-    	{
-    		return false;
-    	}
-    }
-
-    private boolean isPasswordPref(final String key)
-    {
-    	if (key.startsWith(PASS_PREFIX))
-    	{
-    		return true;
-    	}
-    	else
-    	{
-    		return false;
-    	}
-    }
-
-	private String getPrefUserKey(final UsernamePassword acct)
-	{
-		return getPrefUserKey(acct.user);
-	}
-
-    protected String getPrefUserKey(final String phoneNumber)
-	{
-		return getPrefKey(USER_PREFIX, phoneNumber);
-	}
-
-	private String getPrefPassKey(final UsernamePassword acct)
-	{
-		return getPrefPassKey(acct.user);
-	}
-
-	private String getPrefPassKey(final String phoneNumber)
-	{
-		return getPrefKey(PASS_PREFIX, phoneNumber);
-	}
-
-	private String getPrefKey(final String prefix, final String phoneNumber)
-	{
-		return prefix + digits(phoneNumber);
-	}
 }

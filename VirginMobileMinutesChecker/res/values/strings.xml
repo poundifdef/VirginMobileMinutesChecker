@@ -36,5 +36,8 @@
     <string name="areyousure_removenumber">Are you sure you want to remove %1$s?</string>
     <string name="keepit">Keep It</string>
     <string name="removeit">Remove It</string>
+    <string name="notify_remaing_minutes">Notify of Remaining Minutes</string>
+    <string name="minutes_left">Minutes Remaining: %1$s</string>
+    <string name="minutes_over">Minutes Over: %1$s!</string>
 
 </resources>

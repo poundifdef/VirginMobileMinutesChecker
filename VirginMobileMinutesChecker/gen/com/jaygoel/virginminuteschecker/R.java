@@ -67,7 +67,10 @@ public final class R {
         public static final int loginFail=0x7f060006;
         public static final int logout=0x7f060003;
         public static final int minutesUsed=0x7f060014;
+        public static final int minutes_left=0x7f06001c;
+        public static final int minutes_over=0x7f06001d;
         public static final int monthlyCharge=0x7f060016;
+        public static final int notify_remaing_minutes=0x7f06001b;
         public static final int ok=0x7f060011;
         public static final int outgoingCallPrefSummary=0x7f06000e;
         public static final int outgoingCallPrefTitle=0x7f06000d;

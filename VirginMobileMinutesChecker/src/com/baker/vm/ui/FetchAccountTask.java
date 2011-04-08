@@ -1,20 +1,21 @@
 /**
  *
  */
-package com.baker.vm;
+package com.baker.vm.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.baker.vm.ScraperUtil;
+import com.baker.vm.UsernamePassword;
+import com.baker.vm.VMAccount;
 import com.jaygoel.virginminuteschecker.IVMCScraper;
 import com.jaygoel.virginminuteschecker.R;
 import com.jaygoel.virginminuteschecker.ReferenceScraper;
-import com.jaygoel.virginminuteschecker.WebsiteScraper;
 
 /**
  * @author baker
@@ -23,8 +24,6 @@ import com.jaygoel.virginminuteschecker.WebsiteScraper;
 public class FetchAccountTask
 	extends AsyncTask<UsernamePassword, VMAccount, List<VMAccount>>
 {
-
-	private static final String TAG = "FetchAccountTask";
 
 	private final MultipleAccountsActivity activity;
 	private int i = 0;
@@ -86,25 +85,11 @@ public class FetchAccountTask
         final List<VMAccount> accts = new ArrayList<VMAccount>();
         for (final UsernamePassword a : params)
         {
-            VMAccount acct = null;
+            VMAccount acct = ScraperUtil.scrape(a, scraper);
 
-        	if (a.pass != null && a.pass.length() != 0)
+        	if (acct != null)
         	{
-                final String html= WebsiteScraper.fetchScreen(a.user, a.pass);
-                Log.d(TAG, html);
-
-                if (scraper.isValid(html))
-                {
-                    Log.d(TAG, "valid");
-                    acct = new VMAccount(a, html, scraper);
-                    accts.add(acct);
-                }
-                else
-                {
-                    Log.d(TAG, "invalid: " + a.toString());
-                    acct = VMAccount.createInvalid(a);
-                    accts.add(acct);
-                }
+                accts.add(acct);
         	}
 
             ++i;
