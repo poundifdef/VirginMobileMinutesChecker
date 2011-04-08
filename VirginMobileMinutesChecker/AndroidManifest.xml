@@ -14,7 +14,7 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
       
-      </activity>
+    </activity>
     <receiver android:label="@string/notify_remaing_minutes" 
     	android:permission="android.permission.READ_PHONE_STATE" 
     	android:name="com.baker.vm.service.NotifyRemainingMinutes">
@@ -22,6 +22,18 @@
 	  	  	<action android:name="android.intent.action.PHONE_STATE" />
       	</intent-filter>
     </receiver>
+    <receiver android:label="@string/app_name" android:name="Widget">
+    	<intent-filter>
+    		<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+    	</intent-filter>
+    </receiver>
+    
+	<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+		android:minWidth="146dp"
+		android:minHeight="72dp"
+		android:updatePeriodMillis="21600000"
+		android:initialLayout="@layout/widget_2x1">
+	</appwidget-provider>
   </application>
   <uses-sdk android:minSdkVersion="7" />
 

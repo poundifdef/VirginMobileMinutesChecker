@@ -63,10 +63,12 @@ public class FetchAccountTask
     {
         super.onProgressUpdate(values);
 
+        activity.findViewById(R.id.progress).setVisibility(View.VISIBLE);
+
         if (values != null && values.length > 0)
         {
             final ProgressBar bar = (ProgressBar) activity.findViewById(R.id.progress);
-            bar.setProgress(i);
+            bar.setProgress(i + 1);
 
             for (final VMAccount acct : values)
             {
@@ -78,7 +80,9 @@ public class FetchAccountTask
     @Override
     protected List<VMAccount> doInBackground(final UsernamePassword... params)
     {
-        ((ProgressBar) activity.findViewById(R.id.progress)).setMax(params.length);
+        final ProgressBar bar = (ProgressBar) activity.findViewById(R.id.progress);
+        bar.setMax(params.length + 1);
+        bar.setProgress(i + 1);
 
         final IVMCScraper scraper= new ReferenceScraper();
 

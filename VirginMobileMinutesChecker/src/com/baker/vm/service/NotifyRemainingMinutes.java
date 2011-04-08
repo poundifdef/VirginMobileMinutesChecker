@@ -70,22 +70,40 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
 
     private void toastRemainingMinutes(final Context context)
     {
-        int used = PreferencesUtil.getCacheMinutesUsed(context);
+        int used = PreferencesUtil.getMinutesUsed(context);
         int total = PreferencesUtil.getCacheMinutesTotal(context);
-        String message;
+        String minutes = PreferencesUtil.getMinutesString(context);
 
-        if (used > total)
+
+        if (minutes == null || minutes.length() == 0)
         {
-            message = context.getString(R.string.minutes_over, (used - total));
+            return;
+        }
+        else if (used < 0 || total < 0 )
+        {
+            // couldn't parse the minutes but we have a string value.
+            // maybe they have unlimited and we don't want to show anything?
         }
         else
         {
-            message = context.getString(R.string.minutes_left, (total - used));
+            String message;
+
+            if (used > total)
+            {
+                message = context.getString(R.string.minutes_over, (used - total));
+            }
+            else
+            {
+                message = context.getString(R.string.minutes_left, (total - used));
+            }
+
+            Toast.makeText(context,
+                message,
+                Toast.LENGTH_SHORT).show();
         }
 
-        Toast.makeText(context,
-            message,
-            Toast.LENGTH_SHORT).show();
+
+
     }
 
     private void updateCache(final Context context)
@@ -101,14 +119,14 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
 
             if (acct.isValid())
             {
-                PreferencesUtil.setCache(context, acct.getMinutesUsed());
+                PreferencesUtil.setCache(context, acct);
             }
             else
             {
                 Log.e(TAG, "Invalid Account.  Authentication Issue?");
 
-                // invalidate cache if we can't access
-                PreferencesUtil.setCache(context, "");
+                // invalidate cache if we can't access data
+                PreferencesUtil.clearCache(context);
             }
         }
         else

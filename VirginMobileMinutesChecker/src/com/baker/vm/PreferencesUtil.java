@@ -27,6 +27,8 @@ public final class PreferencesUtil
     public static final String CACHE_MINUTES_USED = "cache_minutes_used";
     public static final String CACHE_MINUTES_TOTAL = "cache_minutes_total";
 
+    public static final String CACHE_BALANCE = "cache_balance";
+
     /** Keys in auth preferences. */
     public static final String USER_PREFIX = "USER";
     public static final String PASS_PREFIX = "PASS";
@@ -44,12 +46,17 @@ public final class PreferencesUtil
         return activity.getSharedPreferences(CACHE_PREFS, 0);
     }
 
-    public static String getCacheString(final Context activity)
+    public static String getBalance(final Context context)
+    {
+        return getCache(context).getString(CACHE_BALANCE, "");
+    }
+
+    public static String getMinutesString(final Context activity)
     {
         return getCache(activity).getString(CACHE_AS_STRING, "");
     }
 
-    public static int getCacheMinutesUsed(final Context activity)
+    public static int getMinutesUsed(final Context activity)
     {
         return getCache(activity).getInt(CACHE_MINUTES_USED, -1);
     }
@@ -59,7 +66,20 @@ public final class PreferencesUtil
         return getCache(activity).getInt(CACHE_MINUTES_TOTAL, -1);
     }
 
-    public static void setCache(final Context activity, final String minutes)
+    public static void clearCache(final Context context)
+    {
+        SharedPreferences cache = getCache(context);
+
+        Editor editor = cache.edit();
+
+        editor.putString(CACHE_AS_STRING, "");
+        editor.putInt(CACHE_MINUTES_USED, -1);
+        editor.putInt(CACHE_MINUTES_TOTAL, -1);
+
+        editor.putString(CACHE_BALANCE, "");
+    }
+
+    public static void setCache(final Context activity, final VMAccount account)
     {
         int used = -1;
         int total = -1;
@@ -67,6 +87,9 @@ public final class PreferencesUtil
         SharedPreferences cache = getCache(activity);
 
         Editor editor = cache.edit();
+
+        // Handle minutes used
+        final String minutes = account.getMinutesUsed();
         editor.putString(CACHE_AS_STRING, minutes);
         Matcher m = MINUTES_PAT.matcher(minutes);
 
@@ -92,6 +115,9 @@ public final class PreferencesUtil
 
         editor.putInt(CACHE_MINUTES_USED, used);
         editor.putInt(CACHE_MINUTES_TOTAL, total);
+
+        // Handle account balance
+        editor.putString(CACHE_BALANCE, account.getBalance());
 
         editor.commit();
     }

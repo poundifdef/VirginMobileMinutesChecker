@@ -49,6 +49,10 @@ public final class MultipleAccountsActivity extends Activity
 
     public static String digits(final String user)
     {
+        if (user == null)
+        {
+            return "";
+        }
         final String ret = user.replaceAll("\\D", "");
         if (ret.length() == 10)
         {
@@ -112,7 +116,6 @@ public final class MultipleAccountsActivity extends Activity
         final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.multipleaccounts_menu, menu);
         return true;
-
     }
 
     @Override
@@ -157,6 +160,101 @@ public final class MultipleAccountsActivity extends Activity
 		}
 
 	}
+
+    public void updateLayout(final UsernamePassword auth)
+    {
+        final TextView phoneNumber =
+            (TextView) hash.get(getHashKey(auth.user, TEXTVIEW));
+
+        if (phoneNumber != null)
+        {
+            phoneNumber.setText(formatPhoneNumber(auth.user));
+            phoneNumber.setTextColor(getResources().getColor(R.color.gray3));
+        }
+
+        final LinearLayout table =
+            (LinearLayout) hash.get(getHashKey(auth.user, TABLE));
+
+        if (table != null)
+        {
+            table.removeAllViews();
+
+            if (auth.pass == null || auth.pass.length() == 0)
+            {
+                addRow(table, createSignInButton(auth));
+            }
+            else
+            {
+                table.setPadding(20, 0, 0, 0);
+
+                int widest = getMaxWidth(R.string.currentBalance,
+                                         R.string.minutesUsed,
+                                         R.string.chargedOn,
+                                         R.string.monthlyCharge);
+
+                String balance = "";
+                String minutes = "";
+                if (getUsersTelephoneNumber().equals(auth.user))
+                {
+                    balance = PreferencesUtil.getBalance(this);
+                    minutes = PreferencesUtil.getMinutesString(this);
+                }
+                addRow(table, R.string.currentBalance, balance, widest, true);
+                addRow(table, R.string.minutesUsed, minutes, widest, true);
+                addRow(table, R.string.chargedOn, "", widest, true);
+                addRow(table, R.string.monthlyCharge, "", widest, true);
+            }
+        }
+    }
+
+    public void updateLayout(final List<VMAccount> accounts)
+    {
+        if (accounts != null)
+        {
+            for (final VMAccount acct : accounts)
+            {
+                updateLayout(acct);
+            }
+        }
+    }
+
+    public void updateLayout(final VMAccount acct)
+    {
+        final TextView phoneNumber =
+            (TextView) hash.get(getHashKey(acct.getNumber(), TEXTVIEW));
+
+        if (phoneNumber != null)
+        {
+            phoneNumber.setText(acct.getNumber());
+            phoneNumber.setTextColor(getResources().getColor(R.color.white));
+        }
+
+        final LinearLayout table =
+            (LinearLayout) hash.get(getHashKey(acct.getNumber(), TABLE));
+
+        if (table != null)
+        {
+            table.removeAllViews();
+
+            if (acct.isValid())
+            {
+                int widest = getMaxWidth(R.string.currentBalance,
+                                         R.string.minutesUsed,
+                                         R.string.chargedOn,
+                                         R.string.monthlyCharge);
+                addRow(table, R.string.currentBalance, acct.getBalance(), widest, false);
+                addRow(table, R.string.minutesUsed, acct.getMinutesUsed(), widest, false);
+                addRow(table, R.string.chargedOn, acct.getChargedOn(), widest, false);
+                addRow(table, R.string.monthlyCharge, acct.getMonthlyCharge(), widest, false);
+
+                PreferencesUtil.setCache(this, acct);
+            }
+            else
+            {
+                addRow(table, createSignInButton(acct.getAuth()), getString(R.string.loginFail));
+            }
+        }
+    }
 
 	private void removeAllPasswordsFromPreferences()
 	{
@@ -328,78 +426,11 @@ public final class MultipleAccountsActivity extends Activity
 
     }
 
-	public void updateLayout(final UsernamePassword auth)
-    {
-        final TextView phoneNumber =
-            (TextView) hash.get(getHashKey(auth.user, TEXTVIEW));
-        phoneNumber.setText(formatPhoneNumber(auth.user));
-        phoneNumber.setTextColor(getResources().getColor(R.color.gray));
-
-        final LinearLayout table =
-            (LinearLayout) hash.get(getHashKey(auth.user, TABLE));
-        table.removeAllViews();
-
-        if (auth.pass == null || auth.pass.length() == 0)
-        {
-        	addRow(table, createSignInButton(auth));
-        }
-        else
-        {
-            table.setPadding(20, 0, 0, 0);
-
-            int widest = getMaxWidth(R.string.currentBalance,
-                                     R.string.minutesUsed,
-                                     R.string.chargedOn,
-                                     R.string.monthlyCharge);
-            addRow(table, R.string.currentBalance, "", widest);
-            addRow(table, R.string.minutesUsed, "", widest);
-            addRow(table, R.string.chargedOn, "", widest);
-            addRow(table, R.string.monthlyCharge, "", widest);
-        }
-    }
-
-    public void updateLayout(final List<VMAccount> accounts)
-    {
-        for (final VMAccount acct : accounts)
-        {
-        	updateLayout(acct);
-        }
-    }
-
-    public void updateLayout(final VMAccount acct)
-    {
-        final TextView phoneNumber =
-        	(TextView) hash.get(getHashKey(acct.getNumber(), TEXTVIEW));
-        phoneNumber.setText(acct.getNumber());
-        phoneNumber.setTextColor(getResources().getColor(R.color.white));
-
-        final LinearLayout table =
-        	(LinearLayout) hash.get(getHashKey(acct.getNumber(), TABLE));
-        table.removeAllViews();
-
-        if (acct.isValid())
-        {
-            int widest = getMaxWidth(R.string.currentBalance,
-                                     R.string.minutesUsed,
-                                     R.string.chargedOn,
-                                     R.string.monthlyCharge);
-        	addRow(table, R.string.currentBalance, acct.getBalance(), widest);
-        	addRow(table, R.string.minutesUsed, acct.getMinutesUsed(), widest);
-        	addRow(table, R.string.chargedOn, acct.getChargedOn(), widest);
-        	addRow(table, R.string.monthlyCharge, acct.getMonthlyCharge(), widest);
-
-        	PreferencesUtil.setCache(this, acct.getMinutesUsed());
-        }
-        else
-        {
-        	addRow(table, createSignInButton(acct.getAuth()), getString(R.string.loginFail));
-        }
-    }
-
     private void addRow(final LinearLayout table,
     					final int labelResId,
     					final String value,
-    					final int width)
+    					final int width,
+    					final boolean isFromCache)
     {
         final TextView lbl = new TextView(this);
         if (labelResId != -1)
@@ -410,13 +441,14 @@ public final class MultipleAccountsActivity extends Activity
         {
             lbl.setText("");
         }
-        lbl.setTextColor(getResources().getColor(R.color.gray));
+        lbl.setTextColor(getResources().getColor(R.color.gray3));
         lbl.setTextSize(12F);
         lbl.setMinimumWidth(width + 5);
 
         final TextView val = new TextView(this);
         val.setText(value);
-        val.setTextColor(getResources().getColor(R.color.white));
+        int colorResId = isFromCache ? R.color.gray3 : R.color.white;
+        val.setTextColor(getResources().getColor(colorResId));
 
         final LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -454,7 +486,7 @@ public final class MultipleAccountsActivity extends Activity
         final TextView text = new TextView(this);
         text.setText(formatPhoneNumber(user));
         hash.put(getHashKey(user, TEXTVIEW), text);
-        text.setTextColor(getResources().getColor(R.color.gray));
+        text.setTextColor(getResources().getColor(R.color.gray3));
         text.setOnLongClickListener(new View.OnLongClickListener() {
 
 			@Override
