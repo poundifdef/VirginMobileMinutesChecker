@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.telephony.TelephonyManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.baker.vm.ui.MultipleAccountsActivity;
@@ -23,6 +24,7 @@ public final class PreferencesUtil
     public static final String CACHE_PREFS = "cache";
 
     /** Keys in cache preferences. */
+    public static final String CACHE_TS = "cache_timestamp";
     public static final String CACHE_AS_STRING = "cache_as_string";
     public static final String CACHE_MINUTES_USED = "cache_minutes_used";
     public static final String CACHE_MINUTES_TOTAL = "cache_minutes_total";
@@ -119,6 +121,9 @@ public final class PreferencesUtil
         // Handle account balance
         editor.putString(CACHE_BALANCE, account.getBalance());
 
+        editor.putLong(CACHE_TS, System.currentTimeMillis());
+
+
         editor.commit();
     }
 
@@ -202,6 +207,11 @@ public final class PreferencesUtil
     private static String getPrefKey(final String prefix, final String phoneNumber)
     {
         return prefix + MultipleAccountsActivity.digits(phoneNumber);
+    }
+
+    public static CharSequence getTimestamp(final Context context)
+    {
+        return DateFormat.format("E hh:mm aa", getCache(context).getLong(CACHE_TS, 0));
     }
 
 }

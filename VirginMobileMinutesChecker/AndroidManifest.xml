@@ -22,10 +22,12 @@
 	  	  	<action android:name="android.intent.action.PHONE_STATE" />
       	</intent-filter>
     </receiver>
-    <receiver android:label="@string/app_name" android:name="Widget">
+    <receiver android:label="@string/app_name" android:name="com.baker.vm.widget.Simple2x1Widget">
     	<intent-filter>
     		<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
     	</intent-filter>
+    	<meta-data android:name="android.appwidget.provider"
+    			   android:resource="@xml/widget_provider" />
     </receiver>
     
 	<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"

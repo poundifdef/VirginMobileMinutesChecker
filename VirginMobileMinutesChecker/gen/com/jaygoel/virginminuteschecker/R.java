@@ -36,10 +36,10 @@ public final class R {
         public static final int accountDialogLayout=0x7f080000;
         public static final int accountScrollView=0x7f080009;
         public static final int accountView=0x7f08000a;
-        public static final int logout=0x7f080014;
-        public static final int menu_accountsignout=0x7f080016;
-        public static final int menu_addaccount=0x7f080018;
-        public static final int menu_refreshall=0x7f080017;
+        public static final int logout=0x7f080016;
+        public static final int menu_accountsignout=0x7f080018;
+        public static final int menu_addaccount=0x7f08001a;
+        public static final int menu_refreshall=0x7f080019;
         public static final int minutes=0x7f08000c;
         public static final int password=0x7f080007;
         public static final int passwordInputView=0x7f080004;
@@ -47,16 +47,18 @@ public final class R {
         public static final int phoneLabelView=0x7f080001;
         public static final int phoneNumberInputView=0x7f080002;
         public static final int progress=0x7f08000b;
-        public static final int refresh=0x7f080015;
+        public static final int refresh=0x7f080017;
         public static final int signInButton=0x7f080005;
         public static final int top=0x7f080008;
         public static final int username=0x7f080006;
-        public static final int widget_currentbalance=0x7f08000f;
-        public static final int widget_currentbalanceview=0x7f080010;
-        public static final int widget_minutesused=0x7f080012;
-        public static final int widget_minutesusedview=0x7f080011;
-        public static final int widget_refresh=0x7f080013;
+        public static final int widget_container=0x7f08000f;
+        public static final int widget_currentbalance=0x7f080010;
+        public static final int widget_currentbalanceview=0x7f080013;
+        public static final int widget_minutesused=0x7f080011;
+        public static final int widget_minutesusedview=0x7f080012;
+        public static final int widget_progress=0x7f080015;
         public static final int widget_textview=0x7f08000e;
+        public static final int widget_timestamp=0x7f080014;
     }
     public static final class layout {
         public static final int account_dialog=0x7f030000;
@@ -80,6 +82,8 @@ public final class R {
         public static final int incomingCallPrefSummary=0x7f06000c;
         public static final int incomingCallPrefTitle=0x7f06000b;
         public static final int keepit=0x7f060019;
+        public static final int lastUpdated=0x7f06001f;
+        public static final int loading=0x7f06001e;
         public static final int loadingMessage=0x7f060005;
         public static final int login=0x7f060002;
         public static final int loginFail=0x7f060006;

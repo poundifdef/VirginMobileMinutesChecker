@@ -2,10 +2,11 @@
 <RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
-    <TextView android:layout_width="wrap_content" android:id="@+id/widget_currentbalance" android:layout_height="wrap_content" android:text="@string/currentBalance"></TextView>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@+id/widget_currentbalance" android:layout_alignTop="@+id/widget_currentbalance" android:layout_alignBottom="@+id/widget_currentbalance" android:id="@+id/widget_currentbalanceview"></TextView>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/widget_currentbalanceview" android:layout_alignLeft="@+id/widget_currentbalanceview" android:layout_alignRight="@+id/widget_currentbalanceview" android:id="@+id/widget_minutesusedview"></TextView>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/widget_currentbalance" android:layout_alignLeft="@+id/widget_currentbalance" android:layout_alignRight="@+id/widget_currentbalance" android:id="@+id/widget_minutesused" android:text="@string/minutesUsed"></TextView>
-    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:id="@+id/widget_refresh" android:src="@drawable/loading" android:background="@color/transparent" android:layout_centerVertical="true" android:visibility="gone"></ImageButton>
+  android:layout_height="fill_parent" android:background="@drawable/widget_background" android:id="@+id/widget_container">
+    <TextView android:layout_width="wrap_content" android:id="@+id/widget_currentbalance" android:layout_height="wrap_content" android:text="@string/currentBalance" android:layout_marginLeft="10dp" android:layout_marginTop="15dp"></TextView>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/widget_currentbalance" android:layout_alignLeft="@+id/widget_currentbalance" android:id="@+id/widget_minutesused" android:text="@string/minutesUsed"></TextView>
+    <TextView android:layout_height="wrap_content" android:id="@+id/widget_minutesusedview" android:layout_width="wrap_content" android:layout_toRightOf="@+id/widget_minutesused" android:layout_alignTop="@+id/widget_minutesused" android:layout_alignBottom="@+id/widget_minutesused"></TextView>
+    <TextView android:layout_height="wrap_content" android:text=" " android:id="@+id/widget_currentbalanceview" android:layout_width="wrap_content" android:layout_above="@+id/widget_minutesusedview" android:layout_alignLeft="@+id/widget_minutesusedview"></TextView>
+    <TextView android:layout_height="wrap_content" android:layout_below="@+id/widget_minutesused" android:layout_alignLeft="@+id/widget_minutesused" android:id="@+id/widget_timestamp" android:text="@string/lastUpdated" android:layout_width="wrap_content" android:textSize="10px" android:textStyle="italic"></TextView>
+    <TextView android:layout_alignParentBottom="true" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/widget_progress" android:layout_alignParentRight="true" android:text="@string/loading" android:visibility="gone"></TextView>
 </RelativeLayout>

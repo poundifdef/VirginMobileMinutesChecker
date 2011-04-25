@@ -15,6 +15,7 @@ import com.baker.vm.PreferencesUtil;
 import com.baker.vm.ScraperUtil;
 import com.baker.vm.UsernamePassword;
 import com.baker.vm.VMAccount;
+import com.baker.vm.widget.Simple2x1Widget;
 import com.jaygoel.virginminuteschecker.R;
 
 /**
@@ -29,12 +30,29 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
     @Override
     public void onReceive(final Context context, final Intent intent)
     {
+        Log.e("MYOUTPUT", "onReceiverNotifyRemainingMinutes");
         try
         {
             Bundle extras = intent.getExtras();
 
             if (extras == null)
             {
+                Log.i("MYOUTPUT", "screen scrape");
+
+//              An attempt at making a "loading" icon/text appear when we are
+//              attempting to get new information
+
+//                Intent updateWidgetIntent = new Intent(context, Simple2x1Widget.class);
+//                updateWidgetIntent.setAction(Simple2x1Widget.START_THINKING);
+//                context.sendBroadcast(updateWidgetIntent);
+
+                // Called from Widget
+                updateCache(context);
+
+                Intent updateWidgetIntent = new Intent(context, Simple2x1Widget.class);
+                updateWidgetIntent.setAction(Simple2x1Widget.UPDATE_ACTION);
+                context.sendBroadcast(updateWidgetIntent);
+
                 return;
             }
 
@@ -73,7 +91,6 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
         int used = PreferencesUtil.getMinutesUsed(context);
         int total = PreferencesUtil.getCacheMinutesTotal(context);
         String minutes = PreferencesUtil.getMinutesString(context);
-
 
         if (minutes == null || minutes.length() == 0)
         {
@@ -114,11 +131,13 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
 
         if (password != null && password.length() != 0)
         {
+            Log.i(TAG, "Checking Virgin Mobile's wesbite (" + number + ")");
             VMAccount acct =
                 ScraperUtil.scrape(new UsernamePassword(number, password));
 
             if (acct.isValid())
             {
+                Log.i(TAG, "Found: " + acct.getMinutesUsed() + " " + acct.getBalance());
                 PreferencesUtil.setCache(context, acct);
             }
             else
