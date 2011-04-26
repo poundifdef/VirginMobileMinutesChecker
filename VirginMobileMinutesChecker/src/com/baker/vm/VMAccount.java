@@ -1,5 +1,10 @@
 package com.baker.vm;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.jaygoel.virginminuteschecker.IVMCScraper;
 
 /**
@@ -9,9 +14,42 @@ import com.jaygoel.virginminuteschecker.IVMCScraper;
 public final class VMAccount
 {
 
+	private static final Pattern DATE_PAT = Pattern.compile("(\\d\\d)/(\\d\\d)/(\\d\\d)");
+    private static final Pattern MINUTES_PAT = Pattern.compile("(\\d+)\\s*/\\s*(\\d+)");
+
     public static VMAccount createInvalid(final UsernamePassword iAuth)
     {
         return new VMAccount(iAuth);
+    }
+
+    public static VMAccount createTest(final UsernamePassword auth)
+    {
+    	final VMAccount ret = new VMAccount(auth);
+
+    	ret.monthlyCharge = "$40.00";
+    	ret.balance = "$0.00";
+    	ret.minAmountDue = "$0.00";
+    	ret.dueDate = "04/25/11";
+    	ret.chargedOn = "04/25/11";
+    	ret.minutesUsed = "650 / 1200";
+    	ret.isValid = true;
+
+    	return ret;
+    }
+
+    public static VMAccount createTest()
+    {
+    	final VMAccount ret = new VMAccount(new UsernamePassword("5555555555", "test"));
+
+    	ret.monthlyCharge = "$40.00";
+    	ret.balance = "$0.00";
+    	ret.minAmountDue = "$0.00";
+    	ret.dueDate = "04/25/11";
+    	ret.chargedOn = "04/25/11";
+    	ret.minutesUsed = "40 / 1200";
+    	ret.isValid = true;
+
+    	return ret;
     }
 
     public VMAccount(final UsernamePassword iAuth, final String html, final IVMCScraper scraper)
@@ -54,14 +92,14 @@ public final class VMAccount
     }
 
     private final UsernamePassword auth;
-    private final boolean isValid;
-    private final String number;
-    private final String monthlyCharge;
-    private final String balance;
-    private final String minAmountDue;
-    private final String dueDate;
-    private final String chargedOn;
-    private final String minutesUsed;
+    private boolean isValid;
+    private String number;
+    private String monthlyCharge;
+    private String balance;
+    private String minAmountDue;
+    private String dueDate;
+    private String chargedOn;
+    private String minutesUsed;
 
     public boolean isValid()
     {
@@ -92,9 +130,51 @@ public final class VMAccount
     {
         return chargedOn;
     }
+    public boolean canParseChargedOn()
+    {
+    	return DATE_PAT.matcher(getChargedOn() == null ? "" : getChargedOn()).matches();
+    }
+    public Calendar getChargedOnCal()
+    {
+    	final Matcher m = DATE_PAT.matcher(getChargedOn());
+    	Calendar cal = null;
+    	if (m.matches())
+    	{
+    		// This won't throw NumberFormatExceptions because the matches must be digits
+    		cal = new GregorianCalendar(Integer.parseInt("20" + m.group(3)),
+    									Integer.parseInt(m.group(1)) - 1,
+    									Integer.parseInt(m.group(2)));
+    	}
+
+    	return cal;
+    }
     public String getMinutesUsed()
     {
         return minutesUsed;
+    }
+    public boolean canParseMinutes()
+    {
+    	return MINUTES_PAT.matcher(getMinutesUsed() == null ? "" : getMinutesUsed()).matches();
+    }
+    public int getMinutesUsedInt()
+    {
+    	int used = -1;
+    	final Matcher m = MINUTES_PAT.matcher(getMinutesUsed());
+    	if (m.matches())
+    	{
+    		used = Integer.parseInt(m.group(1));
+    	}
+    	return used;
+    }
+    public int getMinutesTotal()
+    {
+    	int total = -1;
+    	final Matcher m = MINUTES_PAT.matcher(getMinutesUsed());
+    	if (m.matches())
+    	{
+    		total = Integer.parseInt(m.group(2));
+    	}
+    	return total;
     }
 
 	public UsernamePassword getAuth()
