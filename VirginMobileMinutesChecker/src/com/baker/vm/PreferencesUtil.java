@@ -1,13 +1,9 @@
 package com.baker.vm;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.baker.vm.ui.MultipleAccountsActivity;
 
@@ -32,9 +28,6 @@ public final class PreferencesUtil
     /** Keys in auth preferences. */
     public static final String USER_PREFIX = "USER";
     public static final String PASS_PREFIX = "PASS";
-
-    private static final Pattern MINUTES_PAT = Pattern.compile("(\\d+)\\s*/\\s*(\\d+)");
-    private static final String TAG = "PreferencesUtil";
 
     public static SharedPreferences get(final Context context)
     {
@@ -68,9 +61,9 @@ public final class PreferencesUtil
 
     public static void clearCache(final Context context)
     {
-        SharedPreferences cache = getCache(context);
+        final SharedPreferences cache = getCache(context);
 
-        Editor editor = cache.edit();
+        final Editor editor = cache.edit();
 
         editor.putString(CACHE_AS_STRING, "");
         editor.putInt(CACHE_MINUTES_USED, -1);
@@ -81,40 +74,22 @@ public final class PreferencesUtil
 
     public static void setCache(final Context activity, final VMAccount account)
     {
-        int used = -1;
-        int total = -1;
+    	// only ever save the default phone number info in the cache
+    	if (!getDefaultTelephoneNumber(activity).equals(account.getNumber()))
+    	{
+    		return;
+    	}
 
-        SharedPreferences cache = getCache(activity);
+        final SharedPreferences cache = getCache(activity);
 
-        Editor editor = cache.edit();
+        final Editor editor = cache.edit();
 
         // Handle minutes used
         final String minutes = account.getMinutesUsed();
         editor.putString(CACHE_AS_STRING, minutes);
-        Matcher m = MINUTES_PAT.matcher(minutes);
 
-        if (m.matches())
-        {
-            try
-            {
-                used = Integer.parseInt(m.group(1));
-            }
-            catch (NumberFormatException ex)
-            {
-                Log.e(TAG, "Failed to parse minutes used as a number: " + minutes);
-            }
-            try
-            {
-                total = Integer.parseInt(m.group(2));
-            }
-            catch (NumberFormatException ex)
-            {
-                Log.e(TAG, "Failed to parse minutes used as a number: " + minutes);
-            }
-        }
-
-        editor.putInt(CACHE_MINUTES_USED, used);
-        editor.putInt(CACHE_MINUTES_TOTAL, total);
+        editor.putInt(CACHE_MINUTES_USED, account.getMinutesUsedInt());
+        editor.putInt(CACHE_MINUTES_TOTAL, account.getMinutesTotal());
 
         // Handle account balance
         editor.putString(CACHE_BALANCE, account.getBalance());
