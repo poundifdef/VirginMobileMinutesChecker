@@ -28,8 +28,8 @@
     <string name="passwordLabel">Password (vKey or PIN):</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="currentBalance">Current Balance:</string>
-    <string name="minutesUsed">Minutes Used:</string>
+    <string name="currentBalance">Balance:</string>
+    <string name="minutesUsed">Min Used:</string>
     <string name="chargedOn">Charged On:</string>
     <string name="monthlyCharge">Monthly Charge:</string>
     <string name="addAccountDialogTitle">Add Account</string>
@@ -37,7 +37,9 @@
     <string name="keepit">Keep It</string>
     <string name="removeit">Remove It</string>
     <string name="notify_remaing_minutes">Notify of Remaining Minutes</string>
-    <string name="minutes_left">Minutes Remaining: %1$s</string>
-    <string name="minutes_over">Minutes Over: %1$s!</string>
+    
+    <string name="minutes_left">Minutes Remaining: %1$s</string><string name="minutes_over">Minutes Over: %1$s!</string>
+    <string name="loading">Loading...</string>
+    <string name="lastUpdated">last updated%1$s</string>
 
 </resources>
