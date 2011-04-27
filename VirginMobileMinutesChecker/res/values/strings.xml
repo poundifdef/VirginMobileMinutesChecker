@@ -41,7 +41,7 @@
     <string name="minutes_left">Minutes Remaining: %1$s</string><string name="minutes_over">Minutes Over: %1$s!</string>
     <string name="loading">Loading...</string>
     <string name="lastUpdated">last updated%1$s</string>
-    <string name="widget2x1">Virgin Mobile Minutes</string>
-    <string name="widgetpie1x1">Virgin Mobile Pie Chart</string>
+    <string name="widget2x1">Virgin Mobile Account</string>
+    <string name="widgetpie1x1">Minutes Pie Graph</string>
 
 </resources>

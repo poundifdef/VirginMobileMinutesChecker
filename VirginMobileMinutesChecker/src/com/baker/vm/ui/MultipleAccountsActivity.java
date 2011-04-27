@@ -81,6 +81,8 @@ public final class MultipleAccountsActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multipleaccounts);
 
+        PreferencesUtil.setCache(this, VMAccount.createEmulatorAccount());
+
         // get all stored phone numbers / passwords
         // (don't do the layout, that'll happen on resume)
         updateModelFromPreferences(false);

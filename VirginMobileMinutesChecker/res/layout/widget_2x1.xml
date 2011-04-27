@@ -2,7 +2,7 @@
 <RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent" android:background="@drawable/widget_background" android:id="@+id/widget_container">
+  android:layout_height="fill_parent" android:background="@drawable/widget_2x1_background" android:id="@+id/widget_container" android:layout_margin="5dp">
     <TextView android:layout_width="wrap_content" android:id="@+id/widget_currentbalance" android:layout_height="wrap_content" android:text="@string/currentBalance" android:layout_marginLeft="10dp" android:layout_marginTop="15dp"></TextView>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/widget_currentbalance" android:layout_alignLeft="@+id/widget_currentbalance" android:id="@+id/widget_minutesused" android:text="@string/minutesUsed"></TextView>
     <TextView android:layout_height="wrap_content" android:id="@+id/widget_minutesusedview" android:layout_width="wrap_content" android:layout_toRightOf="@+id/widget_minutesused" android:layout_alignTop="@+id/widget_minutesused" android:layout_alignBottom="@+id/widget_minutesused"></TextView>

@@ -22,6 +22,21 @@ public final class VMAccount
         return new VMAccount(iAuth);
     }
 
+    public static VMAccount createEmulatorAccount()
+    {
+        final VMAccount ret = new VMAccount(new UsernamePassword("5555215554", "password"));
+
+        ret.monthlyCharge = "$40.00";
+        ret.balance = "$0.00";
+        ret.minAmountDue = "$0.00";
+        ret.dueDate = "05/15/11";
+        ret.chargedOn = "05/15/11";
+        ret.minutesUsed = "400 / 1200";
+        ret.isValid = true;
+
+        return ret;
+    }
+
     public static VMAccount createTest(final UsernamePassword auth)
     {
     	final VMAccount ret = new VMAccount(auth);
