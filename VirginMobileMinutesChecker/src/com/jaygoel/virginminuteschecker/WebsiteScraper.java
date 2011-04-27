@@ -24,7 +24,7 @@ public class WebsiteScraper
 
         try
         {
-            TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager()
+            final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager()
             {
                 @Override
                 public java.security.cert.X509Certificate[] getAcceptedIssuers()
@@ -45,26 +45,26 @@ public class WebsiteScraper
                 }
             } };
 
-            String url = "https://www1.virginmobileusa.com/login/login.do";
+            final String url = "https://www1.virginmobileusa.com/login/login.do";
             // String url = "https://www1.virginmobileusa.com/login/login.do";
             // String url =
             // "https://www1.virginmobileusa.com/myaccount/home.do";
 
             try
             {
-                SSLContext sc = SSLContext.getInstance("TLS");
+                final SSLContext sc = SSLContext.getInstance("TLS");
                 sc.init(null, trustAllCerts, new java.security.SecureRandom());
                 HttpsURLConnection.setDefaultSSLSocketFactory(sc
                     .getSocketFactory());
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 e.getMessage();
             }
 
             // HttpsURLConnection.setFollowRedirects(true);
 
-            HttpsURLConnection connection = (HttpsURLConnection) new URL(url)
+            final HttpsURLConnection connection = (HttpsURLConnection) new URL(url)
                 .openConnection();
             (connection)
                 .setHostnameVerifier(new AllowAllHostnameVerifier());
@@ -75,7 +75,7 @@ public class WebsiteScraper
 
             // try {
             Thread.sleep(5000);
-            OutputStreamWriter out = new OutputStreamWriter(
+            final OutputStreamWriter out = new OutputStreamWriter(
                 connection.getOutputStream());
             out.write("loginRoutingInfo=&min=" + username + "&vkey=" + password
                 + "&submit=submit");
@@ -86,10 +86,10 @@ public class WebsiteScraper
 
             // connection.connect();
 
-            InputStreamReader in = new InputStreamReader(
+            final InputStreamReader in = new InputStreamReader(
                 (InputStream) connection.getContent());
 
-            BufferedReader buff = new BufferedReader(in);
+            final BufferedReader buff = new BufferedReader(in);
             line = buff.readLine();
 
             while (line != null)
@@ -103,7 +103,7 @@ public class WebsiteScraper
 
             connection.disconnect();
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             e.printStackTrace();
             // System.err.println("exception 83");
@@ -123,7 +123,7 @@ public class WebsiteScraper
 
     public static Map<String, String> parseInfo(final String line)
     {
-        Map<String, String> rc = new HashMap<String, String>();
+        final Map<String, String> rc = new HashMap<String, String>();
 
         if (line == null)
         {
@@ -243,7 +243,7 @@ public class WebsiteScraper
     public static Map<String, String> getInfo(final String username, final String password)
     {
 
-        String line = fetchScreen(username, password);
+        final String line = fetchScreen(username, password);
         // Log.d("DEBUG", "Line: "+line);
 
         return parseInfo(line);

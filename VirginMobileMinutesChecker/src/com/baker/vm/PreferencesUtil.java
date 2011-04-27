@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
-import android.util.Log;
 
 import com.baker.vm.ui.MultipleAccountsActivity;
 
@@ -25,8 +24,8 @@ public final class PreferencesUtil
     public static final String CACHE_AS_STRING = "cache_as_string";
     public static final String CACHE_MINUTES_USED = "cache_minutes_used";
     public static final String CACHE_MINUTES_TOTAL = "cache_minutes_total";
-
     public static final String CACHE_BALANCE = "cache_balance";
+    public static final String CACHE_DUE_DATE = "cache_due_date";
 
     /** Keys in auth preferences. */
     public static final String USER_PREFIX = "USER";
@@ -35,6 +34,18 @@ public final class PreferencesUtil
     public static SharedPreferences get(final Context context)
     {
         return context.getSharedPreferences(AUTH_PREFS, 0);
+    }
+
+    public static VMAccount getCachedAccount(final Context activity)
+    {
+    	final SharedPreferences cache = getCache(activity);
+
+    	final String phoneNumber = getDefaultTelephoneNumber(activity);
+    	final String pass = getPassword(activity, phoneNumber);
+
+    	return VMAccount.createFromCache(new UsernamePassword(phoneNumber, pass),
+    			cache.getString(CACHE_AS_STRING, ""),
+    			cache.getString(CACHE_DUE_DATE, ""));
     }
 
     public static SharedPreferences getCache(final Context activity)
@@ -62,6 +73,11 @@ public final class PreferencesUtil
         return getCache(activity).getInt(CACHE_MINUTES_TOTAL, -1);
     }
 
+	public static String getDueDate(final Context context)
+	{
+        return getCache(context).getString(CACHE_DUE_DATE, "");
+	}
+
     public static void clearCache(final Context context)
     {
         final SharedPreferences cache = getCache(context);
@@ -72,13 +88,14 @@ public final class PreferencesUtil
         editor.putInt(CACHE_MINUTES_USED, -1);
         editor.putInt(CACHE_MINUTES_TOTAL, -1);
 
+        editor.putString(CACHE_DUE_DATE, "");
         editor.putString(CACHE_BALANCE, "");
     }
 
     public static void setCache(final Context activity, final VMAccount account)
     {
     	// only ever save the default phone number info in the cache
-    	if (!getDefaultTelephoneNumber(activity).equals(account.getNumber()))
+    	if (!digits(getDefaultTelephoneNumber(activity)).equals(digits(account.getNumber())))
     	{
     		return;
     	}
@@ -97,13 +114,16 @@ public final class PreferencesUtil
         // Handle account balance
         editor.putString(CACHE_BALANCE, account.getBalance());
 
+        // Handle due date
+        editor.putString(CACHE_DUE_DATE, account.getChargedOn());
+
         editor.putLong(CACHE_TS, System.currentTimeMillis());
 
 
         editor.commit();
     }
 
-    public static String getDefaultTelephoneNumber(final Context c)
+	public static String getDefaultTelephoneNumber(final Context c)
     {
         final TelephonyManager tMgr =
             (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
@@ -189,5 +209,10 @@ public final class PreferencesUtil
     {
         return DateFormat.format("E hh:mm aa", getCache(context).getLong(CACHE_TS, 0));
     }
+
+    private static String digits(final String phoneNumber)
+	{
+		return MultipleAccountsActivity.digits(phoneNumber);
+	}
 
 }

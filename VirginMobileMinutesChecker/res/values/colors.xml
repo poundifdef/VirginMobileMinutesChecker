@@ -2,7 +2,6 @@
 <resources>
     <color name="white">#FFF</color>
     <color name="gray3">#ccc</color>
-    <color name="red">#FF0A0A</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="gray1">#222</color>
     <color name="gray2">#444</color>
@@ -10,4 +9,8 @@
     <color name="skyblue">#3366FF</color>
     <color name="deepblue">#002EB8</color>
     <color name="black">#000</color>
+    
+    <color name="error">#FF0000</color>
+    <color name="warning">#FFFF00</color>
+    <color name="info">#00FF00</color>
 </resources>

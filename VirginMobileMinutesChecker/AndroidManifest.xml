@@ -22,20 +22,21 @@
 	  	  	<action android:name="android.intent.action.PHONE_STATE" />
       	</intent-filter>
     </receiver>
-    <receiver android:label="@string/app_name" android:name="com.baker.vm.widget.Simple2x1Widget">
+    <receiver android:label="@string/widget2x1" android:name="com.baker.vm.widget.Simple2x1Widget">
     	<intent-filter>
     		<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
     	</intent-filter>
     	<meta-data android:name="android.appwidget.provider"
     			   android:resource="@xml/widget_provider" />
     </receiver>
+    <receiver android:label="@string/widgetpie1x1" android:name="com.baker.vm.widget.PieGraphWidget">
+        <intent-filter>
+            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+        </intent-filter>
+        <meta-data android:name="android.appwidget.provider"
+                   android:resource="@xml/widget_pie_provider" />
+    </receiver>
     
-	<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-		android:minWidth="146dp"
-		android:minHeight="72dp"
-		android:updatePeriodMillis="21600000"
-		android:initialLayout="@layout/widget_2x1">
-	</appwidget-provider>
   </application>
   <uses-sdk android:minSdkVersion="7" />
 

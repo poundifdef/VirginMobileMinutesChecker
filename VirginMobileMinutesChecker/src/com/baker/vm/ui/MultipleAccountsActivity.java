@@ -46,6 +46,7 @@ public final class MultipleAccountsActivity extends Activity
     private static final String TEXTVIEW = "textview";
     private static final String TABLE = "table";
     private static final String LAYOUT = "linearlayout";
+    private static final String GRAPH = "graph";
 
     public static String digits(final String user)
     {
@@ -185,23 +186,23 @@ public final class MultipleAccountsActivity extends Activity
             }
             else
             {
-                table.setPadding(20, 0, 0, 0);
-
-                int widest = getMaxWidth(R.string.currentBalance,
+                final int widest = getMaxWidth(R.string.currentBalance,
                                          R.string.minutesUsed,
                                          R.string.chargedOn,
                                          R.string.monthlyCharge);
 
                 String balance = "";
                 String minutes = "";
+                String dueDate = "";
                 if (getUsersTelephoneNumber().equals(auth.user))
                 {
                     balance = PreferencesUtil.getBalance(this);
                     minutes = PreferencesUtil.getMinutesString(this);
+                    dueDate = PreferencesUtil.getDueDate(this);
                 }
                 addRow(table, R.string.currentBalance, balance, widest, true);
                 addRow(table, R.string.minutesUsed, minutes, widest, true);
-                addRow(table, R.string.chargedOn, "", widest, true);
+                addRow(table, R.string.chargedOn, dueDate, widest, true);
                 addRow(table, R.string.monthlyCharge, "", widest, true);
             }
         }
@@ -238,7 +239,7 @@ public final class MultipleAccountsActivity extends Activity
 
             if (acct.isValid())
             {
-                int widest = getMaxWidth(R.string.currentBalance,
+                final int widest = getMaxWidth(R.string.currentBalance,
                                          R.string.minutesUsed,
                                          R.string.chargedOn,
                                          R.string.monthlyCharge);
@@ -254,6 +255,36 @@ public final class MultipleAccountsActivity extends Activity
                 addRow(table, createSignInButton(acct.getAuth()), getString(R.string.loginFail));
             }
         }
+
+        /*
+        final MinutesGraphDrawable graph =
+        	(MinutesGraphDrawable) hash.get(getHashKey(acct.getNumber(), GRAPH));
+
+        if (graph != null)
+        {
+        	if (acct.isValid())
+        	{
+        		graph.updateModel(acct);
+        		graph.setVisibility(View.VISIBLE);
+        	}
+        	else
+        	{
+        		graph.setVisibility(View.GONE);
+        	}
+        }
+
+        final LinearLayout layout =
+        	(LinearLayout) hash.get(getHashKey(acct.getNumber(), LAYOUT));
+
+        if (graph != null)
+        {
+        	if (acct.isValid())
+        	{
+        		layout.setBackgroundDrawable(new MinutesPieGraphDrawable(this, acct));
+        	}
+        }
+        */
+
     }
 
 	private void removeAllPasswordsFromPreferences()
@@ -371,7 +402,7 @@ public final class MultipleAccountsActivity extends Activity
         dialog.show();
     }
 
-    private void doInitialLayout()
+	private void doInitialLayout()
     {
         final LinearLayout v = (LinearLayout) findViewById(R.id.accountView);
 
@@ -397,6 +428,7 @@ public final class MultipleAccountsActivity extends Activity
         	hash.remove(getHashKey(number, TABLE));
         	hash.remove(getHashKey(number, TEXTVIEW));
         	hash.remove(getHashKey(number, LAYOUT));
+        	hash.remove(getHashKey(number, GRAPH));
         }
 
         // Add new views that were not in the model when we laid things out last
@@ -412,18 +444,28 @@ public final class MultipleAccountsActivity extends Activity
 
                 vert.addView(createTextView(auth.user));
 
+                final LinearLayout container = new LinearLayout(getApplicationContext());
+                container.setOrientation(LinearLayout.HORIZONTAL);
+
                 final LinearLayout table = new LinearLayout(getApplicationContext());
                 table.setOrientation(LinearLayout.VERTICAL);
+                table.setPadding(20, 0, 0, 0);
                 hash.put(getHashKey(auth.user, TABLE), table);
 
                 updateLayout(auth);
+
+//                container.addView(table, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1F));
+
+//                final MinutesPieGraph piegraph = new MinutesPieGraph(getApplicationContext());
+//                hash.put(getHashKey(auth.user, GRAPH), piegraph);
+
+//                container.addView(piegraph, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1F));
 
                 vert.addView(table);
 
                 v.addView(vert);
         	}
         }
-
     }
 
     private void addRow(final LinearLayout table,
@@ -447,7 +489,7 @@ public final class MultipleAccountsActivity extends Activity
 
         final TextView val = new TextView(this);
         val.setText(value);
-        int colorResId = isFromCache ? R.color.gray3 : R.color.white;
+        final int colorResId = isFromCache ? R.color.gray3 : R.color.white;
         val.setTextColor(getResources().getColor(colorResId));
 
         final LinearLayout row = new LinearLayout(this);
@@ -459,7 +501,7 @@ public final class MultipleAccountsActivity extends Activity
     }
 
     private void addRow(final LinearLayout table,
-    					final Button button)
+    					final View button)
     {
     	button.setPadding(20, 5, 20, 5);
         table.addView(button, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
@@ -471,7 +513,7 @@ public final class MultipleAccountsActivity extends Activity
     {
         final TextView lbl = new TextView(getApplicationContext());
         lbl.setText(message);
-        lbl.setTextColor(getResources().getColor(R.color.red));
+        lbl.setTextColor(getResources().getColor(R.color.error));
         lbl.setTextSize(12F);
         lbl.setPadding(20, 5, 20, 5);
 
@@ -559,8 +601,8 @@ public final class MultipleAccountsActivity extends Activity
     private int getMaxWidth(final int... stringResIds)
     {
         int max = 0;
-        Paint p = new Paint();
-        for (int stringResId : stringResIds)
+        final Paint p = new Paint();
+        for (final int stringResId : stringResIds)
         {
             max = Math.max(max, (int) p.measureText(getString(stringResId)));
         }
@@ -582,7 +624,7 @@ public final class MultipleAccountsActivity extends Activity
     private String formatPhoneNumber(final String number)
     {
         String ret = number;
-        Matcher m = PHONE_NUMBER_PAT.matcher(number);
+        final Matcher m = PHONE_NUMBER_PAT.matcher(number);
         if (m.matches())
         {
             ret = "(" + m.group(1) + ") " + m.group(2) + "-" + m.group(3);

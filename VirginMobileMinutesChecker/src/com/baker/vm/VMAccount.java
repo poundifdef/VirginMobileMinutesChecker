@@ -44,12 +44,24 @@ public final class VMAccount
     	ret.monthlyCharge = "$40.00";
     	ret.balance = "$0.00";
     	ret.minAmountDue = "$0.00";
-    	ret.dueDate = "04/25/11";
-    	ret.chargedOn = "04/25/11";
-    	ret.minutesUsed = "40 / 1200";
+    	ret.dueDate = "04/31/11";
+    	ret.chargedOn = "04/31/11";
+    	ret.minutesUsed = "400 / 1200";
     	ret.isValid = true;
 
     	return ret;
+    }
+
+    public static VMAccount createFromCache(final UsernamePassword iAuth,
+    										final String iMinutes,
+    										final String iChargedOn)
+    {
+    	final VMAccount account = new VMAccount(iAuth);
+
+    	account.chargedOn = iChargedOn;
+    	account.minutesUsed = iMinutes;
+
+    	return account;
     }
 
     public VMAccount(final UsernamePassword iAuth, final String html, final IVMCScraper scraper)
@@ -130,7 +142,7 @@ public final class VMAccount
     {
         return chargedOn;
     }
-    public boolean canParseChargedOn()
+    public boolean canParseChargedOnDate()
     {
     	return DATE_PAT.matcher(getChargedOn() == null ? "" : getChargedOn()).matches();
     }

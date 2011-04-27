@@ -38,7 +38,7 @@ public class FetchAccountTask
     {
         super.onCancelled();
 
-        activity.findViewById(R.id.progress).setVisibility(View.GONE);
+        activity.findViewById(R.id.progresslayout).setVisibility(View.GONE);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class FetchAccountTask
     {
         super.onPreExecute();
 
-        activity.findViewById(R.id.progress).setVisibility(View.VISIBLE);
+        activity.findViewById(R.id.progresslayout).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class FetchAccountTask
         super.onPostExecute(result);
 
         activity.updateLayout(result);
-        activity.findViewById(R.id.progress).setVisibility(View.GONE);
+        activity.findViewById(R.id.progresslayout).setVisibility(View.GONE);
     }
 
     @Override
@@ -63,13 +63,12 @@ public class FetchAccountTask
     {
         super.onProgressUpdate(values);
 
-        activity.findViewById(R.id.progress).setVisibility(View.VISIBLE);
+        final ProgressBar bar = (ProgressBar) activity.findViewById(R.id.progress);
+        bar.setProgress(i);
+        activity.findViewById(R.id.progresslayout).setVisibility(View.VISIBLE);
 
         if (values != null && values.length > 0)
         {
-            final ProgressBar bar = (ProgressBar) activity.findViewById(R.id.progress);
-            bar.setProgress(i + 1);
-
             for (final VMAccount acct : values)
             {
             	activity.updateLayout(acct);
@@ -80,25 +79,20 @@ public class FetchAccountTask
     @Override
     protected List<VMAccount> doInBackground(final UsernamePassword... params)
     {
-        final ProgressBar bar = (ProgressBar) activity.findViewById(R.id.progress);
-        bar.setMax(params.length + 1);
-        bar.setProgress(i + 1);
+        ((ProgressBar) activity.findViewById(R.id.progress)).setMax(params.length);
+        publishProgress();
 
         final IVMCScraper scraper= new ReferenceScraper();
 
         final List<VMAccount> accts = new ArrayList<VMAccount>();
         for (final UsernamePassword a : params)
         {
-            VMAccount acct = ScraperUtil.scrape(a, scraper);
-
-        	if (acct != null)
-        	{
-                accts.add(acct);
-        	}
+            final VMAccount acct = ScraperUtil.scrape(a, scraper);
 
             ++i;
             if (acct != null)
             {
+            	accts.add(acct);
             	publishProgress(acct);
             }
             else
