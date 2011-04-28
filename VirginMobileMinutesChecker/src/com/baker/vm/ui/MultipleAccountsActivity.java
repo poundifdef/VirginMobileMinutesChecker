@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Paint;
@@ -80,8 +81,6 @@ public final class MultipleAccountsActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multipleaccounts);
-
-        PreferencesUtil.setCache(this, VMAccount.createEmulatorAccount());
 
         // get all stored phone numbers / passwords
         // (don't do the layout, that'll happen on resume)
@@ -157,6 +156,12 @@ public final class MultipleAccountsActivity extends Activity
 				showAddAccountDialog(startingNumber, null);
 
 				return true;
+
+			case R.id.menu_about:
+
+			    startActivity(new Intent(this, AboutActivity.class));
+
+			    return true;
 
 			default:
 				return super.onOptionsItemSelected(item);

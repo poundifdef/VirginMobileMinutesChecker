@@ -34,18 +34,25 @@ public final class ScraperUtil
 
         if (a.pass != null && a.pass.length() != 0)
         {
-            final String html= WebsiteScraper.fetchScreen(a.user, a.pass);
-            Log.d(TAG, html);
+            try
+            {
+                final String html= WebsiteScraper.fetchScreen(a.user, a.pass);
+                Log.d(TAG, html);
 
-            if (scraper.isValid(html))
-            {
-                Log.d(TAG, "valid");
-                acct = new VMAccount(a, html, scraper);
+                if (scraper.isValid(html))
+                {
+                    Log.d(TAG, "valid");
+                    acct = new VMAccount(a, html, scraper);
+                }
+                else
+                {
+                    Log.d(TAG, "invalid: " + a.toString());
+                    acct = VMAccount.createInvalid(a);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Log.d(TAG, "invalid: " + a.toString());
-                acct = VMAccount.createInvalid(a);
+                Log.e(TAG, "Failed to fetch virgin mobile info: " + a.user);
             }
         }
 
