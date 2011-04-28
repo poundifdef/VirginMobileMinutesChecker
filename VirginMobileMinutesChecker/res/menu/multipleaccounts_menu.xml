@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:menuCategory="system" android:id="@+id/menu_accountsignout" android:visible="true" android:checkable="false" android:enabled="true" android:title="@string/logout" android:checked="false"></item>
+    <item android:menuCategory="system" android:id="@+id/menu_refreshall" android:visible="true" android:checkable="false" android:enabled="true" android:title="@string/refresh"></item>
+    <item android:menuCategory="alternative" android:id="@+id/menu_addaccount" android:visible="true" android:checkable="false" android:enabled="true" android:title="@string/addAccountDialogTitle"></item>
+    <item android:menuCategory="alternative" android:id="@+id/menu_about" android:title="@string/about_menu_item"></item>
+</menu>

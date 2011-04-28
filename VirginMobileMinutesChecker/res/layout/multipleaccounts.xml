@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" android:orientation="vertical" android:id="@+id/top" android:background="@drawable/app_background" xmlns:android="http://schemas.android.com/apk/res/android">
+    <ScrollView android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/accountScrollView" android:layout_weight="1" android:scrollbars="vertical" android:visibility="visible">
+        <LinearLayout android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/accountView" android:orientation="vertical"></LinearLayout>
+    </ScrollView>
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/progresslayout" android:minHeight="24px" android:layout_margin="5px" android:background="@drawable/loading_background" android:visibility="visible">
+        <ProgressBar android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/thinkingIcon" android:indeterminate="true" android:maxHeight="20px" android:minHeight="20px" android:layout_gravity="center_vertical" android:maxWidth="20px" android:minWidth="20px" android:indeterminateBehavior="repeat" android:layout_marginLeft="6px" android:layout_marginTop="2px" android:layout_marginBottom="2px"></ProgressBar>
+        <ProgressBar android:id="@+id/progress" android:indeterminate="false" android:focusableInTouchMode="false" android:layout_height="wrap_content" android:drawingCacheQuality="auto" android:indeterminateOnly="false" android:layout_gravity="center_vertical|center_horizontal" android:clickable="false" android:focusable="false" android:layout_weight="1" android:minHeight="8px" android:maxHeight="8px" android:layout_width="wrap_content" android:visibility="visible" android:progressDrawable="@drawable/progress_horizontal" android:layout_marginRight="10px" android:layout_marginLeft="10px"></ProgressBar>
+    </LinearLayout>
+</LinearLayout>

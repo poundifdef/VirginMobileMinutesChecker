@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" 
+	android:layout_height="fill_parent" 
+	android:id="@+id/accountDialogLayout" 
+	android:layout_width="fill_parent" 
+	android:padding="6px" android:gravity="right">
+        <TextView android:text="@string/phoneNumberLabel" android:id="@+id/phoneLabelView" android:layout_height="wrap_content" android:layout_width="fill_parent"></TextView>
+        <EditText android:layout_width="fill_parent" android:id="@+id/phoneNumberInputView" android:imeOptions="actionNext" android:layout_height="wrap_content" android:inputType="phone"></EditText>
+        <TextView android:text="@string/passwordLabel" android:id="@+id/passwordLabelView" android:layout_height="wrap_content" android:layout_width="fill_parent"></TextView>
+        <EditText android:layout_width="fill_parent" android:id="@+id/passwordInputView" android:layout_height="wrap_content" android:imeOptions="actionGo" android:inputType="textPassword|number"></EditText>
+        <Button android:width="150px" android:layout_marginTop="12px" android:layout_height="wrap_content" android:id="@+id/signInButton" android:text="@string/login" android:layout_width="wrap_content"></Button>
+</LinearLayout>

@@ -24,5 +24,32 @@
 
     <string name="outgoingCallPrefTitle">Outgoing Call</string>
     <string name="outgoingCallPrefSummary">Show minutes used when making a call</string>
+    <string name="phoneNumberLabel">Phone Number:</string>
+    <string name="passwordLabel">Password (vKey or PIN):</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="currentBalance">Balance:</string>
+    <string name="minutesUsed">Min Used:</string>
+    <string name="chargedOn">Charged On:</string>
+    <string name="monthlyCharge">Monthly Charge:</string>
+    <string name="addAccountDialogTitle">Add Account</string>
+    <string name="areyousure_removenumber">Are you sure you want to remove %1$s?</string>
+    <string name="keepit">Keep It</string>
+    <string name="removeit">Remove It</string>
+    <string name="notify_remaing_minutes">Notify of Remaining Minutes</string>
+    
+    <string name="minutes_left">Minutes Remaining: %1$s</string><string name="minutes_over">Minutes Over: %1$s!</string>
+    <string name="loading">Loading...</string>
+    <string name="lastUpdated">last updated%1$s</string>
+    <string name="widget2x1">Virgin Mobile Account</string>
+    <string name="widgetpie1x1">Minutes Pie Graph</string>
+    <string name="version">Version: %1$s</string>
+    <string name="about_footer"><a href="https://github.com/poundifdef/VirginMobileMinutesChecker">Help out by contributing to this open source project!</a></string>
+    <string name="about_activity_title">About the App</string>
+    <string name="about_activity_content">This app takes your virgin mobile account information, logs into the official virgin mobile website and retrieves the same information you could find using their website.  </string>
+    <string name="about_broadcast_listener_title">Minutes Remaining Notifier</string>
+    <string name="about_broadcast_listener_content">Every time you complete a call, or refresh the app manually we fetch information about your account, in order to keep your account information current and minimize the amount of work the app does while maximizing battery life on your device.  When you place or receive a call, this service notifies you with the amount of minutes you have remaining.</string>
+    <string name="about_pie_widget_content">This widget displays how far through the billing cycle you currently are, with a black ring.  So if you are half-way through a billing cycle the ring will look like a U.  Under that it displays a pie graph of the percent of minutes you have used.  If you are on track to have enough minutes for the month, the pie is green; cutting it close the pie is yellow; over the pie is red.  If the pie is red, you still have minutes left, but if you continue to use minutes at the rate you are using them, you will run out before the billing period is up.</string>
+    <string name="about_menu_item">About</string>
 
 </resources>

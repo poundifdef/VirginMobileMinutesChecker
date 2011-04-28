@@ -5,41 +5,41 @@
       android:versionName="1.5">
   <application android:icon="@drawable/icon" android:label="@string/app_name">
 
-    <activity android:name=".MinutesChecker" android:label="@string/signinTitle" />
-
-    <activity android:name=".ViewMinutes" android:configChanges="orientation|keyboardHidden">
+    <activity android:name="com.baker.vm.ui.MultipleAccountsActivity" 
+    	android:label="@string/app_name"
+    	android:screenOrientation="portrait">
+    
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
+      
     </activity>
-
-<!--
-
-    <receiver android:name="com.drfloob.VirginMobileMinutesChecker.call_trigger.CallEventReceiver">
-      <intent-filter>
-	<action android:name="android.intent.action.PHONE_STATE" />
-      </intent-filter>
+    <activity android:name="com.baker.vm.ui.AboutActivity" 
+    	android:label="@string/about_menu_item">
+    </activity>
+    <receiver android:label="@string/notify_remaing_minutes" 
+    	android:permission="android.permission.READ_PHONE_STATE" 
+    	android:name="com.baker.vm.service.NotifyRemainingMinutes">
+        <intent-filter>
+	  	  	<action android:name="android.intent.action.PHONE_STATE" />
+      	</intent-filter>
+    </receiver>
+    <receiver android:label="@string/widget2x1" android:name="com.baker.vm.widget.Simple2x1Widget">
+    	<intent-filter>
+    		<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+    	</intent-filter>
+    	<meta-data android:name="android.appwidget.provider"
+    			   android:resource="@xml/widget_provider" />
+    </receiver>
+    <receiver android:label="@string/widgetpie1x1" android:name="com.baker.vm.widget.PieGraphWidget">
+        <intent-filter>
+            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+        </intent-filter>
+        <meta-data android:name="android.appwidget.provider"
+                   android:resource="@xml/widget_pie_provider" />
     </receiver>
     
-    <service android:name=".UpdateService" />
-    
-
-    
-            <receiver android:name="Widget" android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_provider" />
-        </receiver>
-
-    <service android:name="com.drfloob.VirginMobileMinutesChecker.call_trigger.MinutesService" 
-	     android:label="@string/service_name" />
-    
-    <activity android:name=".Preferences" />
--->
   </application>
   <uses-sdk android:minSdkVersion="7" />
 
