@@ -190,6 +190,7 @@ public final class MultipleAccountsActivity extends Activity
             if (auth.pass == null || auth.pass.length() == 0)
             {
                 addRow(table, createSignInButton(auth));
+
             }
             else
             {
@@ -212,6 +213,8 @@ public final class MultipleAccountsActivity extends Activity
                 addRow(table, R.string.chargedOn, dueDate, widest, true);
                 addRow(table, R.string.monthlyCharge, "", widest, true);
             }
+
+            table.setBackgroundDrawable(null);
         }
     }
 
@@ -255,11 +258,17 @@ public final class MultipleAccountsActivity extends Activity
                 addRow(table, R.string.chargedOn, acct.getChargedOn(), widest, false);
                 addRow(table, R.string.monthlyCharge, acct.getMonthlyCharge(), widest, false);
 
+                final MinutesPieGraphDrawable bg = new MinutesPieGraphDrawable(this, acct);
+                bg.setAlignment(MinutesPieGraphDrawable.ALIGN_RIGHT);
+                table.setBackgroundDrawable(bg);
+
                 PreferencesUtil.setCache(this, acct);
             }
             else
             {
                 addRow(table, createSignInButton(acct.getAuth()), getString(R.string.loginFail));
+
+                table.setBackgroundDrawable(null);
             }
         }
 

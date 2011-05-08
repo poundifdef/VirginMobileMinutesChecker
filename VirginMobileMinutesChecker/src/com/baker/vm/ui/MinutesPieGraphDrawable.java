@@ -20,16 +20,22 @@ import com.jaygoel.virginminuteschecker.R;
  */
 public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
 {
+	public static final int ALIGN_CENTER = 0;
+	public static final int ALIGN_LEFT = 1;
+	public static final int ALIGN_RIGHT = 2;
+
     private static final int DRAWABLE_PADDING = 4;
     private static final int TIME_STROKE_WIDTH = 6;
     private static final int DRAWABLE_STROKE_WIDTH = 1;
-    private static final int BACKGROUND_ALPHA = 64;
+    private static final int BACKGROUND_ALPHA = 100;
 
 	private static final int DEGREES = 360;
 
 	private final Context context;
 	private int minDeg;
 	private int dateDeg;
+
+	private int alignment = ALIGN_CENTER;
 
 	String buf = "";
 
@@ -81,10 +87,12 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
 	public void drawOnCanvas(final Canvas c, final Rect clip)
 	{
 		final RectF oval =
-		    new RectF(DRAWABLE_PADDING,
-		              DRAWABLE_PADDING,
+		    new RectF(clip.left + DRAWABLE_PADDING,
+		              clip.top + DRAWABLE_PADDING,
 		              clip.right - DRAWABLE_PADDING,
 		              clip.bottom - DRAWABLE_PADDING);
+
+		Log.e("drawOnCanvas", oval.toString());
 
 		drawBackground(c, oval);
 		drawMinutesChart(c, oval);
@@ -94,6 +102,11 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
 		drawStroke(c, oval);
 
 		drawText(c, clip);
+	}
+
+	public void setAlignment(final int iAlignment)
+	{
+		alignment = iAlignment;
 	}
 
     private void drawText(final Canvas c, final Rect clip)
@@ -106,18 +119,21 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
         black.setColor(Color.BLACK);
         black.setTextSize(12);
 
-        final String text = ((int) (100 * getMinutesPercent())) + "%";
+        String text = ((int) (100 * getMinutesPercent())) + "%";
+        text = getAccount().getMinutesTotal() - getAccount().getMinutesUsedInt() + "";
+
+        final int textHeight = (int) black.getFontMetrics().top / 2;
 
         c.drawText(text,
-            (clip.right - clip.left - black.measureText(text)) / 2,
-            (clip.bottom - clip.top - black.getFontMetrics().ascent) / 2,
-            black);
+        		clip.left + (clip.right - clip.left - black.measureText(text)) / 2,
+        		clip.top + (clip.bottom - clip.top - textHeight) / 2,
+        		black);
     }
 
     private void drawBackground(final Canvas c, final RectF clip)
     {
         final Paint p = new Paint();
-        p.setColor(Color.BLACK);
+        p.setColor(Color.WHITE);
         p.setAlpha(BACKGROUND_ALPHA);
         p.setStyle(Paint.Style.FILL);
         p.setAntiAlias(true);
@@ -169,6 +185,14 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
         degPaint.setAntiAlias(true);
 
         c.drawArc(degOval, 0, dateDeg, false, degPaint);
+
+        // stroke the front of the time / minutes
+        /*
+        degPaint.setStrokeWidth(0);
+        final int x = (int) ((clip.right - clip.left) / 2);
+        final int y = (int) ((clip.bottom - clip.top) / 2);
+        c.drawLine(clip.left + x, clip.top + y, clip.right, clip.top + y, degPaint);
+        */
     }
 
     private Rect squareIt(final Rect clipBounds)
@@ -178,20 +202,28 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
 		final int h = r.bottom - r.top;
 		final int size = Math.min(w, h);
 
-		Log.d("squareIt", r.toString() + ": " + w + " x " + h + " = " + size);
+		switch (alignment)
+		{
+			case ALIGN_LEFT:
+				r.left = 0;
+				r.right = size;
+				break;
+			case ALIGN_RIGHT:
+				r.left = w - size;
+				r.right = w;
+				break;
+			case ALIGN_CENTER:
+			default:
+				r.left += (w - size);
+				r.right -= (w - size);
+				break;
+		}
 
-		r.left += (w - size);
-		r.right -= (w - size);
+		// Always vertically align
 		r.top += (h - size);
 		r.bottom -= (h - size);
 
 		return r;
 	}
-
-	@Override
-	public int getOpacity() {
-	    return 50;
-	}
-
 
 }

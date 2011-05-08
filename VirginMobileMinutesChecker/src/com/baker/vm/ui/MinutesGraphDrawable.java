@@ -24,17 +24,21 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 	private float minutesPercent;
 	private float datePercent;
 
+	private VMAccount account;
+
 	public String string = "unset";
 
-	public MinutesGraphDrawable(final VMAccount account)
+	public MinutesGraphDrawable(final VMAccount iAccount)
 	{
 		super();
 
-		updateModel(account);
+		updateModel(iAccount);
 	}
 
-	protected void updateModel(final VMAccount account)
+	protected void updateModel(final VMAccount iAccount)
 	{
+		account = iAccount;
+
 		if (account != null && account.canParseMinutes())
 		{
 			minutesPercent =
@@ -103,5 +107,13 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 	protected final float getDatePercent()
 	{
 		return datePercent;
+	}
+
+	/**
+	 * @return the account that populated the percent or null
+	 */
+	protected final VMAccount getAccount()
+	{
+		return account;
 	}
 }
