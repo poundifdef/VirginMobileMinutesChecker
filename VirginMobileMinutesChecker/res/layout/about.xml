@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" android:orientation="vertical" android:background="@drawable/app_background" xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/about_container">
+    <RelativeLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/about_top">
+        <ImageView android:layout_height="wrap_content" android:src="@drawable/icon" android:layout_width="wrap_content" android:layout_alignParentLeft="true" android:id="@+id/about_logo" android:layout_margin="5px"></ImageView>
+        <TextView android:layout_height="wrap_content" android:id="@+id/about_app_title" android:layout_width="wrap_content" android:layout_toRightOf="@+id/about_logo" android:layout_alignTop="@+id/about_logo" android:text="@string/app_name"></TextView>
+        <TextView android:layout_below="@+id/about_app_title" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_alignLeft="@+id/about_app_title" android:text="@string/version" android:id="@+id/about_version"></TextView>
+    </RelativeLayout>
+    <ScrollView android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/about_scroll" android:visibility="visible" android:layout_width="fill_parent" android:scrollbars="vertical">
+        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:id="@+id/about_linearlayout" android:layout_height="fill_parent" android:layout_margin="5px">
+            <TextView android:layout_height="wrap_content" android:id="@+id/about_activity" android:layout_width="fill_parent" android:text="@string/about_activity_title" android:layout_marginTop="5px"></TextView>
+            <TextView android:layout_height="wrap_content" android:id="@+id/about_activity_content" android:layout_width="fill_parent" android:layout_marginLeft="15px" android:text="@string/about_activity_content"></TextView>
+            <TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/about_broadcast_listener" android:text="@string/about_broadcast_listener_title" android:layout_marginTop="5px"></TextView>
+            <TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_marginLeft="15px" android:id="@+id/about_broadcast_listener_content" android:text="@string/about_broadcast_listener_content"></TextView>
+            <TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="@string/about_activity_title" android:id="@+id/about_widget" android:layout_marginTop="5px"></TextView>
+            <ImageView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/about_pie_widget_sample" android:layout_gravity="center_horizontal" android:src="@drawable/widget_sample"></ImageView>
+            <TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_marginLeft="15px" android:id="@+id/about_pie_widget_sample_content" android:text="@string/about_pie_widget_content"></TextView>
+        </LinearLayout>
+    </ScrollView>
+    <TextView 
+    	android:layout_height="wrap_content" 
+    	android:id="@+id/about_footer" 
+    	android:layout_width="fill_parent" 
+    	android:text="@string/about_footer" 
+    	android:textSize="8px" 
+    	android:layout_margin="5px" android:linksClickable="true"></TextView>
+</LinearLayout>
