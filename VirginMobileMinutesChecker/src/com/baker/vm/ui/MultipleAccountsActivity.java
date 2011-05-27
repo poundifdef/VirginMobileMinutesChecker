@@ -48,6 +48,9 @@ public final class MultipleAccountsActivity extends Activity
     private static final String TABLE = "table";
     private static final String LAYOUT = "linearlayout";
     private static final String GRAPH = "graph";
+    
+    private static final float LABEL_TEXT_SIZE = 14F;
+    private static final float VALUE_TEXT_SIZE = 18F;
 
     public static String digits(final String user)
     {
@@ -500,13 +503,14 @@ public final class MultipleAccountsActivity extends Activity
             lbl.setText("");
         }
         lbl.setTextColor(getResources().getColor(R.color.gray3));
-        lbl.setTextSize(12F);
+        lbl.setTextSize(LABEL_TEXT_SIZE);
         lbl.setMinimumWidth(width + 5);
 
         final TextView val = new TextView(this);
         val.setText(value);
         final int colorResId = isFromCache ? R.color.gray3 : R.color.white;
         val.setTextColor(getResources().getColor(colorResId));
+        val.setTextSize(VALUE_TEXT_SIZE);
 
         final LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -530,7 +534,7 @@ public final class MultipleAccountsActivity extends Activity
         final TextView lbl = new TextView(getApplicationContext());
         lbl.setText(message);
         lbl.setTextColor(getResources().getColor(R.color.error));
-        lbl.setTextSize(12F);
+        lbl.setTextSize(LABEL_TEXT_SIZE);
         lbl.setPadding(20, 5, 20, 5);
 
         button.setPadding(20, 5, 20, 5);
@@ -543,6 +547,7 @@ public final class MultipleAccountsActivity extends Activity
     {
         final TextView text = new TextView(this);
         text.setText(formatPhoneNumber(user));
+        text.setTextSize(VALUE_TEXT_SIZE);
         hash.put(getHashKey(user, TEXTVIEW), text);
         text.setTextColor(getResources().getColor(R.color.gray3));
         text.setOnLongClickListener(new View.OnLongClickListener() {
@@ -618,6 +623,7 @@ public final class MultipleAccountsActivity extends Activity
     {
         int max = 0;
         final Paint p = new Paint();
+        p.setTextSize(LABEL_TEXT_SIZE);
         for (final int stringResId : stringResIds)
         {
             max = Math.max(max, (int) p.measureText(getString(stringResId)));

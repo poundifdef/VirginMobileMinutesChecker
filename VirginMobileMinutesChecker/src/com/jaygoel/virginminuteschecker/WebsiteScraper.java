@@ -64,17 +64,16 @@ public class WebsiteScraper
 
             // HttpsURLConnection.setFollowRedirects(true);
 
-            final HttpsURLConnection connection = (HttpsURLConnection) new URL(url)
-                .openConnection();
-            (connection)
-                .setHostnameVerifier(new AllowAllHostnameVerifier());
+            final HttpsURLConnection connection = 
+            	(HttpsURLConnection) new URL(url).openConnection();
+            connection.setHostnameVerifier(new AllowAllHostnameVerifier());
 
             // connection.setFollowRedirects(true);
 
             connection.setDoOutput(true);
 
             // try {
-            Thread.sleep(5000);
+            //Thread.sleep(5000);
             final OutputStreamWriter out = new OutputStreamWriter(
                 connection.getOutputStream());
             out.write("loginRoutingInfo=&min=" + username + "&vkey=" + password
@@ -90,16 +89,22 @@ public class WebsiteScraper
                 (InputStream) connection.getContent());
 
             final BufferedReader buff = new BufferedReader(in);
-            line = buff.readLine();
 
-            while (line != null)
-            {
-                if (line.contains("mainContent"))
-                {
-                    break;
-                }
-                line = buff.readLine();
-            }
+			StringBuilder sb = new StringBuilder();
+
+			while ((line = buff.readLine()) != null) {
+				sb.append(line);
+			}
+
+			int mainContentIndex = sb.indexOf("id=\"mainContent\"");
+			if (mainContentIndex == -1) 
+			{
+				line = "";
+			}
+			else 
+			{
+				line = sb.substring(mainContentIndex);
+			}
 
             connection.disconnect();
         }

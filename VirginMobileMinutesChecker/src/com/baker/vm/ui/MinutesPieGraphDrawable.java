@@ -27,7 +27,7 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
     private static final int DRAWABLE_PADDING = 4;
     private static final int TIME_STROKE_WIDTH = 6;
     private static final int DRAWABLE_STROKE_WIDTH = 1;
-    private static final int BACKGROUND_ALPHA = 100;
+    private static final int BACKGROUND_ALPHA = 150;
 
 	private static final int DEGREES = 360;
 

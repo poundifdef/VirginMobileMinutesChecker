@@ -3,18 +3,22 @@ package com.baker.vm.service;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.baker.vm.PreferencesUtil;
 import com.baker.vm.ScraperUtil;
 import com.baker.vm.UsernamePassword;
 import com.baker.vm.VMAccount;
+import com.baker.vm.widget.PieGraphWidget;
 import com.baker.vm.widget.Simple2x1Widget;
 import com.jaygoel.virginminuteschecker.R;
 
@@ -25,27 +29,19 @@ import com.jaygoel.virginminuteschecker.R;
 public final class NotifyRemainingMinutes extends BroadcastReceiver
 {
 
+	private static final int UPDATE_CACHE_DELAY = 1000; //1 * 1000 * 60;
     private static final String TAG = "NotifyMinutesRemaining";
 
     @Override
     public void onReceive(final Context context, final Intent intent)
     {
-        Log.e("MYOUTPUT", "onReceiverNotifyRemainingMinutes");
+        Log.d(TAG, "onReceiverNotifyRemainingMinutes");
         try
         {
             Bundle extras = intent.getExtras();
 
             if (extras == null)
             {
-                Log.i("MYOUTPUT", "screen scrape");
-
-//              An attempt at making a "loading" icon/text appear when we are
-//              attempting to get new information
-
-//                Intent updateWidgetIntent = new Intent(context, Simple2x1Widget.class);
-//                updateWidgetIntent.setAction(Simple2x1Widget.START_THINKING);
-//                context.sendBroadcast(updateWidgetIntent);
-
                 // Called from Widget
                 updateCache(context);
 
@@ -76,7 +72,7 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
                     {
                         updateCache(context);
                     }
-                }, 1000 * 60);
+                }, UPDATE_CACHE_DELAY);
             }
         }
         catch (Exception ex)
@@ -139,6 +135,9 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
             {
                 Log.i(TAG, "Found: " + acct.getMinutesUsed() + " " + acct.getBalance());
                 PreferencesUtil.setCache(context, acct);
+                
+                // See comments in sendUpdateWidget before un-commenting
+                // sendUpdateWidget(context);
             }
             else
             {
@@ -154,5 +153,23 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
                   "No password information for this phone's number: " + number);
         }
     }
+
+    @SuppressWarnings("unused")
+	private void sendUpdateWidget(final Context context) 
+	{
+		sendUpdateToAllWidgets(context, R.layout.widget_2x1, "Simple2x1Widget");
+		sendUpdateToAllWidgets(context, R.layout.widget_1x1, "PieGraphWidget");
+	}
+
+	private void sendUpdateToAllWidgets(final Context context, final int layoutId, final String cls) 
+	{
+		AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+		int[] ids = mgr.getAppWidgetIds(new ComponentName(context, PieGraphWidget.class));
+		RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
+		
+		// For whatever reason, calling updateAppWiget on PieGraphWidgets makes the widget totally transparent
+		// calling updateAppWidget doesn't seem to actually update the 2x1 widget...
+		mgr.updateAppWidget(ids, views);
+	}
 
 }

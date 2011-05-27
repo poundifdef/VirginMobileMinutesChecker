@@ -25,6 +25,7 @@ public final class Simple2x1Widget extends AppWidgetProvider
 {
     public static final String UPDATE_ACTION = "updateWidget";
     public static final String START_THINKING = "startThinking";
+    private static final String TAG = "NotifyMinutesRemaining";
 
     @Override
     public void onUpdate(final Context context,
@@ -33,7 +34,7 @@ public final class Simple2x1Widget extends AppWidgetProvider
     {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
 
-        Log.e("MYOUTPUT", "Updating Balance and Minutes!");
+        Log.i(TAG, "Updating Balance and Minutes!");
 
         updateTextFields(context, appWidgetManager, appWidgetIds, true);
     }
@@ -45,12 +46,10 @@ public final class Simple2x1Widget extends AppWidgetProvider
 
         if (UPDATE_ACTION.equals(intent.getAction()))
         {
-            Log.e("MYOUTPUT", "PEEKING AT SERVICES!");
             updateTextFields(context, null, null, false);
         }
         else if (START_THINKING.equals(intent.getAction()))
         {
-            Log.e("MYOUTPUT", "SHOWING WIDGET");
             RemoteViews views =
                 new RemoteViews(context.getPackageName(), R.layout.widget_2x1);
 
