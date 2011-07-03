@@ -46,7 +46,7 @@ public final class ScraperUtil
                 }
                 else
                 {
-                    Log.d(TAG, "invalid: " + a.toString());
+                    Log.d(TAG, "invalid: " + a.user);
                     acct = VMAccount.createInvalid(a);
                 }
             }
