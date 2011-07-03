@@ -18,6 +18,9 @@
     <activity android:name="com.baker.vm.ui.AboutActivity" 
     	android:label="@string/about_menu_item">
     </activity>
+    <activity android:name="com.baker.vm.ui.SettingsActivity" 
+    	android:label="@string/settings_menu_item">
+    </activity>
     <receiver android:label="@string/notify_remaing_minutes" 
     	android:permission="android.permission.READ_PHONE_STATE" 
     	android:name="com.baker.vm.service.NotifyRemainingMinutes">

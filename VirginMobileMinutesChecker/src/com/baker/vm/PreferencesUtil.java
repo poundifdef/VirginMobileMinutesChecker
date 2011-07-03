@@ -30,6 +30,11 @@ public final class PreferencesUtil
     /** Keys in auth preferences. */
     public static final String USER_PREFIX = "USER";
     public static final String PASS_PREFIX = "PASS";
+    
+    /** Keys for settings. */
+    public static final String SETTINGS_INBOUND_CALL = "settings_inbound";
+    public static final String SETTINGS_OUTBOUND_CALL = "settings_outbound";
+    public static final String SETTINGS_APP_NAME = "settings_appname";
 
     public static SharedPreferences get(final Context context)
     {
@@ -76,6 +81,42 @@ public final class PreferencesUtil
 	public static String getDueDate(final Context context)
 	{
         return getCache(context).getString(CACHE_DUE_DATE, "");
+	}
+	
+	public static void setInboundCall(final Context context, final boolean iShow)
+	{
+		Editor edit = get(context).edit();
+		edit.putBoolean(SETTINGS_INBOUND_CALL, iShow);
+		edit.commit();
+	}
+	
+	public static void setOutboundCall(final Context context, final boolean iShow)
+	{
+		Editor edit = get(context).edit();
+		edit.putBoolean(SETTINGS_OUTBOUND_CALL, iShow);
+		edit.commit();
+	}
+	
+	public static void setAppName(final Context context, final boolean iShow)
+	{
+		Editor edit = get(context).edit();
+		edit.putBoolean(SETTINGS_APP_NAME, iShow);
+		edit.commit();
+	}
+	
+	public static boolean getInboundCall(final Context context)
+	{
+		return get(context).getBoolean(SETTINGS_INBOUND_CALL, true);
+	}
+	
+	public static boolean getOutboundCall(final Context context)
+	{
+		return get(context).getBoolean(SETTINGS_OUTBOUND_CALL, true);
+	}
+	
+	public static boolean getAppName(final Context context)
+	{
+		return get(context).getBoolean(SETTINGS_APP_NAME, true);
 	}
 
     public static void clearCache(final Context context)

@@ -54,11 +54,17 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
 
             if (TelephonyManager.EXTRA_STATE_RINGING.equals(state))
             {
-                toastRemainingMinutes(context);
+            	if (PreferencesUtil.getInboundCall(context))
+            	{
+            		toastRemainingMinutes(context);
+            	}
             }
             else if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(state))
             {
-                toastRemainingMinutes(context);
+            	if (PreferencesUtil.getOutboundCall(context))
+            	{
+            		toastRemainingMinutes(context);
+            	}
             }
             else if (TelephonyManager.EXTRA_STATE_IDLE.equals(state))
             {
@@ -97,7 +103,10 @@ public final class NotifyRemainingMinutes extends BroadcastReceiver
         }
         else
         {
-            String message = context.getString(R.string.app_name) + ":\n";
+            String message = 
+            	PreferencesUtil.getAppName(context) 
+            		? context.getString(R.string.app_name) + ":\n" 
+            	    : "";
 
             if (used > total)
             {

@@ -165,6 +165,12 @@ public final class MultipleAccountsActivity extends Activity
 			    startActivity(new Intent(this, AboutActivity.class));
 
 			    return true;
+			    
+			case R.id.menu_settings:
+				
+				startActivity(new Intent(this, SettingsActivity.class));
+				
+				return true;
 
 			default:
 				return super.onOptionsItemSelected(item);
