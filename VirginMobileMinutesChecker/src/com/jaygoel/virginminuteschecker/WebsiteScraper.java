@@ -15,244 +15,216 @@ import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 
-public class WebsiteScraper
-{
+public class WebsiteScraper {
 
-    public static String fetchScreen(final String username, final String password)
-    {
-        String line = "";
+   public static String fetchScreen(String username, String password) {
+      String line = "";
 
-        try
-        {
-            final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager()
-            {
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers()
-                {
-                    return null;
-                }
-
-                @Override
-                public void checkClientTrusted(
-                    final java.security.cert.X509Certificate[] certs, final String authType)
-                {
-                }
-
-                @Override
-                public void checkServerTrusted(
-                    final java.security.cert.X509Certificate[] certs, final String authType)
-                {
-                }
-            } };
-
-            final String url = "https://www1.virginmobileusa.com/login/login.do";
-            // String url = "https://www1.virginmobileusa.com/login/login.do";
-            // String url =
-            // "https://www1.virginmobileusa.com/myaccount/home.do";
-
-            try
-            {
-                final SSLContext sc = SSLContext.getInstance("TLS");
-                sc.init(null, trustAllCerts, new java.security.SecureRandom());
-                HttpsURLConnection.setDefaultSSLSocketFactory(sc
-                    .getSocketFactory());
+      try {
+         TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+               public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                  return null;
+               }
+               public void checkClientTrusted(
+                     java.security.cert.X509Certificate[] certs, String authType) {
+               }
+               public void checkServerTrusted(
+                     java.security.cert.X509Certificate[] certs, String authType) {
+               }
             }
-            catch (final Exception e)
-            {
-                e.getMessage();
-            }
+         };
 
-            // HttpsURLConnection.setFollowRedirects(true);
+         String url = "https://www1.virginmobileusa.com/login/login.do";    
+         //String url = "https://www1.virginmobileusa.com/login/login.do";    
+         //   String url = "https://www1.virginmobileusa.com/myaccount/home.do";
 
-            final HttpsURLConnection connection = 
-            	(HttpsURLConnection) new URL(url).openConnection();
-            connection.setHostnameVerifier(new AllowAllHostnameVerifier());
 
-            // connection.setFollowRedirects(true);
 
-            connection.setDoOutput(true);
+         try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+         } catch (Exception e) {
+            e.getMessage();
+         }
 
-            // try {
-            //Thread.sleep(5000);
-            final OutputStreamWriter out = new OutputStreamWriter(
-                connection.getOutputStream());
-            out.write("loginRoutingInfo=&min=" + username + "&vkey=" + password
-                + "&submit=submit");
-            out.close();
-            // } catch (IOException e) {
-            // e.printStackTrace();
-            // }
+         //HttpsURLConnection.setFollowRedirects(true);
 
-            // connection.connect();
+         HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+         ((HttpsURLConnection) connection).setHostnameVerifier(new AllowAllHostnameVerifier());
 
-            final InputStreamReader in = new InputStreamReader(
-                (InputStream) connection.getContent());
+         //connection.setFollowRedirects(true);
 
-            final BufferedReader buff = new BufferedReader(in);
 
-			StringBuilder sb = new StringBuilder();
+         connection.setDoOutput(true);
 
-			while ((line = buff.readLine()) != null) {
-				sb.append(line);
-			}
+         // try {
+         //Thread.sleep(5000);
+         OutputStreamWriter out = new OutputStreamWriter(
+               connection.getOutputStream());
+         out.write("loginRoutingInfo=&min=" + username + "&vkey=" + password + "&submit=submit");
+         out.close();
+         //} catch (IOException e) {
+         //   e.printStackTrace();
+         // }
 
-			int mainContentIndex = sb.indexOf("id=\"mainContent\"");
-			if (mainContentIndex == -1) 
-			{
-				line = "";
-			}
-			else 
-			{
-				line = sb.substring(mainContentIndex);
-			}
 
-            connection.disconnect();
-        }
-        catch (final Exception e)
-        {
-            e.printStackTrace();
-            // System.err.println("exception 83");
-            // System.err.println(e.getMessage());
-            // System.err.println(line);
-            return line;
-            // rc.put("isValid", "FALSE");
-        }
-        // line = null;
-        if (line == null)
-        {
+         //connection.connect();
+
+         InputStreamReader in = new InputStreamReader((InputStream) connection.getContent());
+
+         BufferedReader buff = new BufferedReader(in);
+
+         StringBuilder sb = new StringBuilder();
+
+         while ((line = buff.readLine()) != null) {
+            sb.append(line);
+         }
+
+         int mainContentIndex = sb.indexOf("id=\"mainContent\"");
+         if (mainContentIndex == -1) {
             line = "";
-        }
-        // System.err.println(line);
-        return line;
-    }
+         } else {
+            line = sb.substring(mainContentIndex);
+         }
 
-    public static Map<String, String> parseInfo(final String line)
-    {
-        final Map<String, String> rc = new HashMap<String, String>();
+         connection.disconnect();
+      } catch (Exception e) {
+         e.printStackTrace();
+         //System.err.println("exception 83");
+         //System.err.println(e.getMessage());
+         //System.err.println(line);
+         return line;
+         //rc.put("isValid", "FALSE");
+      }
+      //line = null;
+      if (line == null) {
+         line = "";
+      }
+      //System.err.println(line);
+      return line;
+   }
 
-        if (line == null)
-        {
-            rc.put("isValid", "FALSE");
-            return rc;
-        }
 
-        String srch;
-        int start;
-        int end;
+   public static Map<String, String> parseInfo(String line) {
+      Map<String, String> rc = new HashMap<String, String>();
 
-        srch = "<p class=\"tel\">";
-        start = line.indexOf(srch);
-        end = line.indexOf("</p>", start);
+      if (line == null) {
+         rc.put("isValid", "FALSE");
+         return rc;
+      }
 
-        if (start < 0)
-        {
-            rc.put("isValid", "FALSE");
-            return rc;
-        }
-        else
-        {
-            rc.put("isValid", "TRUE");
-        }
 
-        // virginInfo.append("Phone Number: ");
-        // virginInfo.append(line.substring(start + srch.length(), end));
-        // virginInfo.append("\n");
+      String srch;
+      int start;
+      int end;
 
-        rc.put("Phone Number", line.substring(start + srch.length(), end));
+      srch = "<p class=\"tel\">";
+      start = line.indexOf(srch);
+      end = line.indexOf("</p>", start);
 
-        srch = "<h3>Monthly Charge</h3><p>";
-        start = line.indexOf(srch);
-        end = line.indexOf("</p>", start);
+      if (start < 0) {
+         rc.put("isValid", "FALSE");
+         return rc;
+      } else {
+         rc.put("isValid", "TRUE");
+      }
 
-        // virginInfo.append("Monthly Charge: ");
-        // virginInfo.append(line.substring(start + srch.length(), end));
-        // virginInfo.append("\n");
+      //   	    virginInfo.append("Phone Number: ");
+      //   	    virginInfo.append(line.substring(start + srch.length(), end));
+      //   	    virginInfo.append("\n");
 
-        rc.put("Monthly Charge", line.substring(start + srch.length(), end));
+      rc.put("Phone Number", line.substring(start + srch.length(), end));
 
-        srch = "<h3>Current Balance</h3><p>";
-        start = line.indexOf(srch);
-        end = line.indexOf("</p>", start);
+      srch = "<h3>Monthly Charge</h3><p>";
+      start = line.indexOf(srch);
+      end = line.indexOf("</p>", start);
 
-        // virginInfo.append("Current Balance: ");
-        // virginInfo.append(line.substring(start + srch.length(), end));
-        // virginInfo.append("\n");
+      //   	    virginInfo.append("Monthly Charge: ");    	    
+      //   	    virginInfo.append(line.substring(start + srch.length(), end));
+      //   	    virginInfo.append("\n");
 
-        rc.put("Current Balance", line.substring(start + srch.length(), end));
+      rc.put("Monthly Charge", line.substring(start + srch.length(), end));
 
-        srch = "<h3>Min. Amount Due</h3><p>";
-        start = line.indexOf(srch);
-        end = line.indexOf("</p>", start);
+      srch = "<h3>Current Balance</h3><p>";
+      start = line.indexOf(srch);
+      end = line.indexOf("</p>", start);
 
-        // virginInfo.append("Amount Due: ");
-        // virginInfo.append(line.substring(start + srch.length(), end));
-        // virginInfo.append("\n");
+      //   	    virginInfo.append("Current Balance: ");
+      //   	    virginInfo.append(line.substring(start + srch.length(), end));
+      //   	    virginInfo.append("\n");
 
-        if ((start > 0) && (end > 0))
-        {
-            rc.put("Amount Due", line.substring(start + srch.length(), end));
-        }
-        // srch = "<h3>Date Due</h3><p>";
-        // start = line.indexOf(srch);
-        // end = line.indexOf("</p>", start);
+      rc.put("Current Balance", line.substring(start + srch.length(), end));
 
-        // virginInfo.append("Due Date: ");
-        // virginInfo.append(line.substring(start + srch.length(), end));
-        // virginInfo.append("\n");
+      srch = "<h3>Min. Amount Due</h3><p>";
+      start = line.indexOf(srch);
+      end = line.indexOf("</p>", start);
 
-        // if ((start > 0) && (end > 0)) {
-        // rc.put("Date Due", line.substring(start + srch.length(), end));
-        // }
+      //virginInfo.append("Amount Due: ");
+      //virginInfo.append(line.substring(start + srch.length(), end));
+      //virginInfo.append("\n");
 
-        srch = "<h3>Charge Will be deducted on</h3><p>";
-        start = line.indexOf(srch);
-        end = line.indexOf("</p>", start);
+      if ((start > 0) && (end > 0)) {
+         rc.put("Amount Due", line.substring(start + srch.length(), end));
+      }
+      // srch = "<h3>Date Due</h3><p>";
+      // start = line.indexOf(srch);
+      // end = line.indexOf("</p>", start);
 
-        // virginInfo.append("Due Date: ");
-        // virginInfo.append(line.substring(start + srch.length(), end));
-        // virginInfo.append("\n");
+      //   	    virginInfo.append("Due Date: ");
+      //   	    virginInfo.append(line.substring(start + srch.length(), end));
+      //   	    virginInfo.append("\n");
 
-        if ((start > 0) && (end > 0))
-        {
-            rc.put("Charge Deducted",
-                line.substring(start + srch.length(), end));
-        }
+      //if ((start > 0) && (end > 0)) {
+      // 	    rc.put("Date Due", line.substring(start + srch.length(), end));
+      // }
 
-        srch = "<h3>You will be charged on</h3><p>";
-        start = line.indexOf(srch);
-        end = line.indexOf("</p>", start);
+      srch = "<h3>Charge Will be deducted on</h3><p>";
+      start = line.indexOf(srch);
+      end = line.indexOf("</p>", start);
 
-        if ((start > 0) && (end > 0))
-        {
-            rc.put("Charged on", line.substring(start + srch.length(), end));
-        }
+      //   	    virginInfo.append("Due Date: ");
+      //   	    virginInfo.append(line.substring(start + srch.length(), end));
+      //   	    virginInfo.append("\n");
 
-        // rc.put("Charged on", "02/05/11");
+      if ((start > 0) && (end > 0)) {
+         rc.put("Charge Deducted", line.substring(start + srch.length(), end));
+      }
 
-        srch = "<p id=\"remaining_minutes\"><strong>";
-        start = line.indexOf(srch);
-        end = line.indexOf("</p>", start);
+      srch = "<h3>You will be charged on</h3><p>";
+      start = line.indexOf(srch);
+      end = line.indexOf("</p>", start);
 
-        // virginInfo.append("Minutes Used: ");
-        // virginInfo.append(line.substring(start + srch.length(),
-        // end).replaceFirst("</strong>", ""));
-        // virginInfo.append("\n");
+      if ((start > 0) && (end > 0)) {
+         rc.put("Charged on", line.substring(start + srch.length(), end));
+      }
 
-        rc.put("Minutes Used", line.substring(start + srch.length(), end)
-            .replaceFirst("</strong>", ""));
+      //	   rc.put("Charged on", "02/05/11");
 
-        // rc.put("info", virginInfo.toString());
-        return rc;
-    }
 
-    public static Map<String, String> getInfo(final String username, final String password)
-    {
+      srch = "<p id=\"remaining_minutes\"><strong>";
+      start = line.indexOf(srch);
+      end = line.indexOf("</p>", start);
 
-        final String line = fetchScreen(username, password);
-        // Log.d("DEBUG", "Line: "+line);
+      //   	    virginInfo.append("Minutes Used: ");
+      //   	    virginInfo.append(line.substring(start + srch.length(), end).replaceFirst("</strong>", ""));
+      //   	    virginInfo.append("\n");
 
-        return parseInfo(line);
+      rc.put("Minutes Used", line.substring(start + srch.length(), end).replaceFirst("</strong>", ""));
 
-    }
+      // rc.put("info", virginInfo.toString());
+      return rc;
+   }
+
+   public static Map<String, String> getInfo(String username, String password) {
+
+      String line = fetchScreen(username, password);
+      // Log.d("DEBUG", "Line: "+line);
+
+
+      return parseInfo(line);
+
+   }
 
 }
