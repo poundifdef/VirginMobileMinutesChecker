@@ -34,7 +34,7 @@ public final class R {
         public static final int widget_sample=0x7f020006;
     }
     public static final class id {
-        public static final int LinearLayout01=0x7f080023;
+        public static final int LinearLayout01=0x7f080024;
         public static final int about_activity=0x7f080007;
         public static final int about_activity_content=0x7f080008;
         public static final int about_app_title=0x7f080003;
@@ -53,13 +53,14 @@ public final class R {
         public static final int accountDialogLayout=0x7f08000f;
         public static final int accountScrollView=0x7f080018;
         public static final int accountView=0x7f080019;
-        public static final int logout=0x7f08002d;
-        public static final int menu_about=0x7f080032;
-        public static final int menu_accountsignout=0x7f08002f;
-        public static final int menu_addaccount=0x7f080031;
-        public static final int menu_refreshall=0x7f080030;
-        public static final int menu_settings=0x7f080033;
-        public static final int minutes=0x7f080022;
+        public static final int logout=0x7f08002e;
+        public static final int menu_about=0x7f080033;
+        public static final int menu_accountsignout=0x7f080030;
+        public static final int menu_addaccount=0x7f080032;
+        public static final int menu_refreshall=0x7f080031;
+        public static final int menu_settings=0x7f080034;
+        public static final int minuteNotificationLabel=0x7f08001f;
+        public static final int minutes=0x7f080023;
         public static final int password=0x7f080016;
         public static final int passwordInputView=0x7f080013;
         public static final int passwordLabelView=0x7f080012;
@@ -67,25 +68,25 @@ public final class R {
         public static final int phoneNumberInputView=0x7f080011;
         public static final int progress=0x7f08001c;
         public static final int progresslayout=0x7f08001a;
-        public static final int refresh=0x7f08002e;
-        public static final int settingsAppName=0x7f080021;
-        public static final int settingsInboundCall=0x7f08001f;
+        public static final int refresh=0x7f08002f;
+        public static final int settingsAppName=0x7f080022;
+        public static final int settingsInboundCall=0x7f080020;
         public static final int settingsLinearLayout=0x7f08001e;
-        public static final int settingsOutboundCall=0x7f080020;
+        public static final int settingsOutboundCall=0x7f080021;
         public static final int settingsScrollView=0x7f08001d;
         public static final int signInButton=0x7f080014;
         public static final int thinkingIcon=0x7f08001b;
         public static final int top=0x7f080017;
         public static final int username=0x7f080015;
-        public static final int widget_container=0x7f080026;
-        public static final int widget_currentbalance=0x7f080027;
-        public static final int widget_currentbalanceview=0x7f08002a;
-        public static final int widget_minutesused=0x7f080028;
-        public static final int widget_minutesusedview=0x7f080029;
-        public static final int widget_pie_container=0x7f080025;
-        public static final int widget_progress=0x7f08002c;
-        public static final int widget_textview=0x7f080024;
-        public static final int widget_timestamp=0x7f08002b;
+        public static final int widget_container=0x7f080027;
+        public static final int widget_currentbalance=0x7f080028;
+        public static final int widget_currentbalanceview=0x7f08002b;
+        public static final int widget_minutesused=0x7f080029;
+        public static final int widget_minutesusedview=0x7f08002a;
+        public static final int widget_pie_container=0x7f080026;
+        public static final int widget_progress=0x7f08002d;
+        public static final int widget_textview=0x7f080025;
+        public static final int widget_timestamp=0x7f08002c;
     }
     public static final class layout {
         public static final int about=0x7f030000;
@@ -146,6 +147,7 @@ public final class R {
         public static final int settings_appname=0x7f06002c;
         public static final int settings_inbound=0x7f06002a;
         public static final int settings_menu_item=0x7f06002d;
+        public static final int settings_minutenotification_label=0x7f06002e;
         public static final int settings_outbound=0x7f06002b;
         public static final int signinTitle=0x7f060007;
         public static final int version=0x7f060022;

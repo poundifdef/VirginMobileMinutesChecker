@@ -55,5 +55,6 @@
     <string name="settings_outbound">Show minutes remaining when placing a call</string>
     <string name="settings_appname">Show app name, when showing minutes remaining</string>
     <string name="settings_menu_item">Preferences</string>
+    <string name="settings_minutenotification_label">Minute Notifications:</string>
 
 </resources>
