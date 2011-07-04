@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
+import com.baker.vm.PreferencesUtil;
 import com.baker.vm.VMAccount;
 import com.jaygoel.virginminuteschecker.R;
 
@@ -80,8 +81,11 @@ public final class MinutesPieGraphDrawable extends MinutesGraphDrawable
 	@Override
 	public void draw(final Canvas c)
 	{
-		final Rect clip = squareIt(c.getClipBounds());
-		drawOnCanvas(c, clip);
+        if (PreferencesUtil.getShowGraph(context))
+        {
+        	final Rect clip = squareIt(c.getClipBounds());
+        	drawOnCanvas(c, clip);
+        }
 	}
 
 	public void drawOnCanvas(final Canvas c, final Rect clip)

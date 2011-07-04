@@ -3,6 +3,7 @@ package com.baker.vm;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
 
@@ -30,10 +31,21 @@ public final class PreferencesUtil
     /** Keys in auth preferences. */
     public static final String USER_PREFIX = "USER";
     public static final String PASS_PREFIX = "PASS";
+    
+    /** Keys for settings. */
+    public static final String SETTINGS_INBOUND_CALL = "prefs_incomingCallPref";
+    public static final String SETTINGS_OUTBOUND_CALL = "prefs_outgoingCallPref";
+    public static final String SETTINGS_APP_NAME = "prefs_appNamePref";
+    public static final String SETTINGS_SHOW_GRAPH = "prefs_showGraphPref";
 
     public static SharedPreferences get(final Context context)
     {
         return context.getSharedPreferences(AUTH_PREFS, 0);
+    }
+    
+    public static SharedPreferences getPrefs(final Context context)
+    {
+    	return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public static VMAccount getCachedAccount(final Context activity)
@@ -76,6 +88,26 @@ public final class PreferencesUtil
 	public static String getDueDate(final Context context)
 	{
         return getCache(context).getString(CACHE_DUE_DATE, "");
+	}
+	
+	public static boolean getInboundCall(final Context context)
+	{
+		return getPrefs(context).getBoolean(SETTINGS_INBOUND_CALL, true);
+	}
+	
+	public static boolean getOutboundCall(final Context context)
+	{
+		return getPrefs(context).getBoolean(SETTINGS_OUTBOUND_CALL, true);
+	}
+	
+	public static boolean getAppName(final Context context)
+	{
+		return getPrefs(context).getBoolean(SETTINGS_APP_NAME, true);
+	}
+	
+	public static boolean getShowGraph(final Context context)
+	{
+		return getPrefs(context).getBoolean(SETTINGS_SHOW_GRAPH, true);
 	}
 
     public static void clearCache(final Context context)

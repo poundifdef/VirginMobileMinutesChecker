@@ -113,7 +113,6 @@ public final class MultipleAccountsActivity extends Activity
             // prompt for initial phone number / password
             showAddAccountDialog(getUsersTelephoneNumber(), null);
         }
-
 	}
 
 	@Override
@@ -166,7 +165,7 @@ public final class MultipleAccountsActivity extends Activity
 			    startActivity(new Intent(this, AboutActivity.class));
 
 			    return true;
-
+			    
 			case R.id.settings:
 
 			    startActivity(new Intent(this,  Preferences.class));
