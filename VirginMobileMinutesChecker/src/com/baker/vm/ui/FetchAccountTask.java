@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import com.baker.vm.ScraperUtil;
 import com.baker.vm.UsernamePassword;
 import com.baker.vm.VMAccount;
+import com.baker.vm.widget.WidgetUtil;
 import com.jaygoel.virginminuteschecker.IVMCScraper;
 import com.jaygoel.virginminuteschecker.R;
 import com.jaygoel.virginminuteschecker.ReferenceScraper;
@@ -56,6 +57,8 @@ public class FetchAccountTask
 
         activity.updateLayout(result);
         activity.findViewById(R.id.progresslayout).setVisibility(View.GONE);
+        
+        WidgetUtil.updateAllWidgets(activity.getApplicationContext());
     }
 
     @Override

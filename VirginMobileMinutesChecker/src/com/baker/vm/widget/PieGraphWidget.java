@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.baker.vm.PreferencesUtil;
@@ -29,15 +30,16 @@ public final class PieGraphWidget extends AppWidgetProvider
 	public void onUpdate(final Context context, final AppWidgetManager appWidgetManager,
 			final int[] appWidgetIds)
 	{
+		Log.e("PIEGRAPHWIDGET", "UPDATING NOW!");
+		
+		final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_1x1	);
+
+		views.setImageViewBitmap(R.id.widget_pie_container, createPieChart(context));
+        views.setOnClickPendingIntent(R.id.widget_pie_container,
+            PendingIntent.getActivity(context, 0, new Intent(context, MultipleAccountsActivity.class), 0));
+        
 		for (final int appWidgetId : appWidgetIds)
 		{
-			final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_1x1	);
-
-			views.setImageViewBitmap(R.id.widget_pie_container, createPieChart(context));
-
-            views.setOnClickPendingIntent(R.id.widget_pie_container,
-                PendingIntent.getActivity(context, 0, new Intent(context, MultipleAccountsActivity.class), 0));
-
 			appWidgetManager.updateAppWidget(appWidgetId, views);
 		}
 

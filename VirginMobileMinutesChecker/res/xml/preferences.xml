@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+  <PreferenceCategory android:title="@+string/appPrefTitle">
+    <CheckBoxPreference
+       android:title="@+string/showGraphPrefTitle"
+       android:summary="@+string/showGraphPrefSummary"
+       android:defaultValue="true"
+       android:key="prefs_showGraphPref" />
+  </PreferenceCategory>
   <PreferenceCategory
      android:title="@+string/servicePrefTitle">
     <CheckBoxPreference
        android:title="@+string/incomingCallPrefTitle"
        android:summary="@+string/incomingCallPrefSummary"
        android:defaultValue="true"
-       android:key="incomingCallPref" />
+       android:key="prefs_incomingCallPref" />
     <CheckBoxPreference
        android:title="@+string/outgoingCallPrefTitle"
        android:summary="@+string/outgoingCallPrefSummary"
        android:defaultValue="true"
-       android:key="outgoingCallPref" />
+       android:key="prefs_outgoingCallPref" />
+    <CheckBoxPreference
+       android:title="@+string/appNamePrefTitle"
+       android:summary="@+string/appNamePrefSummary"
+       android:defaultValue="true"
+       android:key="prefs_appNamePref" />
   </PreferenceCategory>
 </PreferenceScreen>

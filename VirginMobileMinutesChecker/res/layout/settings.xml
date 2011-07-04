@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" 
+  android:id="@+id/settingsScrollView"
+  android:background="@drawable/app_background">
+        <LinearLayout android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/settingsLinearLayout" android:orientation="vertical">
+            <TextView android:id="@+id/minuteNotificationLabel" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/settings_minutenotification_label" android:layout_marginLeft="5dp"></TextView>
+            <CheckBox android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/settingsInboundCall" android:text="@string/settings_inbound" android:layout_marginLeft="20dp"></CheckBox>
+            <CheckBox android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/settingsOutboundCall" android:text="@string/settings_outbound" android:layout_marginLeft="20dp"></CheckBox>
+            <CheckBox android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/settingsAppName" android:text="@string/settings_appname" android:layout_marginLeft="20dp"></CheckBox>
+        </LinearLayout>
+</ScrollView>
