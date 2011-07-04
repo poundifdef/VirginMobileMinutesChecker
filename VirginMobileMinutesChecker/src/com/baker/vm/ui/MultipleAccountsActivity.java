@@ -33,6 +33,7 @@ import com.baker.vm.PreferencesUtil;
 import com.baker.vm.UsernamePassword;
 import com.baker.vm.VMAccount;
 import com.jaygoel.virginminuteschecker.R;
+import com.jaygoel.virginminuteschecker.Preferences;
 
 /**
  * @author baker
@@ -112,7 +113,6 @@ public final class MultipleAccountsActivity extends Activity
             // prompt for initial phone number / password
             showAddAccountDialog(getUsersTelephoneNumber(), null);
         }
-
 	}
 
 	@Override
@@ -166,11 +166,11 @@ public final class MultipleAccountsActivity extends Activity
 
 			    return true;
 			    
-			case R.id.menu_settings:
-				
-				startActivity(new Intent(this, SettingsActivity.class));
-				
-				return true;
+			case R.id.settings:
+
+			    startActivity(new Intent(this,  Preferences.class));
+
+			    return true;
 
 			default:
 				return super.onOptionsItemSelected(item);

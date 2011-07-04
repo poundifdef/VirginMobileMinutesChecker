@@ -11,13 +11,10 @@
     <string name="signinTitle">Minutes Checker: Sign In</string>
     <string name="viewTitle">Minutes Checker: Usage Information</string>
 
-    <!--string name="settings">Settings</string>
-    <string name="incoming_notification_option">Display Minutes on Incoming Phone Call</string-->
+    <string name="settings">Preferences</string>
 
-
-    <string name="settings">Settings</string>
-
-    <string name="servicePrefTitle">Notification Settings</string>
+    <string name="servicePrefTitle">Notification Preferences</string>
+    <string name="appPrefTitle">App Preferences</string>
 
     <string name="incomingCallPrefTitle">Incoming Call</string>
     <string name="incomingCallPrefSummary">Show minutes used when a call is received</string>
@@ -56,5 +53,9 @@
     <string name="settings_appname">Show app name, when showing minutes remaining</string>
     <string name="settings_menu_item">Preferences</string>
     <string name="settings_minutenotification_label">Minute Notifications:</string>
+    <string name="appNamePrefTitle">App Name in Notification</string>
+    <string name="appNamePrefSummary">Show app name with minute notifications</string>
+    <string name="showGraphPrefTitle">Show Graphs</string>
+    <string name="showGraphPrefSummary">Show widget graphs in the app</string>
 
 </resources>
