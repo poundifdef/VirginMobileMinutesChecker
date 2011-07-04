@@ -40,6 +40,8 @@
                    android:resource="@xml/widget_pie_provider" />
     </receiver>
     
+   <activity android:name=".Preferences" />
+
   </application>
   <uses-sdk android:minSdkVersion="7" />
 

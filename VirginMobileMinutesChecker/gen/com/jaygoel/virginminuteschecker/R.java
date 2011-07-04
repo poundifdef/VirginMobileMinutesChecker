@@ -67,6 +67,7 @@ public final class R {
         public static final int progress=0x7f08001c;
         public static final int progresslayout=0x7f08001a;
         public static final int refresh=0x7f080029;
+        public static final int settings=0x7f08002e;
         public static final int signInButton=0x7f080014;
         public static final int thinkingIcon=0x7f08001b;
         public static final int top=0x7f080017;

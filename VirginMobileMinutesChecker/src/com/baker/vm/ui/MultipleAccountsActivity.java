@@ -33,6 +33,7 @@ import com.baker.vm.PreferencesUtil;
 import com.baker.vm.UsernamePassword;
 import com.baker.vm.VMAccount;
 import com.jaygoel.virginminuteschecker.R;
+import com.jaygoel.virginminuteschecker.Preferences;
 
 /**
  * @author baker
@@ -163,6 +164,12 @@ public final class MultipleAccountsActivity extends Activity
 			case R.id.menu_about:
 
 			    startActivity(new Intent(this, AboutActivity.class));
+
+			    return true;
+
+			case R.id.settings:
+
+			    startActivity(new Intent(this,  Preferences.class));
 
 			    return true;
 
