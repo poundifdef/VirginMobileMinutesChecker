@@ -35,6 +35,8 @@ import com.baker.vm.VMAccount;
 import com.jaygoel.virginminuteschecker.R;
 import com.jaygoel.virginminuteschecker.Preferences;
 
+import com.google.ads.*;
+
 /**
  * @author baker
  *
@@ -84,7 +86,13 @@ public final class MultipleAccountsActivity extends Activity
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.multipleaccounts);
+
+
+    AdView adView = (AdView)this.findViewById(R.id.adView);
+    adView.loadAd(new AdRequest());
 
         // get all stored phone numbers / passwords
         // (don't do the layout, that'll happen on resume)
