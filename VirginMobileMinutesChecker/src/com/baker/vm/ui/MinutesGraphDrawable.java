@@ -55,9 +55,11 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 		{
 			final Calendar end = account.getChargedOnCal();
 			final Calendar start = (Calendar) end.clone();
-			start.set(Calendar.MONTH, end.get(Calendar.MONTH) - 1);
+			start.add(Calendar.MONTH, -1);
+            start.set(Calendar.HOUR_OF_DAY, 0);
+            start.set(Calendar.MINUTE, 0);
 			final Calendar now = new GregorianCalendar();
-
+			
 			final long total = end.getTimeInMillis() - start.getTimeInMillis();
 			final long millis = now.getTimeInMillis() - start.getTimeInMillis();
 
@@ -74,7 +76,7 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
 
 	private String toString(final Calendar end)
 	{
-		return end.get(Calendar.MONTH) + "/" + end.get(Calendar.DAY_OF_MONTH) + "/" + end.get(Calendar.YEAR);
+		return end.get(Calendar.MONTH) + "/" + end.get(Calendar.DAY_OF_MONTH) + "/" + end.get(Calendar.YEAR) + " " + end.get(Calendar.HOUR_OF_DAY) + ":" + end.get(Calendar.MINUTE);
 	}
 
 	/**
