@@ -21,6 +21,12 @@
 
     <string name="outgoingCallPrefTitle">Outgoing Call</string>
     <string name="outgoingCallPrefSummary">Show minutes used when making a call</string>
+    
+    <string name="showAdsPrefTitle">Show Ads</string>
+    <string name="showAdsPrefSummary">Choose whether or not to display ads. This is
+    completely optional. If this app has been valuable to you, then consider leaving the
+    ads on!</string>
+
     <string name="phoneNumberLabel">Phone Number:</string>
     <string name="passwordLabel">Password (vKey or PIN):</string>
     <string name="ok">OK</string>
