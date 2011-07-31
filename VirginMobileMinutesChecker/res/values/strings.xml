@@ -64,7 +64,7 @@
     <string name="showGraphPrefTitle">Show Graphs</string>
     <string name="showGraphPrefSummary">Show widget graphs in the app</string>
 
-    <string name="currentVersion">1.8</string>
-    <string name="currentVersionSummary">Latest updates:</string>
+    <string name="currentVersion">1.9</string>
+    <string name="currentVersionSummary">Updated in this version: \n\n - Can now install to SD card \n\n - Fixed widget date issues \n\n - Added ads. I decided to experiment and see if placing ads on this app would be practical. They are OPTIONAL and you may disable them in the Preferences screen. \n\n If you have found this app to be valuable, then consider leaving the ads enabled!</string>
 
 </resources>
