@@ -89,7 +89,7 @@ public final class MultipleAccountsActivity extends Activity
     {
            if (!PreferencesUtil.getShownVersionMessage(getApplicationContext()).equals(getString(R.string.currentVersion))) {
          AlertDialog.Builder builder = new AlertDialog.Builder(this);
-         builder.setMessage(R.string.currentVersionSummary)
+         builder.setMessage(getString(R.string.currentVersionSummary))
                 .setCancelable(true)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
