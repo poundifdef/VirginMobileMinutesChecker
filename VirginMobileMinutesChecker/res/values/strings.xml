@@ -58,4 +58,7 @@
     <string name="showGraphPrefTitle">Show Graphs</string>
     <string name="showGraphPrefSummary">Show widget graphs in the app</string>
 
+    <string name="currentVersion">1.8</string>
+    <string name="currentVersionSummary">Latest updates:</string>
+
 </resources>

@@ -28,6 +28,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup.LayoutParams;
 import android.widget.TextView;
+import android.util.Log;
+import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.baker.vm.PreferencesUtil;
 import com.baker.vm.UsernamePassword;
@@ -83,6 +85,26 @@ public final class MultipleAccountsActivity extends Activity
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
+           if (!PreferencesUtil.getShownVersionMessage(getApplicationContext()).equals(getString(R.string.currentVersion))) {
+         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+         builder.setMessage(R.string.currentVersionSummary)
+                .setCancelable(true)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                       
+                       SharedPreferences prefs = PreferencesUtil.getPrefs(getApplicationContext());
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString(PreferencesUtil.FLAG_VERSION_MESSAGE, getString(R.string.currentVersion));
+                        editor.commit();
+ 
+                         dialog.cancel();
+                    }
+                });
+         
+         AlertDialog alert = builder.create();
+         alert.show();
+          }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multipleaccounts);
 
