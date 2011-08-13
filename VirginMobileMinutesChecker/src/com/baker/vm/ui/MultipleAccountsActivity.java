@@ -17,19 +17,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup.LayoutParams;
 import android.widget.TextView;
-import android.util.Log;
-import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.baker.vm.PreferencesUtil;
 import com.baker.vm.UsernamePassword;
@@ -85,26 +86,6 @@ public final class MultipleAccountsActivity extends Activity
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
-           if (!PreferencesUtil.getShownVersionMessage(getApplicationContext()).equals(getString(R.string.currentVersion))) {
-         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-         builder.setMessage(R.string.currentVersionSummary)
-                .setCancelable(true)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                       
-                       SharedPreferences prefs = PreferencesUtil.getPrefs(getApplicationContext());
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString(PreferencesUtil.FLAG_VERSION_MESSAGE, getString(R.string.currentVersion));
-                        editor.commit();
- 
-                         dialog.cancel();
-                    }
-                });
-         
-         AlertDialog alert = builder.create();
-         alert.show();
-          }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multipleaccounts);
 
@@ -239,10 +220,10 @@ public final class MultipleAccountsActivity extends Activity
                     minutes = PreferencesUtil.getMinutesString(this);
                     dueDate = PreferencesUtil.getDueDate(this);
                 }
-                addRow(table, R.string.currentBalance, balance, widest, true);
+                //addRow(table, R.string.currentBalance, balance, widest, true);
                 addRow(table, R.string.minutesUsed, minutes, widest, true);
                 addRow(table, R.string.chargedOn, dueDate, widest, true);
-                addRow(table, R.string.monthlyCharge, "", widest, true);
+                //addRow(table, R.string.monthlyCharge, "", widest, true);
             }
 
             table.setBackgroundDrawable(null);
@@ -284,15 +265,17 @@ public final class MultipleAccountsActivity extends Activity
                                          R.string.minutesUsed,
                                          R.string.chargedOn,
                                          R.string.monthlyCharge);
-                addRow(table, R.string.currentBalance, acct.getBalance(), widest, false);
-                addRow(table, R.string.minutesUsed, acct.getMinutesUsed(), widest, false);
+                //addRow(table, R.string.currentBalance, acct.getBalance(), widest, false);
+                addRow(table, R.string.minutesUsed, acct.getMinutesUsedInt() + " | " + acct.getMinutesTotal(), widest, false);
                 addRow(table, R.string.chargedOn, acct.getChargedOn(), widest, false);
-                addRow(table, R.string.monthlyCharge, acct.getMonthlyCharge(), widest, false);
+                //addRow(table, R.string.monthlyCharge, acct.getMonthlyCharge(), widest, false);
 
+                /*
                 final MinutesPieGraphDrawable bg = new MinutesPieGraphDrawable(this, acct);
                 bg.setAlignment(MinutesPieGraphDrawable.ALIGN_RIGHT);
                 table.setBackgroundDrawable(bg);
-
+                */
+                
                 PreferencesUtil.setCache(this, acct);
             }
             else
@@ -487,6 +470,8 @@ public final class MultipleAccountsActivity extends Activity
                 final LinearLayout vert = new LinearLayout(getApplicationContext());
                 vert.setOrientation(LinearLayout.VERTICAL);
                 vert.setPadding(0, 10, 0, 0);
+                // vert.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE); 
+
                 hash.put(getHashKey(auth.user, LAYOUT), vert);
 
                 vert.addView(createTextView(auth.user));
@@ -496,7 +481,7 @@ public final class MultipleAccountsActivity extends Activity
 
                 final LinearLayout table = new LinearLayout(getApplicationContext());
                 table.setOrientation(LinearLayout.VERTICAL);
-                table.setPadding(20, 0, 0, 0);
+                table.setPadding(20, 0, 0, 15);
                 hash.put(getHashKey(auth.user, TABLE), table);
 
                 updateLayout(auth);
@@ -511,6 +496,14 @@ public final class MultipleAccountsActivity extends Activity
                 vert.addView(table);
 
                 v.addView(vert);
+
+View ruler = new View(getApplicationContext());
+ruler.setBackgroundColor(0xFF7C0606); // Dark red
+v.addView(ruler,
+ new ViewGroup.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, 1));
+
+
+
         	}
         }
     }
@@ -522,6 +515,7 @@ public final class MultipleAccountsActivity extends Activity
     					final boolean isFromCache)
     {
         final TextView lbl = new TextView(this);
+        lbl.setGravity(Gravity.RIGHT);
         if (labelResId != -1)
         {
             lbl.setText(labelResId);
@@ -535,10 +529,12 @@ public final class MultipleAccountsActivity extends Activity
         lbl.setMinimumWidth(width + 5);
 
         final TextView val = new TextView(this);
+        lbl.setGravity(Gravity.LEFT);
+        val.setPadding(10, 0, 0, 0);
         val.setText(value);
         final int colorResId = isFromCache ? R.color.gray3 : R.color.white;
         val.setTextColor(getResources().getColor(colorResId));
-        val.setTextSize(VALUE_TEXT_SIZE);
+        val.setTextSize(LABEL_TEXT_SIZE);
 
         final LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);

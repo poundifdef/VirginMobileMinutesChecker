@@ -7,8 +7,6 @@ import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
 
-import com.jaygoel.virginminuteschecker.R;
-
 import com.baker.vm.ui.MultipleAccountsActivity;
 
 public final class PreferencesUtil
@@ -21,7 +19,7 @@ public final class PreferencesUtil
     /** Keys for different preferences. */
     public static final String AUTH_PREFS = "loginInfo";
     public static final String CACHE_PREFS = "cache";
-    public static final String FLAG_VERSION_MESSAGE = "shownVersionMessage";
+
     /** Keys in cache preferences. */
     public static final String CACHE_TS = "cache_timestamp";
     public static final String CACHE_AS_STRING = "cache_as_string";
@@ -112,12 +110,7 @@ public final class PreferencesUtil
 		return getPrefs(context).getBoolean(SETTINGS_SHOW_GRAPH, true);
 	}
 
-	public static String getShownVersionMessage(final Context context)
-	{
-		return getPrefs(context).getString(FLAG_VERSION_MESSAGE, "");
-	}
-
-	public static void clearCache(final Context context)
+    public static void clearCache(final Context context)
     {
         final SharedPreferences cache = getCache(context);
 

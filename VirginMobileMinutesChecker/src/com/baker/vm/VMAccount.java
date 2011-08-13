@@ -170,9 +170,7 @@ public final class VMAccount
     		// This won't throw NumberFormatExceptions because the matches must be digits
     		cal = new GregorianCalendar(Integer.parseInt("20" + m.group(3)),
     									Integer.parseInt(m.group(1)) - 1,
-    									Integer.parseInt(m.group(2)),
-    									23,
-    									59);
+    									Integer.parseInt(m.group(2)));
     	}
 
     	return cal;

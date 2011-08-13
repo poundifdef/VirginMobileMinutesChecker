@@ -26,8 +26,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="currentBalance">Balance:</string>
-    <string name="minutesUsed">Min Used:</string>
-    <string name="chargedOn">Charged On:</string>
+    <string name="minutesUsed">Mins Remaining</string>
+    <string name="chargedOn">Payment Due On</string>
     <string name="monthlyCharge">Monthly Charge:</string>
     <string name="addAccountDialogTitle">Add Account</string>
     <string name="areyousure_removenumber">Are you sure you want to remove %1$s?</string>
@@ -57,8 +57,5 @@
     <string name="appNamePrefSummary">Show app name with minute notifications</string>
     <string name="showGraphPrefTitle">Show Graphs</string>
     <string name="showGraphPrefSummary">Show widget graphs in the app</string>
-
-    <string name="currentVersion">1.8</string>
-    <string name="currentVersionSummary">Latest updates:</string>
 
 </resources>
