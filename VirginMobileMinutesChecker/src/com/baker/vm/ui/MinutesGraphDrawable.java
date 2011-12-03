@@ -60,6 +60,18 @@ public abstract class MinutesGraphDrawable extends ShapeDrawable
             start.set(Calendar.MINUTE, 0);
 			final Calendar now = new GregorianCalendar();
 			
+			if(now.compareTo(start) == -1) {
+				// it is prior to the "month start" (30 days before account is 
+				// charged), so the user has already paid for the following month.
+				//
+				// it isn't useful to tell them none of their minutes have been used
+				// in a month that hasn't even started yet, so move everything back
+				// a month into the actual month we are in.
+				
+				end.add(Calendar.MONTH, -1);
+				start.add(Calendar.MONTH, -1);
+			}
+			
 			final long total = end.getTimeInMillis() - start.getTimeInMillis();
 			final long millis = now.getTimeInMillis() - start.getTimeInMillis();
 
