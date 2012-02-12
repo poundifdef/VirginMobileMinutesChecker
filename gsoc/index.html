@@ -106,6 +106,10 @@ that are likely to occur in the future, come up with a design, and then implemen
 We should have a standard way to cope with changes, as well as conventions for
 code style.</p>
 
+<p>There are no specific ideas for how to do this; we want you to come up with
+a proposal and carry it through! Possibly work with one of us as you
+write your app to create a more concrete plan of attack.</p>
+
 <p>Mentor: Ken Ganong, Jay Goel</p>
 
 <p> Success here means a more maintainable app, which would make it easier for 
@@ -113,6 +117,63 @@ the next project idea:</p>
 
 <h3>3. User-requested features</h3>
 
+<p>There are several new features that users have been requesting sicne the beginning. We
+should implement them!</p>
+
+<ol>
+<li>Handle multiple types of accounts. Currently this app only displays
+information for VM's "Beyond Talk" plan, but some families use PayLo or Broadband2Go plans.
+Can we support this? </li>
+<li>Users also want to be able to see their call log and txt message usage.</li>
+<li>Starting in March, VM will cap data usage at 2.5GB. We should help users with this as well.</li>
+<li>Have an option for other kinds of alerts and messages when they are running out of
+minutes.</li>
+</ol>
+
+<p>
+These are fairly straightforward tasks and would go a long way to make this app 
+useful.
+</p>
+
+<p>Mentor: Ken Ganong, Jay Goel, xbakesx</p>
+
+<h3>4. Testing</h3>
+<p>We do not have a great infrastructure for testing. It would be nice to create mock users
+or mock HTML so we don't have to hit the VM website or use our personal information
+when we want to test. We should have JUnit tests and then a plan for testing the GUI.
+There are bugs that we would have been able to solve sooner with testing.
+How can we test for when a user's network connection drops? How can we monitor the CPU
+and battery utilization of the background service?</p>
+
+<p>In a similar vein, can we do a better job eliciting user feedback? Ask or survey them,
+within the app, about what features they want? Provide news updates to them? This is
+not strictly in the scope of "testing" but it is relevant to getting feedback about
+things which are broken so that we can improve going forward.</p>
+
+<p>You would be responsible for coming up with different areas and scenarios to test,
+and then implementing a framework for doing this. The project would not encompass
+all of the above; you would come up with what you think the most effective 
+attributes for testing are and implement it.</p>
+
+<p>Mentor: Ken Ganong, Jay Goel, xbakesx</p>
+
+<h3>5. Ads</h3>
+<p>Finally, this app uses AdMob for ads. The ads are an experiment - how do users
+react? They also help offset some of the costs - the Android account, maintaining 
+github, purchasing devices for testing, etc.</p>
+
+<p>There are other companies which serve ads. Can we easily switch ad providers?
+What about selling ads directly, rather than going through an agency? We could do
+something similar to what StackOverflow does, and do free ad placement for 
+open-source apps.</p>
+
+<p>Are there different form factors or ad layouts which make for better advertising?
+Can we use other user preferences for show better ads?</p>
+
+<p>Ads are an experiment. It would be fun and informative to play with these attributes
+and see what we can learn.</p>
+
+<p>Mentor: Ken Ganong, Jay Goel</p>
   </div>
 
 </body>
