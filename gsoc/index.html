@@ -34,16 +34,84 @@
 
   <div id="container">
 
+<h1>GSoC 2012: Ideas</h1>
+<h2>Introduction</h2>
 <p>
-The Minutes Checker app performs a simple function: it tells users information about their Virgin Mobile cell phone account. It indicates how many minutes they have for the month and when their bill is due. This app has been installed over 45,000 times, has a 5-star rating (with 1265 ratings) and I receive feedback from customers on a daily basis.
+The Minutes Checker app performs a simple function: it tells users information about their Virgin Mobile cell phone account. It indicates how many minutes they have for the month and when their bill is due. This app has been installed over 45,000 times, has a 5-star rating (with 1200+ ratings) and I receive feedback from customers on a daily basis.
 </p>
 <p>
-The development team consists of myself and a handful of developers who have submitted patches. This app is ideal for motivated students who have limited Android and project experience. The code base is small enough that one can easily grasp it and make changes.
+The development team consists of myself and a handful of developers who have submitted patches. This app is ideal for motivated students who have limited Android experience. The code base is small enough that one can easily grasp it and make changes.
 </p>
 
 <p>
-In that light, here are project ideas which a student could accomplish during the summer, while gaining significant experience exploring a new code base and touching all aspects of the application - both front-end and back-end. Most of these ideas have come directly from the aggregate of customer feedback. Other ideas are more experimental in nature.
+You'll get experience exploring a new code base with multiple contributors - and hopefully help to normalize our coding styles and practices! You will touch all aspects of the application, from back-end networking code to front-end presentation.
 </p>
+
+<h2>Ideas</h2>
+
+<p>
+ Most of these ideas have come directly from the aggregate of customer feedback. Others are more experimental in nature.
+</p>
+
+<h3>1. User Experience and Design</h3>
+<p>
+The user experience leaves a lot to be desired. Specific complaints are:
+
+<ol>
+<li>The app lets one track multiple accounts; how do I delete an account?</li>
+<li>Can we make the widget more intuitive? Can it look better? Convey more useful information?</li>
+<li>The app does not adjust to different-sized screens. Users with large screens still get information
+rendered in small fonts.</li>
+</ol>
+
+The app does have a "help" page, but we should have a UX which uses common affordances and does 
+require the user to read a page of instructions. 
+
+<p>Related to this is graphic design. One gentleman has contributed gorgeous mock-ups for 
+this app. Let's make them a reality.</p>
+
+<p>As a stark example, here is the current app as compared to a user-proposed design:</p>
+
+<p>
+<img src="https://github.com/poundifdef/VirginMobileMinutesChecker/raw/master/screenshots/screen-minutes.png" />
+<img src="https://github.com/poundifdef/VirginMobileMinutesChecker/raw/ux_enhancements/mockups/multiple_accounts.png" />
+</p>
+
+<p>This project would be great for a student who has experience in UX.
+You would be responsible for designing a user flow,
+wireframing it, and then writing code to make it a reality. This probject 
+would not require as much work on the back-end (eg, networking code.)
+Ideas for UX improvements are not limited to what has been described here;
+the broad goal is to improve on what we have now.</p>
+
+<p>It would be great to push out changes (yes, to all users) and elicit feedback, and 
+iterate a few times before the summer ends.</p>
+
+<p>Mentor: Jessica Graham</p>
+
+<h3>2. Back-end architecture</h3>
+
+<p>As the app has evolved, we have not really spent much time on architecture.
+How should we organize the network-related code so that, when Virgin Mobile
+changes the information they provide, we can easily fetch those changes? How
+should we store user's information, or information for multiple accounts?
+</p>
+
+<p>This also entails planning how we should propagate information to the 
+front-end. How can we achieve a better separation between the "presentation" and
+and the back-end?</p>
+
+<p>Your task would be to take this app's requirements, understand the kinds of changes
+that are likely to occur in the future, come up with a design, and then implement.
+We should have a standard way to cope with changes, as well as conventions for
+code style.</p>
+
+<p>Mentor: Ken Ganong, Jay Goel</p>
+
+<p> Success here means a more maintainable app, which would make it easier for 
+the next project idea:</p>
+
+<h3>3. User-requested features</h3>
 
   </div>
 
