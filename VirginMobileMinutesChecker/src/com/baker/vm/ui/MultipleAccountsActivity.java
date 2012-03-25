@@ -702,7 +702,7 @@ public final class MultipleAccountsActivity extends Activity
         AdView adView = (AdView)this.findViewById(R.id.adView);
         if (PreferencesUtil.getShowAds(getApplicationContext())) {
           AdRequest adRequest = new AdRequest();
-          // adRequest.addTestDevice(AdRequest.TEST_EMULATOR);
+          //adRequest.addTestDevice(AdRequest.TEST_EMULATOR);
           adView.loadAd(adRequest);
           adView.setVisibility(AdView.VISIBLE);
         } else {
