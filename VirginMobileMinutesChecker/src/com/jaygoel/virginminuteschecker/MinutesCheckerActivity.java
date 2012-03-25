@@ -2,6 +2,7 @@ package com.jaygoel.virginminuteschecker;
 
 import android.app.Activity;
 import android.os.Bundle;
+import com.vm.accountdata.AccountData;
 
 public class MinutesCheckerActivity extends Activity
 {
