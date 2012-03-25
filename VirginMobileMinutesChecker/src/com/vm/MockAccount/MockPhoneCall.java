@@ -13,6 +13,10 @@ public class MockPhoneCall implements PhoneCall
         return new Date();
     }
 
+    public String getCallFrom() {
+        return "890-567-1234";
+    }
+
     public int getCallDuration() { // minutes
         return 69;
     }
