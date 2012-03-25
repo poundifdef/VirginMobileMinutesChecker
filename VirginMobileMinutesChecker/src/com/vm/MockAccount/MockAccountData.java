@@ -11,7 +11,7 @@ public class MockAccountData implements AccountData
 {
    // TODO: add setters to make this mock class mutable
 
-    public MockAccountData() {
+    public MockAccountData(String username, String password) {
         // TODO: allow you to specify fields in constructor
     }
 
