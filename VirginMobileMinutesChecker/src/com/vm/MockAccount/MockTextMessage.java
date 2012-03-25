@@ -5,6 +5,10 @@ import java.util.Date;
 
 public class MockTextMessage implements TextMessage
 {
+    public MockTextMessage() {
+        // TODO: make this configurable
+    }
+
     public Date getMessageTime() {
         return new Date();
     }

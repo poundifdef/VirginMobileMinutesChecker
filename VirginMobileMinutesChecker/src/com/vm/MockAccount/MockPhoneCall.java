@@ -5,6 +5,10 @@ import java.util.Date;
 
 public class MockPhoneCall implements PhoneCall
 {
+    public MockPhoneCall() {
+        // TODO: make this useful
+    }
+
     public Date getCallTime() {
         return new Date();
     }

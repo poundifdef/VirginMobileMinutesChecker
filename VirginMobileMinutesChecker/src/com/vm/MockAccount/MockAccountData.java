@@ -53,11 +53,17 @@ public class MockAccountData implements AccountData
 
     public List<TextMessage> getTextMessageHistory(Date startDate, Date endDate) {
         List<TextMessage> messages = new ArrayList<TextMessage>();
+        messages.add(new MockTextMessage());
+        messages.add(new MockTextMessage());
+        messages.add(new MockTextMessage());
+
         return messages;
     }
 
     public List<PhoneCall> getPhoneCallHistory(Date startDate, Date endDate) {
         List<PhoneCall> phoneCalls = new ArrayList<PhoneCall>();
+        phoneCalls.add(new MockPhoneCall());
+
         return phoneCalls;
     }
 }
