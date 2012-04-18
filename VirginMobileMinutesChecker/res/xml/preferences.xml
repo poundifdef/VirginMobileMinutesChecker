@@ -25,4 +25,13 @@
        android:defaultValue="true"
        android:key="prefs_appNamePref" />
   </PreferenceCategory>
+  <PreferenceCategory
+     android:title="@+string/adsPrefTitle">
+  <CheckBoxPreference
+       android:title="@+string/showAdsPrefTitle"
+       android:summary="@+string/showAdsPrefSummary"
+       android:defaultValue="true"
+       android:key="prefs_showAdsPref" />
+
+  </PreferenceCategory>
 </PreferenceScreen>
