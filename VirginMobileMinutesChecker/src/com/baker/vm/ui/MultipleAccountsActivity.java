@@ -37,6 +37,8 @@ import com.baker.vm.VMAccount;
 import com.jaygoel.virginminuteschecker.R;
 import com.jaygoel.virginminuteschecker.Preferences;
 
+import com.google.ads.*;
+
 /**
  * @author baker
  *
@@ -87,7 +89,7 @@ public final class MultipleAccountsActivity extends Activity
     {
            if (!PreferencesUtil.getShownVersionMessage(getApplicationContext()).equals(getString(R.string.currentVersion))) {
          AlertDialog.Builder builder = new AlertDialog.Builder(this);
-         builder.setMessage(R.string.currentVersionSummary)
+         builder.setMessage(getString(R.string.currentVersionSummary))
                 .setCancelable(true)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -106,11 +108,16 @@ public final class MultipleAccountsActivity extends Activity
           }
 
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.multipleaccounts);
 
         // get all stored phone numbers / passwords
         // (don't do the layout, that'll happen on resume)
         updateModelFromPreferences(false);
+
+        updateAdsLayout();
+
 
         if (!model.isEmpty())
         {
@@ -129,6 +136,8 @@ public final class MultipleAccountsActivity extends Activity
 		// (and layout views)
         updateModelFromPreferences();
 
+        updateAdsLayout();
+        
         // if they have no phone numbers then pop up a new account dialog
         if (model.isEmpty())
         {
@@ -687,5 +696,17 @@ public final class MultipleAccountsActivity extends Activity
         PreferencesUtil.setAuth(this, acct);
 
     	updateModelFromPreferences();
+    }
+    
+    private void updateAdsLayout() {
+        AdView adView = (AdView)this.findViewById(R.id.adView);
+        if (PreferencesUtil.getShowAds(getApplicationContext())) {
+          AdRequest adRequest = new AdRequest();
+          //adRequest.addTestDevice(AdRequest.TEST_EMULATOR);
+          adView.loadAd(adRequest);
+          adView.setVisibility(AdView.VISIBLE);
+        } else {
+          adView.setVisibility(AdView.GONE);
+        }
     }
 }

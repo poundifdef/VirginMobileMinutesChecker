@@ -39,6 +39,7 @@ public final class PreferencesUtil
     public static final String SETTINGS_OUTBOUND_CALL = "prefs_outgoingCallPref";
     public static final String SETTINGS_APP_NAME = "prefs_appNamePref";
     public static final String SETTINGS_SHOW_GRAPH = "prefs_showGraphPref";
+    public static final String SETTINGS_SHOW_ADS = "prefs_showAdsPref";
 
     public static SharedPreferences get(final Context context)
     {
@@ -110,6 +111,11 @@ public final class PreferencesUtil
 	public static boolean getShowGraph(final Context context)
 	{
 		return getPrefs(context).getBoolean(SETTINGS_SHOW_GRAPH, true);
+	}
+
+	public static boolean getShowAds(final Context context)
+	{
+		return getPrefs(context).getBoolean(SETTINGS_SHOW_ADS, true);
 	}
 
 	public static String getShownVersionMessage(final Context context)

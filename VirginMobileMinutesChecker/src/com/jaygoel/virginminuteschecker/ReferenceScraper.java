@@ -26,7 +26,7 @@ public class ReferenceScraper implements IVMCScraper
     @Override
     public String getMonthlyCharge(final String str)
     {
-        String srch = "<h3>Monthly Charge</h3><p>";
+        String srch = "<h3>Next Month's Charge</h3><p>";
         int start = str.indexOf(srch);
         int end = str.indexOf("</p>", start);
         return str.substring(start + srch.length(), end);

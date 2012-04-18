@@ -15,12 +15,19 @@
 
     <string name="servicePrefTitle">Notification Preferences</string>
     <string name="appPrefTitle">App Preferences</string>
+    <string name="adsPrefTitle">Ads Preferences</string>
 
     <string name="incomingCallPrefTitle">Incoming Call</string>
     <string name="incomingCallPrefSummary">Show minutes used when a call is received</string>
 
     <string name="outgoingCallPrefTitle">Outgoing Call</string>
     <string name="outgoingCallPrefSummary">Show minutes used when making a call</string>
+    
+    <string name="showAdsPrefTitle">Show Ads</string>
+    <string name="showAdsPrefSummary">Choose whether or not to display ads. This is
+    completely optional. If this app has been valuable to you, then consider leaving the
+    ads on!</string>
+
     <string name="phoneNumberLabel">Phone Number:</string>
     <string name="passwordLabel">Password (vKey or PIN):</string>
     <string name="ok">OK</string>
@@ -58,7 +65,7 @@
     <string name="showGraphPrefTitle">Show Graphs</string>
     <string name="showGraphPrefSummary">Show widget graphs in the app</string>
 
-    <string name="currentVersion">1.8</string>
-    <string name="currentVersionSummary">Latest updates:</string>
+    <string name="currentVersion">1.11</string>
+    <string name="currentVersionSummary">Updated in this version: \n\n - Fix issues due to VM\'s website updates. Thanks to everyone who let me know! \n\n This means you can go back and update your ratings to 5 stars again :) \n\n Many have asked if this app will be updated to reflect VM\'s data cap. I hope to do this, but we\'ll have wait until the cap is implemented before developing. \n\n For the Android developers out there: this app is open-source, so please feel free to fork on github! There are a lot of feature requests and plenty of opportunity to lend your expertise.</string>
 
 </resources>
