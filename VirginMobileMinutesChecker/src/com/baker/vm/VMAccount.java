@@ -33,6 +33,8 @@ public final class VMAccount
         ret.chargedOn = "05/15/11";
         ret.minutesUsed = "400 / 1200";
         ret.isValid = true;
+        ret.dataUsed = "345.0";
+        ret.dataTotal = "2560.0";
 
         return ret;
     }
@@ -47,6 +49,8 @@ public final class VMAccount
     	ret.dueDate = "04/25/11";
     	ret.chargedOn = "04/25/11";
     	ret.minutesUsed = "650 / 1200";
+    	ret.dataUsed = "345.0";
+        ret.dataTotal = "2560.0";
     	ret.isValid = true;
 
     	return ret;
@@ -63,6 +67,8 @@ public final class VMAccount
     	ret.chargedOn = "04/31/11";
     	ret.minutesUsed = "400 / 1200";
     	ret.isValid = true;
+    	ret.dataUsed = "345.0";
+        ret.dataTotal = "2560.0";
 
     	return ret;
     }
@@ -92,6 +98,8 @@ public final class VMAccount
             dueDate = scraper.getDateDue(html);
             chargedOn = scraper.getChargedOn(html);
             minutesUsed = scraper.getMinutesUsed(html);
+            dataUsed = scraper.getDataUsed(html);
+            dataTotal = scraper.getDataTotal(html);
         }
         else
         {
@@ -102,6 +110,8 @@ public final class VMAccount
             dueDate = null;
             chargedOn = null;
             minutesUsed = null;
+            dataUsed = null;
+            dataTotal = null;
         }
     }
 
@@ -116,6 +126,8 @@ public final class VMAccount
         dueDate = null;
         chargedOn = null;
         minutesUsed = null;
+        dataUsed = null;
+        dataTotal = null;
     }
 
     private final UsernamePassword auth;
@@ -127,6 +139,8 @@ public final class VMAccount
     private String dueDate;
     private String chargedOn;
     private String minutesUsed;
+    private String dataUsed;
+    private String dataTotal;
 
     public boolean isValid()
     {
@@ -202,6 +216,15 @@ public final class VMAccount
     		total = Integer.parseInt(m.group(2));
     	}
     	return total;
+    }
+
+    public String getDataUsed()
+    {
+    	return dataUsed;
+    }
+    public String getDataTotal()
+    {
+    	return dataTotal;
     }
 
 	public UsernamePassword getAuth()

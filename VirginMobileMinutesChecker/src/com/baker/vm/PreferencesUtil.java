@@ -26,6 +26,7 @@ public final class PreferencesUtil
     public static final String CACHE_MINUTES_TOTAL = "cache_minutes_total";
     public static final String CACHE_BALANCE = "cache_balance";
     public static final String CACHE_DUE_DATE = "cache_due_date";
+    public static final String CACHE_DATA = "cache_data";
 
     /** Keys in auth preferences. */
     public static final String USER_PREFIX = "USER";
@@ -77,6 +78,11 @@ public final class PreferencesUtil
 	{
         return getCache(context).getString(CACHE_DUE_DATE, "");
 	}
+	
+	public static String getData(final Context context)
+	{
+		return getCache(context).getString(CACHE_DATA, "");
+	}
 
     public static void clearCache(final Context context)
     {
@@ -90,6 +96,7 @@ public final class PreferencesUtil
 
         editor.putString(CACHE_DUE_DATE, "");
         editor.putString(CACHE_BALANCE, "");
+        editor.putString(CACHE_DATA, "");
     }
 
     public static void setCache(final Context activity, final VMAccount account)
@@ -118,6 +125,9 @@ public final class PreferencesUtil
         editor.putString(CACHE_DUE_DATE, account.getChargedOn());
 
         editor.putLong(CACHE_TS, System.currentTimeMillis());
+        
+        // Handle data
+        editor.putString(CACHE_DATA, account.getDataUsed() + " / " + account.getDataTotal());
 
 
         editor.commit();

@@ -109,6 +109,7 @@ public final class R {
         public static final int cancel=0x7f060012;
         public static final int chargedOn=0x7f060015;
         public static final int currentBalance=0x7f060013;
+        public static final int dataUsed=0x7f06002a;
         public static final int incomingCallPrefSummary=0x7f06000c;
         public static final int incomingCallPrefTitle=0x7f06000b;
         public static final int keepit=0x7f060019;

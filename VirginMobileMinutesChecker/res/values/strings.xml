@@ -51,5 +51,6 @@
     <string name="about_broadcast_listener_content">Every time you complete a call, or refresh the app manually we fetch information about your account, in order to keep your account information current and minimize the amount of work the app does while maximizing battery life on your device.  When you place or receive a call, this service notifies you with the amount of minutes you have remaining.</string>
     <string name="about_pie_widget_content">This widget displays how far through the billing cycle you currently are, with a black ring.  So if you are half-way through a billing cycle the ring will look like a U.  Under that it displays a pie graph of the percent of minutes you have used.  If you are on track to have enough minutes for the month, the pie is green; cutting it close the pie is yellow; over the pie is red.  If the pie is red, you still have minutes left, but if you continue to use minutes at the rate you are using them, you will run out before the billing period is up.</string>
     <string name="about_menu_item">About</string>
+    <string name="dataUsed">Data Used:</string>
 
 </resources>
