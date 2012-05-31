@@ -114,5 +114,39 @@ public class ReferenceScraper implements IVMCScraper
         return str.substring(start + srch.length(), end).replaceFirst(
             "</strong>", "");
     }
+    
+    @Override
+    public String getDataUsed(final String str)
+    {
+    	String srch = "MB Used: ";
+    	int start = str.indexOf(srch);
+    	int end = str.indexOf(" MB", start);
+    	
+    	if((start > 0) && (end > 0))
+    	{
+    		return str.substring(start + srch.length(), end);
+    	}
+    	else
+    	{
+    		return null;
+    	}
+    }
+    
+    @Override
+    public String getDataTotal(final String str)
+    {
+    	String srch = "Data speeds may be reduced at ";
+    	int start = str.indexOf(srch);
+    	int end = str.indexOf(" MB", start);
+    	
+    	if((start > 0) && (end > 0))
+    	{
+    		return str.substring(start + srch.length(), end);
+    	}
+    	else
+    	{
+    		return null;
+    	}
+    }
 
 }

@@ -237,19 +237,23 @@ public final class MultipleAccountsActivity extends Activity
                 final int widest = getMaxWidth(R.string.currentBalance,
                                          R.string.minutesUsed,
                                          R.string.chargedOn,
-                                         R.string.monthlyCharge);
+                                         R.string.monthlyCharge,
+                                         R.string.dataUsed);
 
                 String balance = "";
                 String minutes = "";
                 String dueDate = "";
+                String data = "";
                 if (getUsersTelephoneNumber().equals(auth.user))
                 {
                     balance = PreferencesUtil.getBalance(this);
                     minutes = PreferencesUtil.getMinutesString(this);
                     dueDate = PreferencesUtil.getDueDate(this);
+                    data = PreferencesUtil.getData(this);
                 }
                 addRow(table, R.string.currentBalance, balance, widest, true);
                 addRow(table, R.string.minutesUsed, minutes, widest, true);
+                addRow(table, R.string.dataUsed, data, widest, true);
                 addRow(table, R.string.chargedOn, dueDate, widest, true);
                 addRow(table, R.string.monthlyCharge, "", widest, true);
             }
@@ -292,9 +296,11 @@ public final class MultipleAccountsActivity extends Activity
                 final int widest = getMaxWidth(R.string.currentBalance,
                                          R.string.minutesUsed,
                                          R.string.chargedOn,
-                                         R.string.monthlyCharge);
+                                         R.string.monthlyCharge,
+                                         R.string.dataUsed);
                 addRow(table, R.string.currentBalance, acct.getBalance(), widest, false);
                 addRow(table, R.string.minutesUsed, acct.getMinutesUsed(), widest, false);
+                addRow(table, R.string.dataUsed, acct.getDataUsed() + " / " + acct.getDataTotal(), widest, false);
                 addRow(table, R.string.chargedOn, acct.getChargedOn(), widest, false);
                 addRow(table, R.string.monthlyCharge, acct.getMonthlyCharge(), widest, false);
 
