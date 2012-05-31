@@ -12,4 +12,6 @@ public interface IVMCScraper {
     String getDateDue(String str);
     String getChargedOn(String str);
     String getMinutesUsed(String str);
+    String getDataUsed(String str);
+    String getDataTotal(String str);
 }
