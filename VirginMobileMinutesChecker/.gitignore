@@ -2,3 +2,4 @@
 *.apk
 *.ap_
 *.dex
+local.properties
