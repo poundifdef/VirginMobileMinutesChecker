@@ -65,7 +65,7 @@
     <string name="showGraphPrefTitle">Show Graphs</string>
     <string name="showGraphPrefSummary">Show widget graphs in the app</string>
 
-    <string name="currentVersion">1.11</string>
-    <string name="currentVersionSummary">Updated in this version: \n\n - Fix issues due to VM\'s website updates. Thanks to everyone who let me know! \n\n This means you can go back and update your ratings to 5 stars again :) \n\n Many have asked if this app will be updated to reflect VM\'s data cap. I hope to do this, but we\'ll have wait until the cap is implemented before developing. \n\n For the Android developers out there: this app is open-source, so please feel free to fork on github! There are a lot of feature requests and plenty of opportunity to lend your expertise.</string>
+    <string name="currentVersion">1.12</string>
+    <string name="currentVersionSummary">Updated in this version: \n\n - Fix due date due to VM\'s website updates. Thanks to everyone who let me know about this!</string>
 
 </resources>
