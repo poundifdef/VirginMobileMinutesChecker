@@ -80,28 +80,8 @@ public class ReferenceScraper implements IVMCScraper
     @Override
     public String getChargedOn(final String str)
     {
-        // Depending on how payments are set up, there are two possible 
-        // strings in the HTML which tell us when the payment is due.
-
-        String srch = "<h3>You will be charged on</h3><p>";
-        int start = str.indexOf(srch);
-        int end = str.indexOf("</p>", start);
-
-        if ((start < 0) || (end < 0)) {
-           srch = "<h3>Charge Will be deducted on</h3><p>";
-           start = str.indexOf(srch);
-           end = str.indexOf("</p>", start);
-        }
-
-        if ((start > 0) && (end > 0))
-        {
-            return str.substring(start + srch.length(), end);
-        }
-        else
-        {
-            // throw error?
-            return null;
-        }
+        // VM seems to waffle between "Date Due" and "Charged On"
+        return getDateDue(str);
     }
 
     @Override
