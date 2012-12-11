@@ -29,7 +29,16 @@ public class ReferenceScraper implements IVMCScraper
         String srch = "<h3>Next Month's Charge</h3><p>";
         int start = str.indexOf(srch);
         int end = str.indexOf("</p>", start);
-        return str.substring(start + srch.length(), end);
+        
+        if ((start > 0) && (end > 0))
+        {
+            return str.substring(start + srch.length(), end);
+        }
+        else
+        {
+            // throw error?
+            return null;
+        }
     }
 
     @Override
@@ -62,7 +71,7 @@ public class ReferenceScraper implements IVMCScraper
     @Override
     public String getDateDue(final String str)
     {
-        String srch = "<h3>Date Due</h3><p>";
+        String srch = "<h3>You will be charged on</h3><p>";
         int start = str.indexOf(srch);
         int end = str.indexOf("</p>", start);
 
