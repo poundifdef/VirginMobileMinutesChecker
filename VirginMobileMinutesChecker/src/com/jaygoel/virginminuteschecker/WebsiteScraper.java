@@ -35,9 +35,9 @@ public class WebsiteScraper {
             }
          };
 
-         String url = "https://www1.virginmobileusa.com/login/login.do";    
-         //String url = "https://www1.virginmobileusa.com/login/login.do";    
-         //   String url = "https://www1.virginmobileusa.com/myaccount/home.do";
+         String url = "https://www2.virginmobileusa.com/login/login.do";    
+         //String url = "https://www2.virginmobileusa.com/login/login.do";    
+         //   String url = "https://www2.virginmobileusa.com/myaccount/home.do";
 
 
 
