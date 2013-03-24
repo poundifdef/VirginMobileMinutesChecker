@@ -35,7 +35,7 @@ public class WebsiteScraper {
             }
          };
 
-         String url = "https://www1.virginmobileusa.com/login/login.do";    
+         String url = "https://www2.virginmobileusa.com/login/login.do";    
          //String url = "https://www1.virginmobileusa.com/login/login.do";    
          //   String url = "https://www1.virginmobileusa.com/myaccount/home.do";
 
@@ -58,12 +58,17 @@ public class WebsiteScraper {
 
 
          connection.setDoOutput(true);
+         String content = "loginRoutingInfo=&min=" + username + "&vkey=" + password + "&submit=submit";
 
+         connection.setFixedLengthStreamingMode(content.length());
+         connection.setRequestProperty("Host", "www2.virginmobileusa.com");
+         connection.setRequestProperty("Accept-Language", "en-US,en;q=0.9");
+ 
          // try {
          //Thread.sleep(5000);
          OutputStreamWriter out = new OutputStreamWriter(
                connection.getOutputStream());
-         out.write("loginRoutingInfo=&min=" + username + "&vkey=" + password + "&submit=submit");
+         out.write(content);
          out.close();
          //} catch (IOException e) {
          //   e.printStackTrace();
