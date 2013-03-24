@@ -62,7 +62,7 @@ public class ReferenceScraper implements IVMCScraper
     @Override
     public String getDateDue(final String str)
     {
-        String srch = "<h3>Date Due</h3><p>";
+        String srch = "<li id=\"charge_date\"><h3>You will be charged on</h3><p>";
         int start = str.indexOf(srch);
         int end = str.indexOf("</p>", start);
 
