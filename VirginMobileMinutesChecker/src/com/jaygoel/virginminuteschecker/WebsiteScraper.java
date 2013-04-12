@@ -192,7 +192,7 @@ public class WebsiteScraper {
          rc.put("Charge Deducted", line.substring(start + srch.length(), end));
       }
 
-      srch = "<h3>You will be charged on</h3><p>";
+      srch = "<li id=\"charge_date\"><h3>You will be charged on</h3><p>";
       start = line.indexOf(srch);
       end = line.indexOf("</p>", start);
 
